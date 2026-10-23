@@ -462,7 +462,9 @@ function renderOutput(el, out, highlight) {
     const hl = !!highlight && (sp.slug === highlight || (t.cepas || []).includes(highlight) || ((D.strain(highlight) || {}).especie === sp.slug && !filas.some(f => (f.t.cepas || []).includes(highlight))));
     tb.append(h("tr", {class: "pv-row" + (hl ? " hl" : "") + (t.presente === "no" ? " pv-g-asociacion" : "")},
       h("th", {scope: "row", "data-k": "Quién"}, who),
-      h("td", {"data-k": "Vía"}, h("div", {class: "pv-mec"}, h("span", {}, viaTxt(t)), h("small", {class: "muted"}, etq(BASE2, t.base)))),
+      // rasgo refutado en ensayo (dato «no»): no hay vía de nada que no se produce; ni «vía no identificada» ni la base
+      h("td", {"data-k": "Vía"}, t.presente === "no" ? h("span", {class: "muted", title: "Rasgo refutado en ensayo: no hay vía que mostrar"}, "—")
+        : h("div", {class: "pv-mec"}, h("span", {}, viaTxt(t)), h("small", {class: "muted"}, etq(BASE2, t.base)))),
       h("td", {"data-k": "Genes"}, t.genes.length ? h("span", {class: "genes"}, t.genes.map(g => h("i", {title: etq(RESP, g.respaldo)}, g.gen))) : h("span", {class: "muted"}, "—")),
       h("td", {"data-k": "Genoma público"}, genomaCell(t)),
       h("td", {"data-k": "¿Funciona muerta?"}, evs.filter(cuenta).length ? muertaCell(muerta(evs.filter(cuenta))) : h("span", {class: "muted"}, evs.length ? "sin efecto propio (asociación o mezcla)" : "sin evidencia")),

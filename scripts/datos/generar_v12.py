@@ -16,6 +16,7 @@ Pasos:
           resultado (lacticaseibacillus-paracasei.ev007).
        b. particiones (curado/particiones_evidencia.json; ev013 -> ev013a/ev013b)
        c. ajustes de campo con autor (curado/ajustes_evidencia.tsv: E1 inactivacion_metodo + E9 ev008 y dentisani ev005)
+          y ortografía de textos v1.1 (curado/ajustes_tildes.tsv: solo tildes/eñes/diéresis, si el texto coincide con v1.1)
        d. dirección: enum cerrado {+, 0, -, mixto}; los «nc» heredados de v1.1 pasan a «mixto» con direccion_v11 = nc
        e. `relacion` en TODOS los registros: regla por modelo y nivel; las OBS, de curado/relacion_obs.tsv; el lote manda
           si la trae. relacion = asociacion NO suma dirección en ninguna celda (especificación P1-01 e, sin excepciones):
@@ -38,7 +39,7 @@ Cierre (--cierre, paso 6 del orquestador): puertas.regulatorio de los veredictos
 p. ej. R-nomedido) y meta.limitaciones con las cifras de catalogo.json, genomica.json y evidencias.json.
 Solo biblioteca estándar.
 """
-import argparse, copy, csv, json, re, shutil, sys
+import argparse, copy, csv, json, re, shutil, sys, unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 from urllib.parse import quote
@@ -288,6 +289,43 @@ def ajustar(ev, traza):
         e.setdefault("ajustes_v12", []).append({"campo": r["campo"], "valor_v11": old, "autor": r["autor"],
                                                "justificacion": r["justificacion"]})
         traza.append(("ajuste", r["evidencia"], r["campo"]))
+
+
+def quitar_tildes(s):
+    """Quita tildes, virgulilla de la eñe y diéresis (NFD sin marcas combinantes): «niño» -> «nino», «pingüino» -> «pinguino»."""
+    return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
+
+
+def ajustar_tildes(ev, ata, esp, traza):
+    """Ortografía de textos heredados de v1.1 (curado/ajustes_tildes.tsv), con el mismo contrato que ajustes_ataques.tsv:
+    se aplica SOLO si el texto actual coincide con el de v1.1, y SOLO si la corrección añade tildes, eñes o diéresis
+    (sin ellas, el texto nuevo y el de v1.1 son idénticos letra a letra); si no, FAIL. Deja traza en ajustes_v12 del registro
+    (evidencia, ataque o especie; `campo` admite ruta con puntos, p. ej. utilidad.0.frase) y en traza_curacion.tsv."""
+    for r in tsv("ajustes_tildes.tsv"):
+        clave = f"{r['fichero']}:{r['id']}.{r['campo']}"
+        if quitar_tildes(r["valor_nuevo"]) != quitar_tildes(r["valor_v11"]) or r["valor_nuevo"] == r["valor_v11"]:
+            sys.exit(f"FAIL ajustes_tildes.tsv: {clave} cambia algo más que tildes/eñes/diéresis (o no cambia nada)")
+        if r["fichero"] == "evidencias":
+            reg = ev.get(r["id"])
+        elif r["fichero"] == "ataques":
+            fila = [x for x in ata if "|".join((x["especie"], x["linea"], x["resultado"])) == r["id"]]
+            reg = fila[0] if len(fila) == 1 else None
+        elif r["fichero"] == "especies":
+            reg = esp.get(r["id"])
+        else:
+            sys.exit(f"FAIL ajustes_tildes.tsv: fichero no admitido {r['fichero']}")
+        partes = r["campo"].split(".")
+        padre = reg
+        for p in partes[:-1]:
+            padre = padre[int(p)] if isinstance(padre, list) and p.isdigit() and int(p) < len(padre) else (
+                padre.get(p) if isinstance(padre, dict) else None)
+        hoja = partes[-1]
+        if not isinstance(padre, dict) or padre.get(hoja) != r["valor_v11"]:
+            sys.exit(f"FAIL ajustes_tildes.tsv: {clave} no coincide con v1.1")
+        padre[hoja] = r["valor_nuevo"]
+        reg.setdefault("ajustes_v12", []).append({"campo": r["campo"], "valor_v11": r["valor_v11"], "autor": r["autor"],
+                                                 "justificacion": r["justificacion"]})
+        traza.append(("ajuste_tildes", f"{r['fichero']}:{r['id']}", r["campo"]))
 
 
 def normalizar_direccion(ev, traza):
@@ -788,6 +826,7 @@ def main_generar(a):
     lotes, sustituidos, colas = ingerir_lotes(ev, cep, refs, traza)
     alias = partir(ev, traza)
     ajustar(ev, traza)
+    ajustar_tildes(ev, ata, esp, traza)
     normalizar_direccion(ev, traza)
     asignar_relacion(ev, traza)
     esp, cep, refs, ver, ata, subg = (expandir_ids(x, alias) for x in (esp, cep, refs, ver, ata, subg))

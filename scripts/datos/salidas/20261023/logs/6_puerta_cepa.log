@@ -3,7 +3,7 @@ cepas: {'gcf_sin_abricate': 38, 'sin_accesion': 32, 'medido': 11, 'vinculo_sin_v
 $ scripts/datos/generar_v12.py --cierre scripts/datos/salidas/20261023/trabajo/data
 cierre: puertas de cepa en 95 veredictos · 3 limitaciones
 $ scripts/datos/diferencias_v11_v12.py scripts/datos/data_v1.1 scripts/datos/salidas/20261023/trabajo/data scripts/datos/salidas/20261023/diferencias_v11_v12.tsv scripts/datos/salidas/20261023/resumen_diferencias_v11_v12.tsv
-/home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/diferencias_v11_v12.tsv 3815 filas
+/home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/diferencias_v11_v12.tsv 3935 filas
 tipo	fichero_o_cifra	regla_o_v11	n_o_v12
 filas	ataques.json	A-forma	33
 filas	ataques.json	A-mec	59
@@ -19,7 +19,7 @@ filas	celdas.json	C-recalc	808
 filas	cepas.json	S-cepa	1
 filas	especies.json	S-lista	3
 filas	especies.json	S-ret	3
-filas	evidencias.json	E-ajuste	4
+filas	evidencias.json	E-ajuste	124
 filas	evidencias.json	E-dir	8
 filas	evidencias.json	E-lote	6
 filas	evidencias.json	E-lote-contexto	1
@@ -59,4 +59,4 @@ cifra	vecinos: frases «pero esta actúa» (sujeto invertido)	44	0
 cifra	vecinos: pares con eje genómico en la puntuación	1036	0
 cifra	vecinos: pares con frase impresa sin nada funcional compartido	754	0
 
-sha256_build d3add424b53ca3dcd1645795a0dd3ff5837b5aa9943a9a53fb88dc2de2c24ee5
+sha256_build bb853da9d3c8237831fd535f311b104c3433333bd03474c741c55787f7f102e8

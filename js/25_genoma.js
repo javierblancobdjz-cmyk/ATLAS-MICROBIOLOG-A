@@ -247,7 +247,7 @@ function especie(s) {
   const nG = taxa.reduce((a, [, t]) => a + (t.genomas || 0), 0);
   const anot = {}; taxa.forEach(([, t]) => Object.entries(t.genomas_por_anotador || {}).forEach(([k, n]) => { anot[k] = (anot[k] || 0) + n; }));
   body.append(h("p", {class: "small"}, h("b", {}, genomasTxt(nG)), " (" + Object.entries(anot).map(([k, n]) => k + " " + n).join(", ") + ") · " +
-    ca.length + " de " + (s.cepas || []).length + " cepas del atlas con perfil" +
+    ca.length + " de " + (s.cepas || []).length + ((s.cepas || []).length === 1 ? " cepa" : " cepas") + " del atlas con perfil" +
     (ca.some(c => g0.cepas_atlas[c].vinculo === "nombre") ? " (" + ca.filter(c => g0.cepas_atlas[c].vinculo === "nombre").length + " vinculadas por nombre: verificar)" : "") + "."));
   const multi = taxa.length > 1;
   const tb = h("tbody", {});

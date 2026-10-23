@@ -1,2 +1,2 @@
 $ scripts/datos/control_publico.py --data scripts/datos/salidas/20261023/trabajo/data --raiz .
-control_publico: 46 códigos, 176 ficheros de texto revisados (todo el repositorio y /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/trabajo/data), 0 binarios listados, 0 coincidencias o fallos
+control_publico: 46 códigos, 177 ficheros de texto revisados (todo el repositorio y /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/trabajo/data), 0 binarios listados, 0 coincidencias o fallos

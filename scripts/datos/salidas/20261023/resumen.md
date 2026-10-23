@@ -1,20 +1,20 @@
 # Build de datos del Atlas · 2026-10-23
 
-Qué se corrió: `python3 -I scripts/datos/construir_datos.py --fecha 2026-10-23`
+Qué se corrió: `python3 -I scripts/datos/construir_datos.py --fecha 2026-10-23 --publicar`
 sobre scripts/datos/data_v1.1 (congelada), scripts/datos/curado (incluido el lote E9_r2, que sustituye a E9_r1) y fuentes_publicas (drive + ncbi).
 
 ## Estado por paso
 
 | paso | estado | s |
 |---|---|---|
-| 1_correcciones | OK | 0.1 |
+| 1_correcciones | OK | 0.0 |
 | 2_generador | OK | 0.2 |
-| 3_genomica | OK | 0.3 |
+| 3_genomica | OK | 0.4 |
 | 4_rasgos | OK | 0.1 |
-| 5_vecinos | OK | 0.2 |
+| 5_vecinos | OK | 0.1 |
 | 6_puerta_cepa | OK | 0.4 |
-| 7_control_publico | OK | 16.0 |
-| 8_tests | OK | 0.4 |
+| 7_control_publico | OK | 17.2 |
+| 8_tests | OK | 0.5 |
 
 ## Resultado global
 
@@ -22,8 +22,8 @@ sobre scripts/datos/data_v1.1 (congelada), scripts/datos/curado (incluido el lot
 - matriz: 138 celdas · veredictos: 183 · vecinos: 1308 pares.
 - genomica.json: 226 genomas con llamadas (62 Bakta, 160 PGAP); 25 de 26 especies con algún análisis; 50 de 83 cepas con perfil (16 vinculadas por nombre: verificar).
 - puerta_cepa: 11 cepas con puerta «vivo» abierta.
-- sha256 del build: d3add424b53ca3dcd1645795a0dd3ff5837b5aa9943a9a53fb88dc2de2c24ee5.
-- data/ publicado en esta ejecución: no.
+- sha256 del build: bb853da9d3c8237831fd535f311b104c3433333bd03474c741c55787f7f102e8.
+- data/ publicado en esta ejecución: sí.
 - data/ del repositorio idéntico byte a byte a este build (sha256 de cada .json): sí.
 
 ## Limitaciones declaradas (meta.limitaciones)

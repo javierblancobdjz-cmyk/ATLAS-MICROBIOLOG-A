@@ -51,7 +51,10 @@ for k in sorted(eb):
             if x.get(c) != y.get(c):
                 fila("evidencias.json", k, c, x.get(c), y.get(c), "E-part", f"Parte de {partes[k]} (partición)")
     for aj in y.get("ajustes_v12", []):
-        fila("evidencias.json", k, aj["campo"], aj["valor_v11"], y[aj["campo"]], "E-ajuste", f"{aj['autor']}: {aj['justificacion']}")
+        v = y  # campo con ruta («nota_esceptica.texto»): ajustes de ortografía de curado/ajustes_tildes.tsv
+        for c in aj["campo"].split("."):
+            v = v[int(c)] if isinstance(v, list) else v[c]
+        fila("evidencias.json", k, aj["campo"], aj["valor_v11"], v, "E-ajuste", f"{aj['autor']}: {aj['justificacion']}")
     m = y["mecanismo"]
     just = "; ".join(f"{r} ({EXP.get(r.split(':')[0], '')})" for r in m["reglas"])
     fila("evidencias.json", k, "mecanismo", None, {c: m[c] for c in ("clases", "subclases", "requiere_viabilidad", "genes", "ids", "base", "determinante")},

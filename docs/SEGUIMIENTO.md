@@ -15,7 +15,7 @@ Se actualiza en cada cambio de fase.
 | Especialistas, ronda 2 | Hecho · 23-10 |
 | Ampliación genómica a todo el atlas (NCBI) | Hecho · 23-10 (161 genomas nuevos) |
 | Cierre del director (especificación) | Hecho · 23-10 (conforme) |
-| Arquitectos y diseñadores implementan | En curso, rama `mejora-v2` |
+| Arquitectos y diseñadores implementan | Hecho · 23-10 · propuesta de cambios #1, pendiente de publicar |
 
 ## Diagnóstico de los consultores
 
@@ -71,3 +71,18 @@ Se elimina la pestaña Pregunta (pasa a la ficha), los pesos de «parecidas» y 
 - Mastitis animal: fuera de esta entrega.
 - Forma posbiótica: puerta «condicionada», rotulada como criterio del atlas y no regulatorio.
 - BAGEL4 y ABRicate pendientes: a P3; esas cepas quedan en gris «no medido».
+
+## Implementación terminada
+
+Propuesta de cambios: https://github.com/javierblancobdjz-cmyk/ATLAS-MICROBIOLOG-A/pull/1 (rama `mejora-v2`). Al fusionarla con `main` se publica en la web.
+
+- 14 agentes: datos con dos vueltas de verificación, tres equipos de interfaz, integración, tres revisores (diseño, caso CECT 5713, criterios) que encontraron 35 hallazgos, corrección y verificación final. Después, limpieza de tildes en 463 textos heredados.
+- Pruebas: generador 8/8 OK, contrato 0 fallos, humo en 31 rutas a escritorio y móvil sin errores, pivote OK.
+- Tareas medidas: entender una especie, 1 clic; de una cepa a quién comparte su output, 2; responder una pregunta de producto, 2.
+- Caso CECT 5713: la vista de *S. mutans* salival muestra 7 microorganismos con resultado a favor; solo dos funcionan con célula inactivada: *L. paracasei* DSMZ 16671 (ensayo clínico) y CECT 5713 (observacional).
+
+### Queda para la siguiente entrega
+
+- Verificar las 16 cepas vinculadas a su genoma por nombre y no por accesión.
+- BAGEL4 dirigido y ABRicate en los genomas que faltan (hoy «no medido»).
+- Curación de huecos declarados: Candida (8 artículos en cola) y salud oral, donde 6 de 11 resultados no tienen evidencia curada.

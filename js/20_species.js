@@ -7,6 +7,9 @@ const NIVORD = ["MA", "ECA", "OBS", "ANI", "CEL", "GEN"];
 const genLabel = c => c === "GEN-v" ? "GEN" : c === "GEN-p" ? "GEN" : c;
 /** «1 producto», «2 productos»: nunca «1 productos» */
 const pl = (n, uno, varios) => n + " " + (n === 1 ? uno : varios);
+/* valores de enumerado que se pintan tal cual: el dato guarda el código sin tilde (las comparaciones lo usan); aquí solo se escribe bien */
+const ENUM_TXT = {si: "sí", debil: "débil", intrinseca: "intrínseca", problematica: "problemática", cateter_central: "catéter central", uci_critica: "uci crítica"};
+const enumTxt = v => ENUM_TXT[v] || v;
 /** Tabla pequeña que en móvil se apila en tarjetas con la etiqueta de cada columna (sin columnas cortadas a 390 px) */
 function miniTable(cols, rows) {
   const t = h("table", {class: "mini-table mini-stack"}, h("thead", {}, h("tr", {}, cols.map(c => h("th", {}, c)))));
@@ -288,13 +291,13 @@ function foldSeg(seg, s) {
       "Sin bloqueo registrado en la curación de especie. No equivale a «cepa medida y limpia»: eso está en la ficha de cada cepa."));
   const vir = seg.virulencia || [];
   if (vir.length) body.append(h("p", {class: "sub"}, "Virulencia"), h("ul", {class: "mini-list"}, vir.map(v => h("li", {},
-    (v.factor || v.gen_o_fenotipo || "") + (v.fuerza ? " · fuerza " + v.fuerza : "") + (v.base ? " · base: " + v.base : ""),
+    (v.factor || v.gen_o_fenotipo || "") + (v.fuerza ? " · fuerza " + enumTxt(v.fuerza) : "") + (v.base ? " · base: " + v.base : ""),
     v.nota ? h("div", {class: "small muted"}, v.nota) : "", " ", sourcesList(v.fuentes)))));
   const amr = seg.amr || [];
   const adq = amr.filter(a => a.origen === "adquirida"), intr = amr.filter(a => a.origen === "intrinseca");
   if (amr.length) {
-    const t = miniTable(["Gen / fenotipo", "Origen", "Móvil", "Fuerza", "Base"], amr.map(a => [a.gen_o_fenotipo, a.origen || "—",
-      a.movil === true ? "sí" : a.movil === false ? "no" : "?", a.fuerza || "—",
+    const t = miniTable(["Gen / fenotipo", "Origen", "Móvil", "Fuerza", "Base"], amr.map(a => [a.gen_o_fenotipo, enumTxt(a.origen) || "—",
+      a.movil === true ? "sí" : a.movil === false ? "no" : "?", enumTxt(a.fuerza) || "—",
       h("span", {class: "small"}, (a.herramienta || "") + (a.version ? " " + a.version : ""), " ", sourcesList(a.fuentes))]));
     body.append(h("p", {class: "sub"}, "Resistencia a antimicrobianos (literatura, nivel especie)"), t);
   }
@@ -317,7 +320,7 @@ function foldSeg(seg, s) {
   if (seg.consideracion_regulatoria) extras.push("Consideración regulatoria: " + seg.consideracion_regulatoria);
   extras.forEach(x => body.append(h("p", {class: "small"}, x)));
   const rp = seg.riesgo_por_poblacion || [];
-  if (rp.length) body.append(h("p", {class: "sub"}, "Riesgo por población"), h("ul", {class: "mini-list"}, rp.map(x => h("li", {}, (x.poblacion || "").replace(/_/g, " ") + ": " + (x.texto || x)))));
+  if (rp.length) body.append(h("p", {class: "sub"}, "Riesgo por población"), h("ul", {class: "mini-list"}, rp.map(x => h("li", {}, (enumTxt(x.poblacion) || "").replace(/_/g, " ") + ": " + (x.texto || x)))));
   const parts = [];
   if (st.estado === "a_revisar") parts.push("a revisar");
   if (st.fuera_qps) parts.push("fuera de QPS");
@@ -336,11 +339,11 @@ function foldTec(tec) {
    ["Crecimiento en leche", tec.crecimiento_en_leche], ["Escalado", tec.escalado_industrial], ["Confianza del dato", tec.confianza]]
     .filter(([, v]) => !NADA(v));
   if (!filas.filter(([k]) => k !== "Confianza del dato").length) return null;
-  filas.forEach(([k, v]) => kv.append(kvp(k, String(v).replace(/_/g, " "))));
+  filas.forEach(([k, v]) => kv.append(kvp(k, String(enumTxt(v)).replace(/_/g, " "))));
   body.append(kv);
   const apt = tec.aptitud_por_forma;
   if (apt) body.append(h("p", {class: "small", style: "margin-top:10px"}, "Aptitud por forma (criterio de especie): " +
-    ["vivo", "posbiotico", "fermentado"].filter(f => apt[f]).map(f => U.formaLabel(f) + " = " + apt[f]).join(" · ")));
+    ["vivo", "posbiotico", "fermentado"].filter(f => apt[f]).map(f => U.formaLabel(f) + " = " + enumTxt(apt[f])).join(" · ")));
   if (tec.nota_cepa_vs_especie) body.append(h("p", {class: "small muted"}, tec.nota_cepa_vs_especie));
   return fold("Tecnología", (tec.aerotolerancia || "").replace(/_/g, " "), body);
 }
@@ -627,7 +630,7 @@ function comoLoHace(subj, sp) {
   return card;
 }
 const SOLIDEZ = {hipotesis: ["hip", "HIPÓTESIS"], evidencia: ["evi", "EVIDENCIA"], inferencia: ["inf", "INFERENCIA"]};
-const BASE_DESC = {observado: "observado", inferencia: "inferencia", causal: "causal"};
+const BASE_DESC = {observado: "observado", inferencia: "inferencia", causal: "causal", hipotesis: "hipótesis"};
 /** Fuentes en texto libre del catálogo: ids de evidencia → chip; rutas de fuentes públicas → su descripción, sin guiones bajos */
 function fuenteNodes(txt) {
   return String(txt || "").split(/\s*(?:\+|,)\s*(?=[a-z])/).filter(Boolean).flatMap(part => {

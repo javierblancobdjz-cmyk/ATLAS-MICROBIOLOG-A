@@ -52,6 +52,7 @@ from datetime import date
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
 from superficie_k4 import construir as superficie_k4, lecturas as lecturas_k4  # noqa: E402
+import ajustes_tildes  # noqa: E402  ortografía curada (curado/ajustes_tildes.tsv, fichero = genomica)
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--fuentes", required=True)
@@ -811,6 +812,13 @@ out = {
             "no_cruzados": ani_no_cruzados,
             "columnas": ["ref", "query", "ani", "af_ref", "af_query", "herramienta"], "pares": pares},
 }
+
+# ortografía curada de textos que vienen de fuentes_publicas (que no se tocan): solo tildes/eñes/diéresis, con FAIL si el
+# texto no coincide con su origen; queda en la salida como lista de rutas ajustadas
+_tr = []
+ajustes_tildes.aplicar("genomica", out, _tr, marcar=False)
+if _tr:
+    out["ajustes_tildes"] = [t[2] for t in _tr]
 
 os.makedirs(A.salida_dir, exist_ok=True)
 dst = os.path.join(A.salida_dir, "genomica_" + A.fecha.replace("-", "") + ".json")

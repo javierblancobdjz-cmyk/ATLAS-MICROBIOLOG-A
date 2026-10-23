@@ -71,8 +71,8 @@ def construir(dir_fp):
             bandera = ("gen grande al borde de un contig secundario sin hits posteriores: "
                        "la longitud puede estar truncada; comprobar en el assembly report de NCBI"
                        if margen <= 0 else
-                       f"gen grande en contig secundario (posible plasmido; {margen} pb hasta el ultimo hit "
-                       "del contig); comprobar cromosoma/plasmido en el assembly report de NCBI")
+                       f"gen grande en contig secundario (posible plásmido; {margen} pb hasta el último hit "
+                       "del contig); comprobar cromosoma/plásmido en el assembly report de NCBI")
         salida[acc] = {
             "cepa_ncbi": cepa,
             "mucbp_corto_1041pb": any(l == MUCBP_CORTO_PB for l in longs),
@@ -99,7 +99,7 @@ def construir(dir_fp):
                 "repeticiones_internas_mucbp": None,
                 "fichero_que_haria_falta": "InterProScan/hmmscan o el .tsv de Bakta con Pfam PF06458",
                 "cromosoma_o_plasmido": None,
-                "fichero_que_haria_falta_2": "assembly report de NCBI (publico)",
+                "fichero_que_haria_falta_2": "assembly report de NCBI (público)",
             },
         }
     n_pub = len(inv)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
             "especies_del_atlas_con_esta_capa": 1,
             "especies_del_atlas": 26,
             "texto": "Arquitectura de superficie medida: 1 de 26 especies (Ligilactobacillus salivarius). "
-                     f"{len(bloque)} de {n_pub} genomas publicos de la especie tienen Bakta funcional; "
+                     f"{len(bloque)} de {n_pub} genomas públicos de la especie tienen Bakta funcional; "
                      f"los otros {n_pub - len(bloque)} son NO MEDIDO, no ausencia.",
         },
         "descartes_declarados": dict(descartes),

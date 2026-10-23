@@ -1,2 +1,2 @@
 $ scripts/datos/derivar_genomica.py --fuentes fuentes_publicas --data scripts/datos/salidas/20261023/trabajo/data --salida-dir scripts/datos/salidas/20261023 --fecha 2026-10-23 --publicar scripts/datos/salidas/20261023/trabajo/data/genomica.json
-ok /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/genomica_20261023.json 813354 bytes; 244 genomas; 226 con llamadas; 15 marcadores; publicado en /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/trabajo/data/genomica.json
+ok /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/genomica_20261023.json 813457 bytes; 244 genomas; 226 con llamadas; 15 marcadores; publicado en /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/trabajo/data/genomica.json

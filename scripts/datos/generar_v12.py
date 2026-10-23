@@ -16,7 +16,8 @@ Pasos:
           resultado (lacticaseibacillus-paracasei.ev007).
        b. particiones (curado/particiones_evidencia.json; ev013 -> ev013a/ev013b)
        c. ajustes de campo con autor (curado/ajustes_evidencia.tsv: E1 inactivacion_metodo + E9 ev008 y dentisani ev005)
-          y ortografía de textos v1.1 (curado/ajustes_tildes.tsv: solo tildes/eñes/diéresis, si el texto coincide con v1.1)
+          y ortografía curada (curado/ajustes_tildes.tsv vía ajustes_tildes.py: solo tildes/eñes/diéresis, si el texto
+          coincide con su origen: v1.1, curado/*.tsv al leerlo o el lote al cargarlo)
        d. dirección: enum cerrado {+, 0, -, mixto}; los «nc» heredados de v1.1 pasan a «mixto» con direccion_v11 = nc
        e. `relacion` en TODOS los registros: regla por modelo y nivel; las OBS, de curado/relacion_obs.tsv; el lote manda
           si la trae. relacion = asociacion NO suma dirección en ninguna celda (especificación P1-01 e, sin excepciones):
@@ -39,7 +40,7 @@ Cierre (--cierre, paso 6 del orquestador): puertas.regulatorio de los veredictos
 p. ej. R-nomedido) y meta.limitaciones con las cifras de catalogo.json, genomica.json y evidencias.json.
 Solo biblioteca estándar.
 """
-import argparse, copy, csv, json, re, shutil, sys, unicodedata
+import argparse, copy, csv, json, re, shutil, sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from urllib.parse import quote
@@ -48,6 +49,8 @@ AQUI = Path(__file__).resolve().parent
 CUR = AQUI / "curado"
 sys.path.insert(0, str(AQUI))
 import celdas_v11  # noqa: E402
+import ajustes_tildes  # noqa: E402
+TRAZA_TILDES = []  # ortografía aplicada al leer curado/*.tsv (se vuelca en traza_curacion.tsv)
 
 REVISION = "r2"
 FORMAS = ("vivo", "posbiotico", "fermentado")
@@ -107,8 +110,13 @@ def nivel_num(n):
 
 
 def tsv(nombre):
+    """Lee un TSV de curado/ con la ortografía curada de ajustes_tildes.tsv (fichero = curado/<nombre>) ya aplicada."""
     with open(CUR / nombre, encoding="utf-8") as f:
-        return list(csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE))
+        filas = list(csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE))
+    t = []
+    ajustes_tildes.aplicar_tsv(nombre, filas, t)
+    TRAZA_TILDES.extend(x for x in t if x not in TRAZA_TILDES)
+    return filas
 
 
 def cargar(d, k):
@@ -168,6 +176,7 @@ def lotes_a_leer(traza):
         if p.name.endswith("_refs.json") or p.name.startswith("metadatos_"):
             continue
         L = json.loads(p.read_text(encoding="utf-8"))
+        ajustes_tildes.aplicar(str(p.relative_to(AQUI)), L, traza, marcar=False)  # ortografía curada del lote (id «-»)
         todos[L.get("lote") or p.stem] = (p, L)
     sustituidos = {L["sustituye_a"]: lid for lid, (p, L) in todos.items() if L.get("sustituye_a")}
     out = []
@@ -289,43 +298,6 @@ def ajustar(ev, traza):
         e.setdefault("ajustes_v12", []).append({"campo": r["campo"], "valor_v11": old, "autor": r["autor"],
                                                "justificacion": r["justificacion"]})
         traza.append(("ajuste", r["evidencia"], r["campo"]))
-
-
-def quitar_tildes(s):
-    """Quita tildes, virgulilla de la eñe y diéresis (NFD sin marcas combinantes): «niño» -> «nino», «pingüino» -> «pinguino»."""
-    return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
-
-
-def ajustar_tildes(ev, ata, esp, traza):
-    """Ortografía de textos heredados de v1.1 (curado/ajustes_tildes.tsv), con el mismo contrato que ajustes_ataques.tsv:
-    se aplica SOLO si el texto actual coincide con el de v1.1, y SOLO si la corrección añade tildes, eñes o diéresis
-    (sin ellas, el texto nuevo y el de v1.1 son idénticos letra a letra); si no, FAIL. Deja traza en ajustes_v12 del registro
-    (evidencia, ataque o especie; `campo` admite ruta con puntos, p. ej. utilidad.0.frase) y en traza_curacion.tsv."""
-    for r in tsv("ajustes_tildes.tsv"):
-        clave = f"{r['fichero']}:{r['id']}.{r['campo']}"
-        if quitar_tildes(r["valor_nuevo"]) != quitar_tildes(r["valor_v11"]) or r["valor_nuevo"] == r["valor_v11"]:
-            sys.exit(f"FAIL ajustes_tildes.tsv: {clave} cambia algo más que tildes/eñes/diéresis (o no cambia nada)")
-        if r["fichero"] == "evidencias":
-            reg = ev.get(r["id"])
-        elif r["fichero"] == "ataques":
-            fila = [x for x in ata if "|".join((x["especie"], x["linea"], x["resultado"])) == r["id"]]
-            reg = fila[0] if len(fila) == 1 else None
-        elif r["fichero"] == "especies":
-            reg = esp.get(r["id"])
-        else:
-            sys.exit(f"FAIL ajustes_tildes.tsv: fichero no admitido {r['fichero']}")
-        partes = r["campo"].split(".")
-        padre = reg
-        for p in partes[:-1]:
-            padre = padre[int(p)] if isinstance(padre, list) and p.isdigit() and int(p) < len(padre) else (
-                padre.get(p) if isinstance(padre, dict) else None)
-        hoja = partes[-1]
-        if not isinstance(padre, dict) or padre.get(hoja) != r["valor_v11"]:
-            sys.exit(f"FAIL ajustes_tildes.tsv: {clave} no coincide con v1.1")
-        padre[hoja] = r["valor_nuevo"]
-        reg.setdefault("ajustes_v12", []).append({"campo": r["campo"], "valor_v11": r["valor_v11"], "autor": r["autor"],
-                                                 "justificacion": r["justificacion"]})
-        traza.append(("ajuste_tildes", f"{r['fichero']}:{r['id']}", r["campo"]))
 
 
 def normalizar_direccion(ev, traza):
@@ -826,7 +798,13 @@ def main_generar(a):
     lotes, sustituidos, colas = ingerir_lotes(ev, cep, refs, traza)
     alias = partir(ev, traza)
     ajustar(ev, traza)
-    ajustar_tildes(ev, ata, esp, traza)
+    # ortografía curada de los textos heredados de v1.1 (solo tildes/eñes/diéresis; curado/ajustes_tildes.tsv)
+    web = cargar(DI, "web") if (DI / "web.json").exists() else {}
+    for k, o in (("evidencias", ev), ("ataques", ata), ("especies", esp), ("cepas", cep), ("catalogo", cat),
+                 ("veredictos", ver), ("subgrupos", subg), ("meta", meta)):
+        ajustes_tildes.aplicar(k, o, traza)
+    if ajustes_tildes.aplicar("web", web, traza):  # web.json no lo reescribe nadie más: se guarda solo si cambia
+        guardar(DO, "web", web)
     normalizar_direccion(ev, traza)
     asignar_relacion(ev, traza)
     esp, cep, refs, ver, ata, subg = (expandir_ids(x, alias) for x in (esp, cep, refs, ver, ata, subg))
@@ -1124,6 +1102,7 @@ def main_generar(a):
         with (Path(a.trazas) / "traza_curacion.tsv").open("w", encoding="utf-8", newline="") as f:
             w = csv.writer(f, delimiter="\t", lineterminator="\n")
             w.writerow(["accion", "id", "detalle"])
+            traza.extend(TRAZA_TILDES)
             for t in traza:
                 w.writerow([t[0], t[1], json.dumps(t[2], ensure_ascii=False) if not isinstance(t[2], str) else t[2]])
     print("evidencias:", len(E), "· contexto:", tot["contexto"], "· con mecanismo:",

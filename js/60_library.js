@@ -68,6 +68,13 @@ Atlas.registerView({route: "datos", tab: "datos", cssClass: "v-datos", render(el
     h("p", {}, "Toda referencia pasa un script que comprueba PMID/DOI (título, año y revista) y que la frase clave aparece en el resumen de PubMed. La frase literal solo vive en la caché local de verificación: la app no reproduce resúmenes."),
     h("p", {}, `Modo de datos no verificados: ${m.modo_no_verificadas}. ` + (m.modo_no_verificadas === "drop" ? "Lo no verificado se descarta y, en cascada, lo que dependía de ello." : "Lo no verificado se marca pero no cuenta en agregados."))));
 
+  // E7 r2: el buscador ya no usa busqueda.json (lista curada a mano que daba falsos positivos: «candida» → C. minuta)
+  const G = Atlas.data.raw.genomica;
+  el.append(sect("Cómo se construye el buscador",
+    h("p", {}, "El índice se deriva al arrancar, de los propios datos: nombres y sinónimos de especies y cepas, depósitos, resultados del catálogo, clases de mecanismo y mecanismos concretos, genes nombrados en las evidencias y en los rasgos, outputs y vías de los rasgos, moléculas y funciones declaradas. Nombres y entidades se buscan por principio de palabra; el texto de las evidencias y de los rasgos, por palabra exacta o su plural, para no confundir «candida» con «candidato»."),
+    h("p", {}, "No hay fichero de búsqueda que mantener a mano: si un término no aparece es que ningún dato curado lo nombra (hueco de curación, no ausencia demostrada)."),
+    G ? h("p", {class: "small muted"}, "Capa genómica: " + G.cobertura.tabla.map(x => x.que + ": " + x.valor).join(" · ") + ". Llamadas generadas por " + G.generado_por + " (" + G.version + ").") : ""));
+
   const desc = m.descartadas || [];
   el.append(sect("Verificación y auditoría",
     h("p", {}, `Referencias verificadas: ${m.pct_verificadas} %. Avisos de validación (no bloquean): ${m.avisos_validacion}.`),

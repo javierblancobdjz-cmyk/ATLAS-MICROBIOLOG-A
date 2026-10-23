@@ -9,9 +9,15 @@ Atlas.loadData = async function () {
   if (tag) return JSON.parse(tag.textContent);
   const base = window.ATLAS_DATA_URL || "data/";
   const keys = ["meta", "catalogo", "especies", "subgrupos", "cepas", "evidencias", "refs", "web",
-                "celdas", "matriz", "ataques", "veredictos", "busqueda", "vecinos"];
+                "celdas", "matriz", "ataques", "veredictos", "vecinos"];   // E7 r2: busqueda.json retirado (el índice se deriva al arrancar)
   const parts = await Promise.all(keys.map(k => fetch(base + k + ".json").then(r => r.json())));
-  return Object.fromEntries(keys.map((k, i) => [k, parts[i]]));
+  const out = Object.fromEntries(keys.map((k, i) => [k, parts[i]]));
+  // v1.2 (E1): estado de veredicto por forma; opcional para no romper con datos v1.1
+  out.veredictos_estado = await fetch(base + "veredictos_estado.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  // K6 (E6) y capa genómica (E2): opcionales; si faltan, la ficha dice «no medido», nunca «ausente»
+  const opt = f => fetch(base + f).then(r => r.ok ? r.json() : null).catch(() => null);
+  [out.genomica, out.puerta_cepa, out.perfil_cepa] = await Promise.all([opt("genomica.json"), opt("puerta_cepa.json"), opt("perfil_cepa.json")]);   // E4: perfil de cepa (opcional)
+  return out;
 };
 
 Atlas.initData = function (D) {
@@ -23,7 +29,8 @@ Atlas.initData = function (D) {
     species: id => D.especies[id] || null,
     strain: id => D.cepas[id] || null,
     subgroup: id => D.subgrupos[id] || null,
-    evidence: id => D.evidencias[id] || null,
+    /** E7 r2: un id partido en v1.2 (ev013 → ev013a/b, meta.ids_partidos) resuelve a su parte principal */
+    evidence: id => D.evidencias[id] || ((D.meta.ids_partidos || {})[id] ? D.evidencias[D.meta.ids_partidos[id].principal] : null) || null,
     ref: id => D.refs[id] || null,
     web: id => D.web[id] || null,
     lineas: (tipo = "producto") => D.catalogo.lineas.filter(l => !tipo || l.tipo === tipo),
@@ -32,6 +39,11 @@ Atlas.initData = function (D) {
     mecanismo: id => D.catalogo.mecanismos.find(m => m.id === id) || null,
     cell: (subj, lin, r) => D.celdas[`${subj}|${lin}|${r}`] || null,
     verdict: (subj, lin, forma) => D.veredictos[`${subj}|${lin}|${forma}`] || null,
+    /** E7: estado del veredicto por forma (calculado / no_calculado / sin_evidencia_en_forma / sin_resultado_a_favor) */
+    verdictState: (subj, lin, forma) => (D.veredictos_estado || {})[`${subj}|${lin}|${forma}`] || null,
+    /** E7: celda de la matriz de línea (especie × resultado) */
+    matrixCell: (lin, subj, r) => ((D.matriz || {})[lin] || {})[subj + "|" + r] || null,
+    clasesMecanismo: () => D.catalogo.clases_mecanismo || [],
     evidenceOf: (subj, filt = {}) => Object.values(D.evidencias).filter(e =>
       (e.especie === subj || e.cepa === subj || e.subgrupo === subj) &&
       Object.entries(filt).every(([k, v]) => v == null || (Array.isArray(v) ? v.includes(e[k]) : e[k] === v))),
@@ -39,6 +51,14 @@ Atlas.initData = function (D) {
     attacks: (lin) => D.ataques.filter(a => !lin || a.linea === lin),
     vecinos: id => (D.vecinos && D.vecinos[id]) || [],
     allSpecies: () => Object.values(D.especies),
+    /** E2: llamadas de un genoma (única fuente de AMR_ADQ/PLASMIDO/VFDB/CheckM2) */
+    genome: acc => (acc && D.genomica && D.genomica.genomas[acc]) || null,
+    /** E6 · K6: reglas derivadas por cepa x forma (no repite llamadas) */
+    puertaCepa: id => (D.puerta_cepa && D.puerta_cepa.cepas[id]) || null,
+    /** E4: sección «perfil de cepa a buscar» (solo donde hay forma no viva + arquitectura medida) */
+    perfilCepa: id => (D.perfil_cepa && D.perfil_cepa.secciones && D.perfil_cepa.secciones[id]) || null,
+    segEspecie: slug => (D.puerta_cepa && D.puerta_cepa.seguridad_especie[slug]) || null,
+    agregadosSeg: slug => D.puerta_cepa ? Object.entries(D.puerta_cepa.agregados_taxon).filter(([, v]) => v.slug_atlas === slug).map(([k, v]) => ({taxon: k, ...v})) : [],
     /** Resuelve cualquier id (especie, cepa, subgrupo) a {tipo, obj, especie} */
     resolve: id => D.especies[id] ? {tipo: "especie", obj: D.especies[id], especie: id}
       : D.cepas[id] ? {tipo: "cepa", obj: D.cepas[id], especie: D.cepas[id].especie}
@@ -117,7 +137,25 @@ const NIV = {MA: [1, "Metaanálisis de ECA"], ECA: [2, "Ensayo clínico aleatori
              "GEN-v": [6, "Predicción genómica (célula viva)"], "GEN-p": [6, "Predicción genómica (posbiótico/inactivado)"]};
 const VEREDICTO = {solida: "Sólida", prometedora: "Prometedora", especulativa: "Especulativa",
                    desaconsejada: "Desaconsejada", sin_datos: "Sin datos suficientes"};
+/* Puertas (E6). Cada valor tiene clase y texto propios. Vocabulario normalizado: sin_bloqueo / a_revisar / bloqueo / no_medido.
+   Alias heredados hasta que el generador de veredictos (E1) normalice: «no» = sin bloqueo (160 veredictos automáticos)
+   y «si» = sin bloqueo también (4 del estratega: GG, L. rhamnosus y 299v intestinal, sg-nisina; todos sólida/prometedora).
+   Lo desconocido, no medido o no aplicable va en gris con borde discontinuo: nunca en verde. */
+const GATE = {
+  seguridad: {sin_bloqueo: ["ok", "sin bloqueo"], no: ["ok", "sin bloqueo"], si: ["ok", "sin bloqueo"],
+              a_revisar: ["warn", "a revisar"], bloqueo: ["bad", "bloqueo"], no_medido: ["nd", "no medido"], desconocida: ["nd", "desconocida"]},
+  regulatorio: {abierta: ["ok", "abierta"], condicionada: ["warn", "condicionada"], cerrada: ["bad", "cerrada"],
+                bloqueada_qps: ["bad", "fuera de QPS (AMR adquirida)"], no_medido: ["nd", "no medido"], desconocida: ["nd", "desconocida"]},
+  tecnologia: {demostrada: ["ok", "demostrada"], plausible: ["warn", "plausible"], problematica: ["bad", "problemática"], desconocida: ["nd", "desconocida"]},
+  genoma: {P: ["bad", "presente"], A: ["ok", "sin hits"], NM: ["nd", "no medido"], no_aplica: ["nd", "no aplica"]},
+};
 Atlas.ui = {
+  /** gatePill("regulatorio", "Vivo", "no_medido") -> píldora con color por semántica de la puerta, no por la palabra */
+  gateClass: (k, v) => ((GATE[k] || {})[v] || ["nd"])[0],
+  gatePill(k, label, v, txt) {
+    const [c, t] = (GATE[k] || {})[v] || ["nd", v ? String(v).replace(/_/g, " ") : "sin dato"];
+    return Atlas.ui.h("span", {class: "gate-pill gate-" + c}, label ? Atlas.ui.h("b", {}, label + ": ") : "", txt || t);
+  },
   esc: s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c])),
   h(tag, attrs = {}, ...kids) {
     const el = document.createElement(tag);
@@ -179,7 +217,7 @@ Atlas.ui = {
   openCitation(evId) { Atlas.bus.dispatchEvent(new CustomEvent("citation:open", {detail: evId})); },
   /** Recuadro «Objetivo / Qué significa / Cómo se lee», con recuerdo de plegado por vista */
   readingBox(key, objetivo, significa, comoSeLee) {
-    const open = Atlas.prefs.get("rb." + key, true);
+    const open = Atlas.prefs.get("rb." + key, false);   // E7: plegado por defecto; ocupaba la primera pantalla en móvil
     const d = Atlas.ui.h("details", {class: "reading-box", open,
       ontoggle: ev => Atlas.prefs.set("rb." + key, ev.target.open)},
       Atlas.ui.h("summary", {}, "Objetivo · Qué significa · Cómo se lee"),
@@ -201,6 +239,10 @@ Atlas.ui = {
     const route = r?.tipo === "cepa" ? "cepa" : "especie";
     return Atlas.ui.h("a", {href: Atlas.route.href(route, r?.tipo === "subgrupo" ? r.especie : id)}, child || Atlas.ui.name(id));
   },
+  /** E7: forma de la evidencia → forma de producto (inactivado y componente cuentan como posbiótico, regla v1.2) */
+  formaProducto: f => f === "inactivado" || f === "componente" || f === "posbiotico" ? "posbiotico" : f === "fermentado" ? "fermentado" : f === "vivo" ? "vivo" : null,
+  formaLabel: f => ({vivo: "Vivo", posbiotico: "Posbiótico", fermentado: "Fermentado", inactivado: "inactivado", componente: "componente"})[f] || f || "—",
+  claseLabel(id) { const c = (Atlas.data.clasesMecanismo() || []).find(x => x.id === id); return c ? c.etiqueta : String(id || "").replace(/_/g, " "); },
   markTab(name) { document.querySelectorAll("#tabs a").forEach(a => a.toggleAttribute("aria-current", a.dataset.tab === name)); },
   stub(el, titulo, paquete) { el.append(Atlas.ui.h("div", {class: "stub"}, `${titulo} · pendiente del paquete ${paquete}`)); },
 };

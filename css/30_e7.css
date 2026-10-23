@@ -1,0 +1,82 @@
+/* 30_e7.css · E7 (prototipo): pie, tira de formas, «Cómo lo hace», pivote «quién más». Solo tokens del kit. */
+.foot{max-width:var(--content-max);margin:0 auto;padding:var(--s5) var(--gutter) 96px;font-size:var(--fs-sm);color:var(--ink-3);border-top:1px solid var(--line)}
+.foot a{color:var(--ink-2)}
+@media (max-width:760px){.foot{padding:var(--s4) 16px 96px}}
+.who-more{display:inline-block;margin-top:6px;font-size:var(--fs-sm);font-weight:600;color:var(--accent);text-decoration:none}
+.who-more:hover{text-decoration:underline}
+.how-card .genes,.q-dl .genes{font-style:italic}
+.gene-link{color:inherit;text-decoration:underline dotted;text-underline-offset:3px;font-style:italic}
+.genes-line{margin:12px 0 0;border-top:1px solid var(--line);padding-top:10px}
+.muerta{display:inline-flex;font-size:var(--fs-xs);font-weight:600;border-radius:var(--r-sm);padding:2px 8px;background:var(--surface-2);color:var(--ink-2)}
+.muerta-si{background:var(--ok-soft);color:var(--ok)}
+.muerta-no{background:var(--bad-soft);color:var(--bad)}
+/* tira de formas */
+.forma-strip{margin:0 0 var(--s5)}
+.forma-strip h3{font-size:var(--fs-base)}
+.fs-chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fs-chip{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:var(--tap);padding:10px 12px;border:1px solid var(--line-strong);border-radius:var(--r-md);background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.fs-chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.fs-chip b{font-size:var(--fs-sm)}
+.fs-n{font-size:var(--fs-xs);font-weight:600;color:var(--ok)}
+.fs-n.zero{color:var(--ink-3);font-weight:400}
+.fs-chip .ruta{font-size:13px;padding:1px 6px;max-width:100%;white-space:normal}
+.fs-detail .card{margin-top:10px}
+.fs-lines li{padding:10px 0}
+.fs-why summary{cursor:pointer;font-size:var(--fs-sm);color:var(--accent);margin-top:6px}
+.gate-pill{display:inline-flex;gap:4px;font-size:var(--fs-xs);border-radius:var(--r-sm);padding:2px 8px;margin:4px 6px 0 0;background:var(--surface-2);color:var(--ink-2)}
+.gate-ok{background:var(--ok-soft);color:var(--ok)} .gate-warn{background:var(--warn-soft);color:var(--warn)} .gate-bad{background:var(--bad-soft);color:var(--bad)}
+.flag-warn{background:var(--warn-soft);color:var(--warn);border-radius:var(--r-md);padding:10px 12px;align-items:flex-start}
+/* pivote */
+.v-quien .crumbs{margin:0 0 4px}
+.q-target{font-family:var(--serif)}
+.q-sum{font-size:var(--fs-sm);margin:0 0 4px}
+.q-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px;margin-top:12px}
+.q-card{padding:14px 16px}
+.q-card.hl{box-shadow:inset 0 0 0 2px var(--accent)}
+.q-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.q-head .tag{margin-left:6px}
+.q-dl{display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 10px;margin:10px 0;font-size:var(--fs-sm)}
+.q-dl dt{color:var(--ink-3)}
+.q-dl dd{margin:0}
+.q-src .chips{flex-wrap:wrap}
+.q-index{list-style:none;padding:0;margin:0}
+.q-index li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.q-index a{text-decoration:none;color:inherit}
+.mx thead th a{color:inherit;text-decoration:underline dotted;text-underline-offset:3px}
+.claims .meta .who-more{margin-top:0;margin-left:auto}
+.how li{padding:10px 0}
+.fold-body{overflow-x:auto}
+.v-quien .filters{display:flex;flex-wrap:wrap;gap:8px;overflow:visible}
+.who-row{font-size:var(--fs-sm);margin:0 0 var(--s4)} .who-row .who-more{margin-top:0}
+
+/* E6 · K6: gris discontinuo = no medido / desconocido / no aplica (nunca verde) */
+.gate-nd{background:var(--surface-2);color:var(--ink-3);border:1px dashed var(--ink-3)}
+.fs-chip .ruta.ruta-no_medido,.fs-chip .ruta.ruta-desconocida{border:1px dashed var(--ink-3)}
+.ruta-no_medido{background:var(--surface-2);color:var(--ink-3)}
+.ruta-bloqueada_qps{background:var(--bad-soft);color:var(--bad)}
+.k6-why{margin:6px 0 0;overflow-wrap:anywhere}
+.k6-note{font-size:var(--fs-xs);color:var(--ink-3);margin:6px 0 0;overflow-wrap:anywhere}
+.k6-genes{font-family:var(--mono,monospace);font-size:var(--fs-xs);overflow-wrap:anywhere}
+.gates{display:flex;flex-wrap:wrap;gap:6px}
+.gates .gate-pill{max-width:100%;overflow-wrap:anywhere}
+.fs-chip .gate-pill{margin:0;max-width:100%;flex-wrap:wrap;white-space:normal;font-size:13px;padding:1px 6px}
+
+/* E7 r2: líneas compactas de «Cómo lo hace» / «Qué produce» y «Lo demostrado» agrupado por resultado */
+.how-lines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.how-lines>li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:8px 0;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.how-lines>li:first-child{border-top:0}
+.how-lines>li.how-no>b{color:var(--ink-3)}
+.how-lines .genes-in i{font-style:italic}
+.how-card h4{margin:12px 0 2px}
+.ld h3{margin:18px 0 6px}
+.ld-g{border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);margin:0 0 6px}
+.ld-g>summary{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:10px 12px;cursor:pointer;min-height:44px}
+.ld-g>summary::-webkit-details-marker{display:none}
+.ld-g>summary .ic{margin-left:auto;transition:transform .15s}
+.ld-g[open]>summary .ic{transform:rotate(90deg)}
+.ld-g>.claims{padding:0 12px 8px;margin:0}
+.vec-axes-line{display:block;margin-top:4px}
+.gen-list li{overflow-wrap:anywhere}
+.gen-ref .gen-est,.gen-I .gen-est,.gen-NM .gen-est{color:var(--ink-3);font-style:italic}
+.perfil-cadena li{margin-bottom:6px}
+.pv-from{margin:0 0 8px}

@@ -32,7 +32,7 @@ Atlas.registerView({route: "comparar", tab: "comparar", cssClass: "v-comparar", 
   el.append(h("h1", {}, "Comparador"),
     U.readingBox("comparar",
       "Elegir entre 2-4 especies, subgrupos o cepas para una línea o forma concreta.",
-      "La aptitud es el mejor nivel por línea; el veredicto con razones está en Pregunta.",
+      "La aptitud es el mejor nivel por línea; el veredicto por forma está en la ficha de cada uno.",
       "Las barras pequeñas cuentan evidencias por nivel, de metaanálisis (izq.) a genómica (dcha.)."));
 
   el.append(addControl(ids, r.query.dif === "1"));
@@ -102,13 +102,25 @@ Atlas.registerView({route: "comparar", tab: "comparar", cssClass: "v-comparar", 
   });
   tb.append(tr);
 
-  // Rasgos
-  grp(tb, "Rasgos");
-  ["gaba", "butirato", "folato", "eps", "bacteriocina"].forEach(rg => {
-    const vals = subs.map(x => traitOf(x.id, rg));
-    if (dif && allEqual(vals)) return;
-    const trr = h("tr", {}, h("th", {class: "stick", scope: "row"}, cap(rg)));
-    vals.forEach(v => trr.append(h("td", {}, v)));
+  // Rasgos · E7: unión de los rasgos que declaran los comparados (antes: lista fija de 5, con «eps» vacío en las 26 especies).
+  // Se muestran gen y nivel taxonómico; «rasgo» genérico «otro» se nombra por sus genes.
+  // E5: rasgos v1.2 (vocabulario cerrado output × vía; «otro» ya no existe). Celda = presencia · vía · genes · alcance.
+  const keyR = t => t.rasgo, labR = t => t.etiqueta || cap(String(t.rasgo).replace(/_/g, " "));
+  const union = new Map();
+  subs.forEach(x => { const sp = D.species(x.r.especie); (sp && sp.rasgos || []).filter(t => t.alcance !== "criterio_propio").forEach(t => { if (!union.has(keyR(t))) union.set(keyR(t), labR(t)); }); });
+  if (union.size) grp(tb, "Qué produce y por qué vía");
+  const PRES = {si: "Sí", no: "No", variable_cepa: "Varía entre cepas", sin_resolver: "Sin resolver"};
+  union.forEach((lab, k) => {
+    const vals = subs.map(x => { const sp = D.species(x.r.especie); const T = (sp && sp.rasgos || []).filter(t => keyR(t) === k);
+      return T.length ? T.filter(t => x.r.tipo !== "cepa" || t.alcance !== "cepa" || (t.cepas || []).includes(x.id)) : null; });
+    const keys = vals.map(T => T ? T.map(t => t.presente + t.via).join() : "—");
+    if (dif && allEqual(keys)) return;
+    const trr = h("tr", {}, h("th", {class: "stick", scope: "row"}, lab));
+    vals.forEach(T => trr.append(h("td", {}, !T ? h("span", {class: "muted"}, "no declarado") : !T.length ? h("span", {class: "muted"}, "de otra cepa") :
+      h("span", {}, ...T.flatMap((t, i) => [i ? h("br") : "", PRES[t.presente] || String(t.presente || "?"),
+        h("small", {}, " · " + (t.via !== "desconocida" ? t.via_etiqueta : "vía no identificada")),
+        (t.genes || []).length ? h("i", {class: "small"}, " " + t.genes.map(g => g.gen).join(", ")) : "",
+        h("small", {class: "muted"}, " · " + (t.alcance === "cepa" ? (t.cepas || []).map(c => (D.strain(c) || {}).nombre_corto || c).join(", ") : t.alcance))])))));
     tb.append(trr);
   });
 
@@ -121,9 +133,9 @@ Atlas.registerView({route: "comparar", tab: "comparar", cssClass: "v-comparar", 
   row(tb, subs, "Aerotolerancia", dif, x => {
     const sp = D.species(x.r.especie); return ((sp && sp.tecnologia && sp.tecnologia.aerotolerancia) || "—").replace(/_/g, " ");
   }, x => { const sp = D.species(x.r.especie); return sp && sp.tecnologia && sp.tecnologia.aerotolerancia; });
-  row(tb, subs, "Forma recomendada", dif, x => {
-    const sp = D.species(x.r.especie); return (sp && sp.forma_tecnologica_recomendada) || "—";
-  }, x => { const sp = D.species(x.r.especie); return sp && sp.forma_tecnologica_recomendada; });
+  // E7: fuera «Forma recomendada» heredada de la especie (decía «vivo» para CECT 5713); se pintan las formas realmente ensayadas
+  const formasDe = x => [...new Set(D.evidenceOf(x.id).filter(e => e.direccion === "+" || e.direccion === "mixto").map(e => e.forma).filter(Boolean))].sort().join(", ") || "—";
+  row(tb, subs, "Formas ensayadas con resultado a favor", dif, formasDe, formasDe);
 
   table.append(thead, tb); wrap.append(table); el.append(wrap);
   el.append(h("p", {class: "swipe"}, "Desliza para ver todas las columnas →"));

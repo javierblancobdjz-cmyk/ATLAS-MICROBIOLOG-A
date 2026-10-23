@@ -1,0 +1,110 @@
+/* 30_pivot.css · K2: matriz de tres estados coloreada por familia de mecanismo + vista pivote por resultado.
+   Paleta de familias validada (dataviz validate_palette, --pairs all): claro #2a78d6/#eb6834/#1baf7a sobre #FFF
+   (CVD ΔE≥9,2; normal ≥24); oscuro #3987e5/#d95926/#199e70 sobre #1C2529. Cada celda lleva texto: nunca solo color. */
+:root{
+  --fam-exclusion:#2a78d6; --fam-antagonismo:#eb6834; --fam-hospedador:#1baf7a; --fam-otro:#7d8a8d;
+  --fam-mix:16%;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --fam-exclusion:#3987e5; --fam-antagonismo:#d95926; --fam-hospedador:#199e70; --fam-otro:#7d8a8d; --fam-mix:24%;
+}}
+:root[data-theme="dark"]{
+  --fam-exclusion:#3987e5; --fam-antagonismo:#d95926; --fam-hospedador:#199e70; --fam-otro:#7d8a8d; --fam-mix:24%;
+}
+
+/* ---------- matriz: tres estados ---------- */
+.mx a.colhead{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:2px;border-bottom:1px dotted var(--ink-3)}
+.mx a.colhead:hover{color:var(--accent);border-color:var(--accent)}
+.mx a.colhead .ic{width:14px;height:14px;flex:none}
+.cell.c0{background:transparent;border:0;min-height:44px;cursor:default;position:relative}
+.cell.c0::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--line-strong)}
+.cell.cu,.cell.cm{flex-direction:column;gap:1px;text-decoration:none;color:var(--ink);line-height:1.15;min-height:44px}
+.cell.cu{background:var(--surface);border:1.5px solid var(--line-strong)}
+.cell.cu .l2{color:var(--ink-3);font-weight:400}
+.cell.cm{border:0;border-left:5px solid var(--f);background:color-mix(in srgb,var(--f) var(--fam-mix),var(--surface))}
+.cell .l1{display:inline-flex;align-items:center;gap:4px}
+.cell .l2{font-size:13px;font-weight:600}
+.cell .lvl{background:transparent!important;color:inherit!important;padding:0}
+.fam-bg-exclusion{--f:var(--fam-exclusion)} .fam-bg-antagonismo{--f:var(--fam-antagonismo)}
+.fam-bg-hospedador{--f:var(--fam-hospedador)} .fam-bg-otro{--f:var(--fam-otro)}
+a.cell.neg{text-decoration:none}
+.mx-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:4px 0 10px;color:var(--ink-2)}
+.mx-legend>span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:18px;height:14px;border-radius:3px;flex:none}
+.sw-none{background:transparent;border:1px dotted var(--line-strong)}
+.sw-unk{background:var(--surface);border:1.5px solid var(--line-strong)}
+.sw-exclusion{background:color-mix(in srgb,var(--fam-exclusion) var(--fam-mix),var(--surface));border-left:5px solid var(--fam-exclusion)}
+.sw-antagonismo{background:color-mix(in srgb,var(--fam-antagonismo) var(--fam-mix),var(--surface));border-left:5px solid var(--fam-antagonismo)}
+.sw-hospedador{background:color-mix(in srgb,var(--fam-hospedador) var(--fam-mix),var(--surface));border-left:5px solid var(--fam-hospedador)}
+.sw-neg{background:var(--bad-soft)}
+.mx-empty{margin-top:8px}
+
+/* ---------- pivote ---------- */
+.crumbs{margin:0 0 6px} .crumbs a{text-decoration:none}
+.pv-title{margin:0 0 8px} .pv-title .muted{font-weight:400}
+.pv-res{margin-bottom:10px}
+.pv-lede{margin:6px 0 10px;max-width:70ch}
+.pv-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 12px}
+.fam{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-sm);color:var(--ink-2)}
+.fam i{width:12px;height:12px;border-radius:3px;background:var(--fc);flex:none}
+.fam-exclusion{--fc:var(--fam-exclusion)} .fam-antagonismo{--fc:var(--fam-antagonismo)}
+.fam-hospedador{--fc:var(--fam-hospedador)} .fam-otro{--fc:var(--fam-otro)}
+.fam-unk i{background:transparent;border:1.5px solid var(--line-strong)}
+.pv-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+table.pv{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+table.pv thead th{text-align:left;font-weight:600;color:var(--ink-3);font-size:13px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+table.pv tbody th,table.pv td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:400}
+table.pv tbody tr:last-child>*{border-bottom:0}
+table.pv tbody tr>th{border-left:5px solid var(--rowc,transparent)}
+.fam-row-exclusion{--rowc:var(--fam-exclusion)} .fam-row-antagonismo{--rowc:var(--fam-antagonismo)}
+.fam-row-hospedador{--rowc:var(--fam-hospedador)} .fam-row-otro{--rowc:var(--fam-otro)} .fam-row-unk{--rowc:var(--line)}
+table.pv tr.hl>*{background:var(--accent-soft)}
+.pv-who{display:flex;flex-direction:column;gap:2px}
+.pv-who a{font-weight:600;text-decoration:none}
+.pv-scope{font-size:13px;color:var(--ink-3)}
+.pv-mec{display:flex;flex-direction:column;gap:2px}
+.pv-mec .fams{display:flex;gap:4px}
+.pv-mec small,.pv td small{font-size:13px}
+.pv-unk{color:var(--ink-3)}
+.pv-lv{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.pv-src{display:inline-flex;align-items:center;gap:3px}
+.mu{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.mu .ic{width:16px;height:16px}
+.mu-si,.mu-frac{color:var(--ok);font-weight:600}
+.mu-nulo{color:var(--bad)}
+.mu-np,.mu-ferm{color:var(--ink-3)}
+.genes{display:flex;flex-wrap:wrap;gap:4px}
+.genes i{background:var(--surface-2);border-radius:4px;padding:0 6px}
+.pv .chips{display:flex;flex-wrap:wrap;gap:4px}
+.pv .chip{min-height:32px;padding:2px 10px;font-size:13px;white-space:normal}
+.pv-h3{margin:22px 0 8px}
+.pv-foot{margin-top:14px;max-width:80ch}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.qb-more{font-size:13px;text-decoration:none;white-space:nowrap}
+
+/* móvil: cada fila pasa a tarjeta con etiquetas; sin scroll horizontal */
+@media (max-width:760px){
+  table.pv,table.pv tbody,table.pv tr,table.pv th,table.pv td{display:block;width:auto}
+  table.pv thead{display:none}
+  table.pv tbody tr{border-bottom:1px solid var(--line);border-left:5px solid var(--rowc,transparent);padding:8px 12px}
+  table.pv tbody tr>th{border-left:0}
+  table.pv tbody th,table.pv td{border:0;padding:4px 0;display:grid;grid-template-columns:118px minmax(0,1fr);gap:8px;justify-items:start}
+  table.pv tbody th::before,table.pv td::before{content:attr(data-k);color:var(--ink-3);font-size:13px;font-weight:400}
+  table.pv tbody th{grid-template-columns:1fr}
+  table.pv tbody th::before{display:none}
+  .cell .l2{font-size:12px}
+}
+/* E5: vía bajo el mecanismo y genoma público en el pivote por output */
+.pv-via{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.pv-gen{display:flex;flex-direction:column;gap:2px}
+
+/* E8 r2 · determinante desconocido: misma familia (mismo borde), relleno más pálido y rótulo «det. ?».
+   Nunca solo color: el texto va siempre. Mecanismo estudiado sin efecto en la misma unidad: texto, sin color. */
+.cell .l3{font-size:11px;font-weight:400;color:var(--ink-3);font-style:italic}
+.cell.cm.det-unk{background:color-mix(in srgb,var(--f) calc(var(--fam-mix) / 2),var(--surface))}
+.pv-nul{display:block;margin-top:4px;color:var(--ink-3)}
+.mx-empty p{margin:0 0 4px}
+.mx-cola{margin:4px 0 0}
+.mx-cola summary{cursor:pointer;color:var(--ink-2)}
+.mx-cola code{font-size:12px;overflow-wrap:anywhere}
+.mx-cola p{margin:4px 0;overflow-wrap:anywhere}

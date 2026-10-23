@@ -1,8 +1,25 @@
 ;(function(){
 /* 90_boot.js · P1 núcleo. Monta barra superior, pestañas, Inicio, panel de cita (hoja/lateral) y bandeja; arranca el router. */
 const {h, icon, level, sources, link, name, esc} = Atlas.ui;
-const TABS = [["inicio", "Inicio"], ["especies", "Especies"], ["comparar", "Comparar"], ["lineas", "Líneas"],
-              ["pregunta", "Pregunta"], ["biblioteca", "Biblioteca", "minor"], ["datos", "Sobre los datos", "minor"]];
+/* E7: cuatro pestañas caben a 390 px; Biblioteca y Sobre los datos bajan al pie; la pestaña Pregunta se funde en la ficha. */
+const TABS = [["inicio", "Inicio"], ["especies", "Especies"], ["comparar", "Comparar"], ["lineas", "Líneas"]];
+const FOOT = [["biblioteca", "Biblioteca"], ["datos", "Sobre los datos"]];
+
+/* Enlaces antiguos #/pregunta?b=…&f=… → ficha de la especie o cepa (la tira de formas responde lo mismo) */
+Atlas.registerView({route: "pregunta", tab: "especies", render(el, r) {
+  const b = r.query.b, res = b && Atlas.data.resolve(b);
+  if (res) { location.replace(Atlas.route.href(res.tipo === "cepa" ? "cepa" : "especie", res.tipo === "subgrupo" ? res.especie : b)); return; }
+  el.append(h("h1", {}, "La pregunta de producto vive ahora en cada ficha"),
+    h("p", {}, "Abre una especie o cepa: bajo «Qué hace bien» verás la tira Vivo · Posbiótico · Fermentado con el veredicto de cada forma."),
+    h("a", {class: "btn pri", href: Atlas.route.href("especies")}, "Ir a especies"));
+}});
+
+/* E7 r2: el pivote es uno (Atlas.pivot de E8, ruta #/lineas). Los enlaces #/quien de la ronda 1 redirigen. */
+Atlas.registerView({route: "quien", tab: "lineas", render(el, r) {
+  const q = Object.assign({}, r.query); delete q.de; if (r.query.de) q.s = r.query.de;
+  let lin = null; if (r.param && r.param.includes("|")) { const [l, res] = r.param.split("|"); lin = l; q.res = res; }
+  location.replace(Atlas.route.href("lineas", lin, q));
+}});
 
 /* ---------- Inicio ---------- */
 Atlas.registerView({route: "inicio", tab: "inicio", cssClass: "v-home", render(el) {
@@ -18,9 +35,8 @@ Atlas.registerView({route: "inicio", tab: "inicio", cssClass: "v-home", render(e
 
   // Puertas rápidas
   const puertas = h("div", {class: "home-gates"},
-    gate("pregunta", "Hacer una pregunta de producto", "Bacteria + línea + forma → veredicto con razones y fuente.", "q"),
+    gate("lineas", "Quién consigue cada resultado", "Matriz bacteria × resultado coloreada por mecanismo; toca un resultado para ver quién, con qué cepa, forma y si funciona muerta.", "target"),
     gate("comparar", "Comparar", "2–4 especies, subgrupos o cepas en paralelo.", "plus"),
-    gate("lineas", "Líneas de producto", "Matriz bacteria × resultado, huecos y líneas de ataque.", "target"),
     gate("especies", "Explorar especies", `${t.especies} especies, ${t.n2} con dossier completo.`, "search"));
   el.append(puertas);
 
@@ -141,7 +157,7 @@ document.addEventListener("click", e => {
   Atlas.initData(await Atlas.loadData());
   Atlas.tray._load();
   const top = document.getElementById("topbar");
-  const input = h("input", {type: "search", placeholder: "Especie, sinónimo, cepa, molécula, gen o línea", "aria-label": "Buscar", autocomplete: "off"});
+  const input = h("input", {type: "search", placeholder: "Especie, cepa, resultado, mecanismo o gen", "aria-label": "Buscar", autocomplete: "off"});
   const list = h("ul", {class: "suggest", role: "listbox", hidden: true});
   top.append(
     h("a", {href: "#/", class: "brand"}, "Atlas"),
@@ -153,6 +169,9 @@ document.addEventListener("click", e => {
   Atlas.mountSearch(input, list);
   document.addEventListener("keydown", e => { if (e.key === "/" && document.activeElement !== input && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) { e.preventDefault(); input.focus(); } });
   document.getElementById("tabs").append(...TABS.map(([id, label, cls]) => h("a", {href: Atlas.route.href(id), "data-tab": id, class: cls || ""}, label)));
+  const foot = document.getElementById("foot");
+  if (foot) foot.append(...FOOT.flatMap(([id, label], i) => [i ? " · " : "", h("a", {href: Atlas.route.href(id), "data-tab": id}, label)]),
+    h("span", {class: "muted"}, " · corte " + Atlas.data.meta.fecha_corte));
 
   // bandeja de comparar persistente
   const tray = document.getElementById("tray");

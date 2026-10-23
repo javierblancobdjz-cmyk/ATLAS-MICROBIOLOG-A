@@ -221,7 +221,7 @@ section{margin:var(--s6) 0}
 .cell.gap{background:transparent;border:1.5px dashed var(--line-strong);color:var(--ink-3);font-weight:400}
 .cell.atk{background:var(--warn-soft);border:1.5px solid var(--warn-mark);color:var(--warn)}
 .cell.neg{background:var(--bad-soft);color:var(--bad)}
-.cell .n{font-weight:400;opacity:.85}
+.cell .n{font-weight:400}
 .cell .lvl{background:transparent!important;color:inherit!important;padding:0}
 @media (max-width:760px){.cell .n{display:none}.mx thead th,.mx td{min-width:96px}}
 
@@ -243,13 +243,13 @@ section{margin:var(--s6) 0}
 
 /* ---------- LÍNEAS ---------- */
 .line-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:thin}
-.attack-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px}
+.attack-rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(420px,100%),1fr));gap:14px}   /* v2: tarjetas de ataque anchas (antes 300px + regla aparte en 30_pivot.css) */
 .atk-card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn-mark);border-radius:var(--r-md);padding:16px 18px;min-width:0;overflow-wrap:anywhere}
 .atk-card h4{font-size:var(--fs-base);margin:0}
 .atk-card dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 12px;margin:10px 0 0;font-size:var(--fs-sm)}
 .atk-card dt{color:var(--ink-3)} .atk-card dd{margin:0;min-width:0}
 @media (max-width:760px){.atk-card dl{grid-template-columns:1fr;gap:2px}.atk-card dt{margin-top:8px}}
-.mark.atk{color:var(--warn);font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.mark.atk{color:var(--accent);font-weight:600;display:inline-flex;align-items:center;gap:4px}
 
 /* ---------- PREGUNTA ---------- */
 .q-selectors{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px;margin-bottom:var(--s5)}
@@ -278,6 +278,7 @@ section{margin:var(--s6) 0}
 .gates{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 var(--s4)}
 .gate-pill{font-size:var(--fs-xs);padding:4px 10px;border-radius:var(--r-sm);font-weight:600}
 .gate-ok{background:var(--ok-soft);color:var(--ok)} .gate-warn{background:var(--warn-soft);color:var(--warn)} .gate-bad{background:var(--bad-soft);color:var(--bad)}
+.gate-nd{background:var(--nd-soft);color:var(--nd);border:1px dashed var(--nd-line)}
 .cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 @media (max-width:900px){.cols3{grid-template-columns:1fr}}
 .col{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px}
@@ -339,3 +340,35 @@ svg.ic{width:1.05em;height:1.05em;vertical-align:-.17em;flex:none}
 .q-pob{margin-top:var(--s3)}
 .q-pob .seg{margin-top:0}
 .chip-src{cursor:pointer}
+
+/* ---------- v2 · estado «no medido / desconocido» como texto (gris discontinuo, nunca «No» ni cero) ---------- */
+.nd-txt{display:inline-block;border:1px dashed var(--nd-line);color:var(--nd);background:var(--nd-soft);border-radius:var(--r-sm);padding:0 8px;font-size:var(--fs-xs)}
+#panel .mech-line{font-size:var(--fs-sm);color:var(--ink-2);margin:-4px 0 12px;padding-left:10px;border-left:3px solid var(--line-strong)}
+/* ---------- v2 · Inicio: «Bucea por patrón» (entradas al pivote único por output, mecanismo y gen) ---------- */
+.home-pat{margin:var(--s5) 0;display:grid;gap:10px;min-width:0}
+.home-pat h2{font-size:var(--fs-lg)}
+.home-pat p{margin:0}
+.pat-row{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:6px 14px;align-items:baseline;padding-top:10px;border-top:1px solid var(--line)}
+.pat-h{font-size:var(--fs-sm);color:var(--ink-2)}
+.pat-chip{text-decoration:none;white-space:normal;min-height:var(--tap);max-width:100%}
+.pat-chip:hover{border-color:var(--accent);color:var(--ink)}
+.pat-chip .fam{gap:0}
+.pat-n{font-size:var(--fs-xs);color:var(--ink-3);border-left:1px solid var(--line);padding-left:6px}
+@media (max-width:640px){.pat-row{grid-template-columns:minmax(0,1fr)}.pat-chip{padding:4px 10px;min-height:40px;gap:5px}}
+/* v2 · celdas de la línea de seguridad (40_lines.js matCell): nivel, rótulo y «criterio propio» apilados, sin desbordar a 390 px */
+.cell.seg{flex-direction:column;gap:1px;line-height:1.15;min-height:44px;text-decoration:none;text-align:center}
+.cell.seg .l3{font-size:12px;font-style:italic;color:inherit}
+
+/* D07 · 390 px: nada cortado dentro de los plegables. El alcance largo («Extrapolada de Bifidobacterium (rasgo de género)») parte
+   línea; las tablas pequeñas (AMR, Mercado, Posbiótico) se apilan en tarjetas con la etiqueta de cada columna. */
+.claims .meta .scope{white-space:normal;overflow-wrap:anywhere}
+.chip-web{overflow-wrap:anywhere}
+@media (max-width:760px){
+  table.mini-stack,table.mini-stack tbody,table.mini-stack tr,table.mini-stack td{display:block;width:auto}
+  table.mini-stack thead{display:none}
+  table.mini-stack tr{padding:6px 0;border-bottom:1px solid var(--line)}
+  table.mini-stack td{border:0;padding:2px 0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px;overflow-wrap:anywhere}
+  table.mini-stack td::before{content:attr(data-k);color:var(--ink-3);font-size:13px}
+}
+/* chips de fuente con nombre largo («EFSA Panel on Nutrition, Novel Foods…»): parten línea dentro del plegable, no se cortan */
+.fold-body .chip,.claims .chip{white-space:normal;max-width:100%;overflow-wrap:anywhere;text-align:left;height:auto}

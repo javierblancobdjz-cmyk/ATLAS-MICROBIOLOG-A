@@ -1,0 +1,23 @@
+gen	patron_claim	nota
+arcA	\barcA\b	arginina deiminasa (ADS)
+arcB	\barcB\b	ADS
+arcC	\barcC\b	ADS
+spxB	\bspxB\b|piruvato oxidasa|\bpox\b	piruvato oxidasa; el claim puede nombrar la enzima sin el gen
+lox	\blox\b|lactato oxidasa	lactato oxidasa
+aaoSo	aaoSo|SO-LAAO	L-aminoácido oxidasa de S. oligofermentans
+sgc	\bSgc\b	proteasa tipo challisina de S. australis A12
+abp118	Abp118	bacteriocina Abp118 (salivaricina) de L. salivarius
+abpK	\babpK\b	histidina quinasa del regulador de Abp118
+plnEF	plnE/?F|plnEF	plantaricina EF
+nisA	\bnisA\b|nisina A\b	precursor de nisina A
+nis (operón)	oper[oó]n de nisina|oper[oó]n nis	operón completo de nisina
+spaCBA	SpaCBA	pilina de unión a moco de L. rhamnosus GG
+gad	\bgad\b	glutamato descarboxilasa
+ileS	\bileS\b	isoleucil-tRNA sintetasa (resistencia intrínseca a mupirocina)
+tet(W)	tet\(W\)	resistencia a tetraciclina
+erm	\berm\b	resistencia a macrólidos
+vanA	\bvanA\b	resistencia a vancomicina
+Amuc_1100	Amuc_1100	proteína de membrana externa de A. muciniphila
+p40	\bp40\b	proteína soluble de L. rhamnosus GG
+slpB	\bSlpB\b	proteína de capa S de P. freudenreichii
+mam	\bMAM\b	proteína antiinflamatoria de Faecalibacterium

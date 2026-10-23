@@ -5,6 +5,19 @@
 const U = Atlas.ui, D = new Proxy({}, {get: (_, k) => Atlas.data[k]}), h = U.h, icon = U.icon, level = U.level, name = U.name;
 const NIVORD = ["MA", "ECA", "OBS", "ANI", "CEL", "GEN"];
 const genLabel = c => c === "GEN-v" ? "GEN" : c === "GEN-p" ? "GEN" : c;
+/** «1 producto», «2 productos»: nunca «1 productos» */
+const pl = (n, uno, varios) => n + " " + (n === 1 ? uno : varios);
+/* valores de enumerado que se pintan tal cual: el dato guarda el código sin tilde (las comparaciones lo usan); aquí solo se escribe bien */
+const ENUM_TXT = {si: "sí", debil: "débil", intrinseca: "intrínseca", problematica: "problemática", cateter_central: "catéter central", uci_critica: "uci crítica"};
+const enumTxt = v => ENUM_TXT[v] || v;
+/** Tabla pequeña que en móvil se apila en tarjetas con la etiqueta de cada columna (sin columnas cortadas a 390 px) */
+function miniTable(cols, rows) {
+  const t = h("table", {class: "mini-table mini-stack"}, h("thead", {}, h("tr", {}, cols.map(c => h("th", {}, c)))));
+  const tb = h("tbody", {});
+  rows.forEach(r => tb.append(h("tr", {}, r.map((v, i) => h("td", {"data-k": cols[i]}, v)))));
+  t.append(tb);
+  return t;
+}
 
 function trayBtn(id) {
   const inTray = Atlas.tray.items.includes(id);
@@ -14,87 +27,86 @@ function trayBtn(id) {
   }}, icon(inTray ? "x" : "plus"), inTray ? "En la bandeja" : "Comparar");
 }
 
-/* ---------- «PARECIDAS A ESTA» (buscador de vecinos por parecido, 4 ejes) ---------- */
-const EJES = [["funcional", "Funcional"], ["resultado", "Resultado/diana"], ["taxonomica", "Taxonómica"], ["genomica", "Genómica"]];
-function pesosVecinos(boost) {
-  const base = Atlas.data.meta.pesos_vecinos || {funcional: .35, resultado: .35, taxonomica: .15, genomica: .15};
-  if (!boost) return base;
-  const w = {funcional: .1, resultado: .1, taxonomica: .1, genomica: .1}; w[boost] = .7; return w;
-}
-const DATA_AXES = ["funcional", "resultado", "genomica"];
-function combinadoVec(ejes, pesos) {
-  let num = 0, den = 0;
-  for (const k in pesos) { const a = ejes[k]; if (a && a.disponible) { num += pesos[k] * a.score; den += pesos[k]; } }
-  let score = den ? num / den : 0;
-  // mismo descuento que el motor: parecido de solo-taxonomía = señal débil
-  if (!DATA_AXES.some(k => (ejes[k] || {}).disponible)) score *= 0.5;
-  return score;
-}
+/* ---------- «PARECIDAS A ESTA» (P1-06) ----------
+   E1 calcula orden y ejes (vecinos_v12.py: 3 ejes, denominador = suma de todos los pesos, eje resultado solo con líneas de
+   producto, genómica fuera del score). Aquí solo se pinta: sin número /100, sin botones de peso, sin barras. Tarjeta =
+   nombre · «k/3 ejes con dato» · etiqueta · línea de ejes · chips de lo compartido con su fuente · frase (si E1 la da).
+   Las que solo se parecen por taxonomía van en una lista compacta debajo (misma etiqueta, sin frase). El ANI va en Genoma. */
+const EJES = [["funcional", "funcional"], ["resultado", "resultado"], ["taxonomica", "taxonomía"]];
+const PIV = (lin, res, de) => Atlas.route.href("lineas", lin, {res, s: de});
+const PIVQ = (k, v, de) => Atlas.route.href("lineas", null, {[k]: v, s: de});
+const soloTax = v => !v.frase && !(v.rasgos_compartidos || []).length;
+const ordenVec = vs => [...vs].sort((a, b) => (a.orden ?? 1e9) - (b.orden ?? 1e9) || (b.score_combinado || 0) - (a.score_combinado || 0));
 function vecinosPanel(id) {
   const vs = D.vecinos(id);
+  if (!vs.length) return null;   // plegable vacío → no se pinta
+  const ranked = ordenVec(vs);
+  const fun = ranked.filter(v => !soloTax(v)), tax = ranked.filter(soloTax);
   const body = h("div", {class: "vecinos"});
-  if (!vs.length) { body.append(h("p", {class: "muted"}, "Sin vecinos con señal suficiente en los datos cargados.")); return fold("Parecidas a esta", "sin vecinos", body); }
-  body.append(h("p", {class: "small muted"}, "Vecinos por parecido en 4 ejes (funcional, resultado/diana, taxonómica y genómica —proxy por genes, no ANI—). Da más peso a un eje para reordenar en vivo. La evidencia lleva su fuente; la inferencia va marcada."));
-  const state = {boost: null};
-  const sel = h("div", {class: "filters bar vec-weights"});
-  const listEl = h("div", {class: "vec-list"});
-  const wchip = (key, label) => h("button", {class: "chip", type: "button", "data-boost": key || "equilibrado",
-    "aria-pressed": String(state.boost === key), onclick: () => { state.boost = state.boost === key ? null : key; redraw(); }}, label);
-  function redraw() {
-    sel.innerHTML = "";
-    sel.append(h("span", {class: "small vec-sel-lab"}, "Más peso a:"), wchip(null, "Equilibrado"));
-    EJES.forEach(([k, l]) => sel.append(wchip(k, l)));
-    const pesos = pesosVecinos(state.boost);
-    const ranked = vs.map(v => ({v, sc: combinadoVec(v.desglose_por_eje, pesos)}))
-      .sort((a, b) => b.sc - a.sc || (a.v.id < b.v.id ? -1 : 1));
-    listEl.innerHTML = "";
-    ranked.forEach(({v, sc}) => listEl.append(vecCard(v, sc)));
+  body.append(h("p", {class: "small muted"}, "Ordenadas por parecido en 3 ejes: funcional (mecanismo o rasgo con base causal u observada), resultado de producto y taxonomía. Un eje sin dato cuenta 0. Parecerse por taxonomía no transporta la actividad; el parentesco genómico (ANI) está en el bloque Genoma."));
+  if (!fun.length) {
+    const outs = outputsDe(id).filter(o => (D.linea(o.lin) || {}).tipo === "producto");
+    body.append(h("div", {class: "flag flag-warn vec-none"}, icon("no"),
+      h("span", {}, "Ninguna de estas " + vs.length + " comparte un mecanismo, un output o un resultado con esta ficha: no hay nada que extrapolar.",
+        outs.length ? h("span", {}, " Para ver quién consigue lo mismo: ", ...outs.slice(0, 3).flatMap((o, i) => [i ? " · " : "", h("a", {href: PIV(o.lin, o.res, id)}, o.nombre + " →")])) : "")));
+  } else {
+    const listEl = h("div", {class: "vec-list"});
+    fun.forEach(v => listEl.append(vecCard(v)));
+    body.append(listEl);
   }
-  redraw();
-  body.append(sel, listEl);
-  return fold("Parecidas a esta", vs.length + " vecinos", body);
+  if (tax.length) body.append(h("div", {class: "vec-tax"},
+    h("p", {class: "sub"}, "Sin mecanismo, output ni resultado en común (" + tax.length + ")"),
+    h("ul", {class: "vec-tax-list"}, tax.map(v => h("li", {"data-vec": v.id},
+      h("a", {href: Atlas.route.href(v.tipo === "cepa" ? "cepa" : "especie", v.id)}, name(v.id)),
+      h("span", {class: "chip vec-flag vec-warn"}, v.etiqueta || "solo parecido taxonómico"),
+      h("span", {class: "small muted"}, kEjes(v) + "/3 ejes con dato · " + ejesLinea(v)))))));
+  return fold("Parecidas a esta", vs.length + " · " + fun.length + " comparten mecanismo o resultado", body);
 }
-function vecCard(v, sc) {
-  const card = h("div", {class: "vec card" + (v.aviso_tax_no_funcional ? " vec-aviso" : ""), "data-vec": v.id});
+const kEjes = v => v.ejes_con_dato != null ? v.ejes_con_dato : EJES.filter(([x]) => ((v.desglose_por_eje || {})[x] || {}).disponible).length;
+/* H5: «✓» se leía como «comparte». Cada eje dice ahora si comparte algo, si tiene dato pero nada en común, o si no tiene dato. */
+const ejesLinea = v => {
+  const rc = v.rasgos_compartidos || [];
+  const comp = {funcional: rc.some(r => r.tipo !== "resultado"), resultado: rc.some(r => r.tipo === "resultado")};
+  return EJES.map(([x, l]) => { const a = (v.desglose_por_eje || {})[x] || {};
+    if (x === "taxonomica") return l + ": " + (a.nota || "sin dato");
+    return l + ": " + (!a.disponible ? "sin dato" : comp[x] ? "comparte" : "nada en común"); }).join(" · ");
+};
+function vecCard(v) {
+  const card = h("article", {class: "vec card", "data-vec": v.id});
   card.append(h("div", {class: "vec-head"},
     h("div", {class: "vec-name"}, h("a", {href: Atlas.route.href(v.tipo === "cepa" ? "cepa" : "especie", v.id)}, name(v.id)),
       v.tipo === "cepa" ? h("span", {class: "tag"}, "cepa") : ""),
-    h("div", {class: "vec-score", title: "Parecido combinado (0–100)"}, h("b", {}, String(Math.round(sc * 100))), h("small", {}, "/100"))));
-  const badges = h("div", {class: "vec-badges"});
-  badges.append(h("span", {class: "chip vec-flag " + (v.es_inferencia_o_evidencia === "evidencia" ? "is-ev" : "is-inf")},
-    v.es_inferencia_o_evidencia === "evidencia" ? "con evidencia" : "solo inferencia"));
-  if (v.aviso_tax_no_funcional) badges.append(h("span", {class: "chip vec-warn", title: "Parecido taxonómico pero no funcional (la lección K12 vs M18)"}, icon("no"), " taxonómico, NO funcional"));
-  card.append(badges);
-  const dz = h("div", {class: "vec-axes"});
-  EJES.forEach(([k, l]) => dz.append(axisBar(l, v.desglose_por_eje[k] || {}, k)));
-  card.append(dz);
+    h("div", {class: "vec-score", title: "Ejes con dato comparable"}, h("small", {}, kEjes(v) + "/3 ejes con dato"))));
+  card.append(h("div", {class: "vec-badges"},
+    h("span", {class: "chip vec-flag is-ev"}, v.etiqueta || "comparten algo"),
+    h("span", {class: "small muted vec-axes-line"}, ejesLinea(v))));
   if ((v.rasgos_compartidos || []).length) {
-    const rc = h("div", {class: "vec-traits"});
+    const rc = h("ul", {class: "vec-traits"});
     v.rasgos_compartidos.forEach(r => rc.append(traitChip(r)));
-    card.append(h("p", {class: "vec-sub"}, "Comparten"), rc);
+    card.append(rc);
   }
-  card.append(h("p", {class: "vec-inf"}, h("span", {class: "vec-inf-tag"}, "Inferencia"), " " + v.inferencia_1linea));
-  card.append(h("div", {class: "vec-acts"},
-    h("a", {class: "btn", href: Atlas.route.href(v.tipo === "cepa" ? "cepa" : "especie", v.id)}, "Ver ficha"),
-    trayBtn(v.id)));
+  if (v.frase) card.append(h("p", {class: "vec-inf"}, v.frase));
   return card;
 }
-const AXCOL = {funcional: 2, resultado: 1, taxonomica: 4, genomica: 5};
-function axisBar(label, a, k) {
-  const disp = !!a.disponible, pct = disp ? Math.round(a.score * 100) : 0;
-  return h("div", {class: "vec-axis" + (disp ? "" : " off"), title: (a.nota ? a.nota + " · " : "") + (disp ? pct + "/100" : "sin dato comparable en este eje")},
-    h("span", {class: "vec-axis-lab"}, label),
-    h("span", {class: "track"}, h("span", {class: "fill", "data-l": AXCOL[k], style: "width:" + pct + "%"})),
-    h("span", {class: "vec-axis-val"}, disp ? String(pct) : "—"));
+/** Resultados (línea|resultado) con evidencia a favor del sujeto, para enlazar al pivote */
+function outputsDe(id) {
+  const m = new Map();
+  D.evidenceOf(id).filter(e => e.tipo !== "contexto" && e.linea && (e.direccion === "+" || e.direccion === "mixto") && e.relacion !== "asociacion").forEach(e => {
+    const k = e.linea + "|" + e.resultado; if (m.has(k)) return;
+    const r = D.resultado(e.linea, e.resultado); m.set(k, {k, lin: e.linea, res: e.resultado, nombre: r ? r.nombre_corto || r.nombre : String(e.resultado).replace(/_/g, " ")});
+  });
+  return [...m.values()];
 }
+const TIPO_RASGO = {mecanismo: "mecanismo", resultado: "resultado", rasgo: "output", gen: "gen"};
 function traitChip(r) {
-  const fuente = r.fuentes && r.fuentes[0];
-  const cls = "chip vec-trait " + (r.tipo === "gen" ? "is-gen" : r.diana ? "is-diana" : r.tipo === "mecanismo" ? "is-mec" : "is-res");
-  const label = r.tipo === "gen" ? "gen " + r.etiqueta
-    : r.tipo === "mecanismo" ? ((D.mecanismo(r.etiqueta) || {}).nombre || r.etiqueta) : r.etiqueta;
-  const chip = h("span", {class: cls}, label, r.es_inferencia ? h("i", {class: "vec-inf-dot", title: "inferencia (derivado de genes, no de un ensayo)"}, " ≈") : "");
-  if (fuente) return h("span", {class: "vec-trait-wrap"}, chip, U.sourceChip(fuente));
-  return chip;
+  const VR = (D.raw.catalogo.vocabulario_rasgos || {rasgos: {}}).rasgos;
+  const cls = "chip vec-trait " + (r.tipo === "gen" ? "is-gen" : r.diana ? "is-diana" : r.tipo === "mecanismo" ? "is-mec" : r.tipo === "rasgo" ? "is-out" : "is-res");
+  const label = r.tipo === "rasgo" ? ((VR[r.id] || {}).etiqueta || String(r.etiqueta || r.id).replace(/_/g, " "))
+    : r.tipo === "gen" ? r.etiqueta : String(r.etiqueta || r.id).replace(/_/g, " ");
+  const f1 = (r.fuentes || [])[0], f2 = (r.fuentes_vecino || [])[0];
+  return h("li", {class: "vec-trait-wrap"}, h("span", {class: cls}, h("small", {}, (TIPO_RASGO[r.tipo] || "") + " "), label),
+    f1 ? h("span", {class: "vec-src"}, h("small", {class: "muted"}, "aquí"), U.sourceChip(f1)) : "",
+    f2 ? h("span", {class: "vec-src"}, h("small", {class: "muted"}, "allí"), U.sourceChip(f2)) : "");
 }
 
 /* ---------- LISTA DE ESPECIES ---------- */
@@ -130,7 +142,7 @@ Atlas.registerView({route: "especies", tab: "especies", cssClass: "v-especies", 
     tb.append(h("tr", {class: "clickrow", onclick: () => Atlas.route.go("especie", s.slug)},
       h("th", {class: "stick", scope: "row"}, h("a", {href: Atlas.route.href("especie", s.slug)}, h("i", {class: "bn"}, s.nombre_actual)),
         s.nivel_ficha === "N2" ? h("span", {class: "tag", style: "margin-left:8px"}, "N2") : ""),
-      h("td", {}, s.grupo || "—"),
+      h("td", {}, String(s.grupo || "—").replace(/_/g, " ")),
       h("td", {}, h("span", {class: "qps " + (qps ? "yes" : "nope")}, icon(qps ? "ok" : "minus"), qps ? "QPS" : "No")),
       h("td", {class: "small"}, (s.nicho && s.nicho.corto) || "—"),
       h("td", {}, best ? level(best) : "—"),
@@ -159,15 +171,15 @@ Atlas.registerView({route: "especie", tab: "especies", cssClass: "v-especie", re
       h("span", {class: "qps " + (isQps ? "yes" : "nope")}, icon(isQps ? "ok" : "minus"), isQps ? "QPS" : "No QPS"),
       h("span", {class: "tag"}, "Ficha " + (s.nivel_ficha || "N1")),
       (cont.nulos_en_contra ? h("span", {class: "tag tag-warn"}, "Nulos/en contra: " + cont.nulos_en_contra) : "")),
-    h("div", {class: "sp-acts"}, trayBtn(s.slug),
-      h("a", {class: "btn pri", href: Atlas.route.href("pregunta", null, {b: s.slug})}, icon("q"), "Preguntar por esta especie"))));
+    h("div", {class: "sp-acts"}, trayBtn(s.slug))));
 
   el.append(U.readingBox("especie",
     "Saber qué hace bien la especie, con qué solidez y para qué producto.",
     "Cada afirmación lleva su mejor nivel y cuántas cepas distintas la sostienen. Cepa no es especie.",
     "Toca una fuente para ver la cita. Las secciones de abajo se pliegan."));
 
-  // Qué hace bien + Utilidad
+  // E7: tira de formas arriba (responde «qué puedo vender y en qué forma» sin scroll), luego Qué hace bien + Cómo lo hace
+  el.append(formaStrip(s.slug, s));
   const grid = h("div", {class: "sp-good"});
   const good = h("div", {class: "card"}, h("h3", {}, "Qué hace bien"));
   const qbs = s.que_hace_bien || [];
@@ -180,9 +192,13 @@ Atlas.registerView({route: "especie", tab: "especies", cssClass: "v-especie", re
         qb.nivel ? level(qb.nivel) : "",
         h("span", {class: "pips", title: qb.soporte_texto || ""}, pips(qb.cepas_que_sostienen ? qb.cepas_que_sostienen.length : 0),
           " ", qb.soporte_texto || (qb.alcance_mostrado === "especie" ? "nivel especie" : "")),
-        U.sources(qb.evidence_ids))));
+        U.sources(qb.evidence_ids),
+        qb.linea && qb.resultado ? h("a", {class: "who-more", href: PIV(qb.linea, qb.resultado, s.slug)}, "Quién más →") : "")));
   });
   good.append(ul); grid.append(good);
+  grid.append(comoLoHace(s.slug, s));
+  el.append(grid);
+  const grid2 = h("div", {class: "sp-good"});
 
   const util = h("div", {class: "card"}, h("h3", {}, "Utilidad para producto"));
   const uul = h("ul", {class: "use-list"});
@@ -192,23 +208,20 @@ Atlas.registerView({route: "especie", tab: "especies", cssClass: "v-especie", re
   util.append(uul);
   // Lo demostrado
   util.append(demostrado(cont));
-  grid.append(util);
-  el.append(grid);
+  grid2.append(util);
+  el.append(grid2);
 
   // Secciones plegables
   const sec = h("div", {class: "sp-sections"});
-  sec.append(foldReg(reg));
-  sec.append(foldSeg(s.seguridad || {}));
-  sec.append(foldTec(s.tecnologia || {}, s.forma_tecnologica_recomendada));
-  sec.append(foldPost(s));
-  sec.append(foldMercado(s.mercado || {}));
-  if ((s.subgrupos || []).length || (s.cepas || []).length) sec.append(foldDentro(s));
-  sec.append(vecinosPanel(s.slug));
-  sec.append(foldNoDemostrado(s));
+  // E7: los plegables sin contenido no se pintan (Mercado, Posbiótico, Tecnología vacíos; Parecidas sin vecinos)
+  [foldReg(reg), foldSeg(s.seguridad || {}, s), foldGenomaEspecie(s), foldTec(s.tecnologia || {}), foldPost(s), foldMercado(s.mercado || {}),
+   ((s.subgrupos || []).length || (s.cepas || []).length) ? foldDentro(s) : null, vecinosPanel(s.slug), foldNoDemostrado(s)]
+    .filter(Boolean).forEach(f => sec.append(f));
   el.append(sec);
 
-  // Tabla de evidencias
-  el.append(evidenceTable(s, r.query || {}));
+  // E7 r2: tabla de evidencias plegada (cada afirmación ya está a un toque desde «Qué hace bien», «Cómo lo hace» y el pivote)
+  const et = evidenceTable(s, r.query || {});
+  el.append(h("div", {class: "sp-sections"}, fold("Todas las evidencias", (s.evidencias || []).length + " · tabla filtrable", et)));
 }});
 
 function pips(n) {
@@ -257,7 +270,7 @@ function foldReg(reg) {
   kv.append(kvp("Novel Food", nf.detalle || nf.estado || "—", nf.fuentes));
   if (reg.historia_uso) kv.append(kvp("Historia de uso (IDF)", reg.historia_uso.inventario_idf || "—"));
   body.append(kv);
-  const formas = ["vivo", "posbiotico", "fermentado"].filter(f => rpf[f]);
+  const formas = [];   // E7: ruta por forma → tira de formas bajo «Qué hace bien»
   if (formas.length) {
     const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Forma"), h("th", {}, "Ruta"), h("th", {}, "Detalle"))));
     const tb = h("tbody", {});
@@ -265,75 +278,96 @@ function foldReg(reg) {
     t.append(tb); body.append(h("p", {class: "sub"}, "Ruta por forma"), t);
   }
   const sum = (qps.estado === "qps" ? "QPS" : "No QPS") + " · " + (nf.estado ? nf.estado.replace(/_/g, " ") : "Novel Food ?");
-  return fold("Regulación", sum, body, true);
+  return fold("Regulación", sum, body, false);
 }
-function foldSeg(seg) {
+/* Seguridad de especie (E6). El estado sale de puerta_cepa.json (regla S del script, no de la vista):
+   a revisar si la curación lo marca, si EFSA la deja fuera de QPS o si hay virulencia registrada; si no, «sin bloqueo
+   registrado», que NO es «cepa medida y limpia». El resumen nunca dice «sin señales» si el cuerpo tiene señales. */
+function foldSeg(seg, s) {
   const body = h("div", {});
-  if (seg.bloqueo) body.append(h("p", {class: "flag flag-bad"}, icon("no"), " Puerta de seguridad: " + seg.bloqueo));
+  const st = D.segEspecie(s.slug) || {estado: "desconocida", motivos: []};
+  body.append(h("div", {class: "gates"}, U.gatePill("seguridad", "Seguridad de especie", st.estado)),
+    h("p", {class: "k6-note"}, st.motivos.length ? "Motivo: " + st.motivos.join(" · ") + "." :
+      "Sin bloqueo registrado en la curación de especie. No equivale a «cepa medida y limpia»: eso está en la ficha de cada cepa."));
+  const vir = seg.virulencia || [];
+  if (vir.length) body.append(h("p", {class: "sub"}, "Virulencia"), h("ul", {class: "mini-list"}, vir.map(v => h("li", {},
+    (v.factor || v.gen_o_fenotipo || "") + (v.fuerza ? " · fuerza " + enumTxt(v.fuerza) : "") + (v.base ? " · base: " + v.base : ""),
+    v.nota ? h("div", {class: "small muted"}, v.nota) : "", " ", sourcesList(v.fuentes)))));
   const amr = seg.amr || [];
+  const adq = amr.filter(a => a.origen === "adquirida"), intr = amr.filter(a => a.origen === "intrinseca");
   if (amr.length) {
-    const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Gen / fenotipo"), h("th", {}, "Origen"), h("th", {}, "Móvil"), h("th", {}, "Fuerza"), h("th", {}, "Base"))));
-    const tb = h("tbody", {});
-    amr.forEach(a => tb.append(h("tr", {}, h("td", {}, a.gen_o_fenotipo), h("td", {}, a.origen || "—"),
-      h("td", {}, a.movil === true ? "sí" : a.movil === false ? "no" : "?"), h("td", {}, a.fuerza || "—"),
-      h("td", {class: "small"}, (a.herramienta || "") + (a.version ? " " + a.version : ""), " ", sourcesList(a.fuentes)))));
-    t.append(tb); body.append(h("p", {class: "sub"}, "Resistencia a antimicrobianos"), t);
+    const t = miniTable(["Gen / fenotipo", "Origen", "Móvil", "Fuerza", "Base"], amr.map(a => [a.gen_o_fenotipo, enumTxt(a.origen) || "—",
+      a.movil === true ? "sí" : a.movil === false ? "no" : "?", enumTxt(a.fuerza) || "—",
+      h("span", {class: "small"}, (a.herramienta || "") + (a.version ? " " + a.version : ""), " ", sourcesList(a.fuentes))]));
+    body.append(h("p", {class: "sub"}, "Resistencia a antimicrobianos (literatura, nivel especie)"), t);
   }
+  // n/N medido en genomas públicos (genomica.json de E2, agregado por scripts/build_puerta_cepa.py)
+  const ag = D.agregadosSeg(s.slug);
+  if (ag.length) body.append(h("p", {class: "sub"}, "En genomas públicos (ABRicate 1.4.0)"),
+    h("ul", {class: "mini-list"}, ag.map(x => h("li", {},
+      h("b", {}, x.amr + "/" + x.N), " con AMR adquirida (ResFinder)" + (ag.length > 1 ? " · " + x.taxon : ""),
+      Object.keys(x.genes_amr).length ? h("span", {class: "k6-genes"}, " · " + Object.entries(x.genes_amr).map(([g, n]) => g + " " + n).join(", ")) : "",
+      x.colocalizados ? h("span", {class: "small"}, " · en " + x.colocalizados + " el gen comparte contig con un replicón de plásmido") : "",
+      h("span", {class: "small muted"}, " · replicón de plásmido " + x.plasmido + "/" + x.N + " · VFDB " + x.vfdb + "/" + x.N)))),
+    h("p", {class: "k6-note"}, "Resistencias intrínsecas de CARD (ileS, rpoB, lmrD) no cuentan como adquiridas. VFDB sin hits no certifica seguridad."));
+  else body.append(h("p", {class: "k6-note"}, s.tipo_organismo === "levadura" ? "ResFinder, VFDB y PlasmidFinder no aplican a una levadura."
+    : "Genomas públicos de esta especie con ABRicate: ninguno cargado (no medido)."));
   const extras = [];
-  if ((seg.virulencia || []).length) extras.push("Virulencia: " + seg.virulencia.map(v => v.gen_o_fenotipo || v).join(", "));
-  if (seg.hemolisis) extras.push("Hemólisis: " + (seg.hemolisis.resultado || seg.hemolisis));
-  if ((seg.aminas_biogenas || []).length) extras.push("Aminas biógenas: " + seg.aminas_biogenas.map(a => a.amina || a.gen_o_fenotipo || a).join(", "));
+  const hem = seg.hemolisis && (seg.hemolisis.estado || seg.hemolisis.resultado);
+  if (hem && hem !== "desconocido") extras.push("Hemólisis: " + hem);
+  if ((seg.aminas_biogenas || []).length) extras.push("Aminas biógenas: " + seg.aminas_biogenas.map(a => a.amina || a.gen_o_fenotipo || a.factor || "").join(", "));
   if (seg.consideracion_clinica) extras.push("Consideración clínica: " + seg.consideracion_clinica);
   if (seg.consideracion_regulatoria) extras.push("Consideración regulatoria: " + seg.consideracion_regulatoria);
   extras.forEach(x => body.append(h("p", {class: "small"}, x)));
   const rp = seg.riesgo_por_poblacion || [];
-  if (rp.length) body.append(h("p", {class: "sub"}, "Riesgo por población"), h("ul", {class: "mini-list"}, rp.map(x => h("li", {}, (x.poblacion || "") + ": " + (x.texto || x)))));
-  if (!amr.length && !extras.length) body.append(h("p", {class: "muted"}, "Sin señales de seguridad registradas."));
-  const sum = amr.length ? amr[0].gen_o_fenotipo + (amr.length > 1 ? " +" + (amr.length - 1) : "") : "sin señales";
-  return fold("Seguridad", sum, body);
+  if (rp.length) body.append(h("p", {class: "sub"}, "Riesgo por población"), h("ul", {class: "mini-list"}, rp.map(x => h("li", {}, (enumTxt(x.poblacion) || "").replace(/_/g, " ") + ": " + (x.texto || x)))));
+  const parts = [];
+  if (st.estado === "a_revisar") parts.push("a revisar");
+  if (st.fuera_qps) parts.push("fuera de QPS");
+  if (vir.length) parts.push("virulencia " + vir.length);
+  if (adq.length) parts.push("AMR adquirida " + adq.length);
+  if (ag.length) parts.push("genomas: AMR " + ag.map(x => x.amr + "/" + x.N).join(" + "));
+  if (!parts.length) parts.push(intr.length ? "solo AMR intrínseca" : "sin bloqueo registrado");
+  return fold("Seguridad", parts.join(" · "), body);
 }
-function foldTec(tec, recom) {
+function foldTec(tec) {
   const body = h("div", {});
-  const forma = recom || tec.forma_tecnologica_recomendada;
-  if (forma) body.append(h("p", {class: "flag"}, "Forma recomendada: ", h("b", {}, forma)));
   const kv = h("div", {class: "kvs"});
-  [["Cultivabilidad", tec.cultivabilidad], ["Medio", tec.medio], ["Aerotolerancia", tec.aerotolerancia],
+  const NADA = v => v == null || /^(desconocid[oa]|sin[_ ]datos?)$/.test(String(v));
+  const filas = [["Cultivabilidad", tec.cultivabilidad], ["Medio", tec.medio], ["Aerotolerancia", tec.aerotolerancia],
    ["Esporas", tec.esporas === true ? "sí" : tec.esporas === false ? "no" : null], ["Estabilidad (secado)", tec.estabilidad_secado],
    ["Crecimiento en leche", tec.crecimiento_en_leche], ["Escalado", tec.escalado_industrial], ["Confianza del dato", tec.confianza]]
-    .filter(([, v]) => v != null).forEach(([k, v]) => kv.append(kvp(k, String(v).replace(/_/g, " "))));
+    .filter(([, v]) => !NADA(v));
+  if (!filas.filter(([k]) => k !== "Confianza del dato").length) return null;
+  filas.forEach(([k, v]) => kv.append(kvp(k, String(enumTxt(v)).replace(/_/g, " "))));
   body.append(kv);
   const apt = tec.aptitud_por_forma;
-  if (apt) body.append(h("p", {class: "small", style: "margin-top:10px"}, "Aptitud por forma: " +
-    ["vivo", "posbiotico", "fermentado"].filter(f => apt[f]).map(f => f + " = " + apt[f]).join(" · ")));
+  if (apt) body.append(h("p", {class: "small", style: "margin-top:10px"}, "Aptitud por forma (criterio de especie): " +
+    ["vivo", "posbiotico", "fermentado"].filter(f => apt[f]).map(f => U.formaLabel(f) + " = " + enumTxt(apt[f])).join(" · ")));
   if (tec.nota_cepa_vs_especie) body.append(h("p", {class: "small muted"}, tec.nota_cepa_vs_especie));
-  return fold("Tecnología", (forma ? "forma: " + forma + " · " : "") + (tec.aerotolerancia || "").replace(/_/g, " "), body);
+  return fold("Tecnología", (tec.aerotolerancia || "").replace(/_/g, " "), body);
 }
 function foldPost(s) {
   const rows = s.posbiotico || [];
   const body = h("div", {});
-  if (!rows.length) { body.append(h("p", {class: "muted"}, "Sin datos de posbiótico.")); return fold("Posbiótico", "sin datos", body); }
-  const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Mecanismo"), h("th", {}, "Forma ensayada"), h("th", {}, "Inactivación"), h("th", {}, "¿Conserva?"), h("th", {}, "Cepa"), h("th", {}, "Fuente"))));
-  const tb = h("tbody", {});
-  rows.forEach(p => { const m = D.mecanismo(p.mecanismo); tb.append(h("tr", {},
-    h("td", {}, m ? m.nombre : p.mecanismo), h("td", {}, p.forma_ensayada || "—"), h("td", {}, p.inactivacion_metodo || "—"),
-    h("td", {}, p.se_conserva_inactivado || "?"), h("td", {}, p.cepa ? name(p.cepa) : "—"), h("td", {}, sourcesList(p.evidence_ids)))); });
-  t.append(tb); body.append(t);
-  return fold("Posbiótico", rows.length + " entradas", body);
+  if (!rows.length) return null;
+  const t = miniTable(["Mecanismo", "Forma ensayada", "Inactivación", "¿Conserva?", "Cepa", "Fuente"], rows.map(p => { const m = D.mecanismo(p.mecanismo);
+    return [m ? m.nombre : (p.mecanismo ? String(p.mecanismo).replace(/_/g, " ") : "sin mecanismo del catálogo"), p.forma_ensayada || "—", p.inactivacion_metodo ? String(p.inactivacion_metodo).replace(/_/g, " ") : "—",
+      String(p.se_conserva_inactivado || "?").replace(/_/g, " "), p.cepa ? name(p.cepa) : "—", sourcesList(p.evidence_ids)]; }));
+  body.append(t);
+  return fold("Posbiótico", pl(rows.length, "entrada", "entradas"), body);
 }
 function foldMercado(mk) {
   const body = h("div", {});
   const prods = mk.productos || [];
   if (prods.length) {
-    const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Producto"), h("th", {}, "Empresa"), h("th", {}, "Cepa"), h("th", {}, "Tipo"))));
-    const tb = h("tbody", {});
-    prods.forEach(p => tb.append(h("tr", {}, h("td", {}, p.nombre), h("td", {}, p.empresa || "—"), h("td", {}, p.cepa ? name(p.cepa) : "—"), h("td", {}, p.tipo_producto || "—"))));
-    t.append(tb); body.append(t);
+    body.append(miniTable(["Producto", "Empresa", "Cepa", "Tipo"], prods.map(p => [p.nombre, p.empresa || "—", p.cepa ? name(p.cepa) : "—", String(p.tipo_producto || "—").replace(/_/g, " ")])));
   }
   if (mk.patentes) body.append(kvbox("Patentes", (mk.patentes.densidad || "—") + (mk.patentes.consulta ? " · " + mk.patentes.consulta : "")));
   if (mk.competencia) body.append(kvbox("Competencia", mk.competencia));
   if (mk.hueco) body.append(kvbox("Hueco", mk.hueco));
-  if (!prods.length && !mk.hueco) body.append(h("p", {class: "muted"}, "Sin datos de mercado."));
-  return fold("Mercado", (prods.length ? prods.length + " productos" : "sin productos") + (mk.patentes ? " · patentes " + mk.patentes.densidad : ""), body);
+  if (!prods.length && !mk.hueco && !mk.competencia) return null;
+  return fold("Mercado", (prods.length ? pl(prods.length, "producto", "productos") : "sin productos") + (mk.patentes ? " · patentes " + mk.patentes.densidad : ""), body);
 }
 function foldDentro(s) {
   const body = h("div", {});
@@ -343,7 +377,7 @@ function foldDentro(s) {
     sgs.forEach(sg => g.append(h("div", {class: "sg"},
       h("h4", {}, sg.nombre), h("p", {}, sg.rasgo_diferencial || ""),
       (sg.genes_marcadores || []).length ? h("span", {class: "gene"}, sg.genes_marcadores.join(", ")) : "",
-      " ", h("span", {class: "small muted"}, "· " + nCepasSub(s, sg.id) + " cepas"))));
+      " ", h("span", {class: "small muted"}, "· " + pl(nCepasSub(s, sg.id), "cepa", "cepas")))));
     body.append(h("p", {class: "sub"}, "Subgrupos"), g);
   }
   // matriz cepa × resultado
@@ -351,7 +385,7 @@ function foldDentro(s) {
   // anillos (placeholder)
   body.append(h("div", {class: "rings"}, icon("target"),
     h("span", {}, h("b", {}, "Anillos de cepa."), " Exterior: literatura · medio: genomas públicos · interior: tus cepas (no cargadas; confidenciales).")));
-  return fold("Dentro de la especie", (sgs.length ? sgs.length + " subgrupos · " : "") + (s.cepas || []).length + " cepas", body);
+  return fold("Dentro de la especie", (sgs.length ? pl(sgs.length, "subgrupo", "subgrupos") + " · " : "") + pl((s.cepas || []).length, "cepa", "cepas"), body);
 }
 function nCepasSub(s, sgId) { return (s.cepas || []).map(D.strain).filter(c => c && c.subgrupo === sgId).length; }
 function strainMatrix(s) {
@@ -394,20 +428,20 @@ function depositLabel(st) {
 }
 function foldNoDemostrado(s) {
   // evidencias con dirección nula/en contra
-  const evs = (s.evidencias || []).map(D.evidence).filter(e => e && (e.direccion === "-" || e.direccion === "0"));
+  const evs = (s.evidencias || []).map(D.evidence).filter(e => e && e.tipo !== "contexto" && (e.direccion === "-" || e.direccion === "0"));
   const body = h("div", {});
-  if (!evs.length) { body.append(h("p", {class: "muted"}, "No hay resultados nulos o en contra registrados.")); return fold("Lo que no se demostró", "sin resultados nulos", body); }
+  if (!evs.length) return null;   // plegable vacío → no se pinta
   const ul = h("ul", {class: "claims"});
   evs.forEach(e => ul.append(h("li", {}, h("p", {class: "txt"}, e.claim_es),
     h("div", {class: "meta"}, level(e.nivel), U.direction(e.direccion), U.scope(e), U.sources([e.id])))));
   body.append(ul);
-  return fold("Lo que no se demostró", evs.length + " resultados nulos o en contra", body);
+  return fold("Lo que no se demostró", pl(evs.length, "resultado nulo o en contra", "resultados nulos o en contra"), body);
 }
 
 function evidenceTable(s, q) {
-  const wrap = h("section", {class: "sp-evidence"}, h("h3", {}, "Evidencias"));
+  const wrap = h("section", {class: "sp-evidence"});
   const evs = (s.evidencias || []).map(D.evidence).filter(Boolean);
-  const lineas = [...new Set(evs.map(e => e.linea))];
+  const lineas = [...new Set(evs.map(e => e.linea))].filter(Boolean);
   const state = {linea: null, nivel: null, alcance: null};
   const filt = h("div", {class: "filters bar"});
   const tblWrap = h("div", {class: "tbl", "data-scroll": true});
@@ -424,20 +458,21 @@ function evidenceTable(s, q) {
   }
   function redraw() {
     filt.innerHTML = "";
-    filt.append(chip("nivel", "alto", "Nivel >= animal"), chip("alcance", "cepa", "Solo cepa"), chip("alcance", "especie", "Solo especie"));
+    filt.append(chip("nivel", "alto", "Nivel ≥ animal"), chip("alcance", "cepa", "Solo cepa"), chip("alcance", "especie", "Solo especie"));
     lineas.forEach(l => filt.append(chip("linea", l, U.lineaName(l))));
     tblWrap.innerHTML = "";
     const rows = evs.filter(pass);
     const table = h("table", {}, h("thead", {}, h("tr", {},
-      h("th", {class: "stick"}, "Afirmacion"), h("th", {}, "Nivel"), h("th", {}, "Alcance"), h("th", {}, "Direccion"),
-      h("th", {}, "Linea"), h("th", {}, "Forma"), h("th", {}, "Fuente"), h("th", {}, "Estado"))));
+      h("th", {class: "stick"}, "Afirmación"), h("th", {}, "Nivel"), h("th", {}, "Alcance"), h("th", {}, "Dirección"),
+      h("th", {}, "Línea"), h("th", {}, "Forma"), h("th", {}, "Fuente"), h("th", {}, "Estado"))));
     const tb = h("tbody", {});
     rows.forEach(e => {
       const ver = e.verificacion || {};
       tb.append(h("tr", {},
         h("th", {class: "stick", scope: "row", style: "font-weight:400"}, U.truncate(e.claim_es, 90)),
-        h("td", {}, level(e.nivel)), h("td", {}, U.scope(e)), h("td", {}, U.direction(e.direccion)),
-        h("td", {class: "small"}, U.lineaName(e.linea)), h("td", {}, e.forma || "-"),
+        h("td", {}, e.tipo === "contexto" ? h("span", {class: "tag"}, "contexto") : level(e.nivel)), h("td", {}, scopeTag(e)),
+        h("td", {}, e.direccion ? U.direction(e.direccion) : "—", e.relacion === "asociacion" ? h("span", {class: "tag tag-asoc"}, "asociación") : ""),
+        h("td", {class: "small"}, e.linea ? U.lineaName(e.linea) : "contexto (sin línea)"), h("td", {}, formaTxt(e.forma)),
         h("td", {}, U.sourceChip(e.id)),
         h("td", {}, h("span", {class: "mark " + (ver.estado === "verificada" ? "ok" : "pend")}, icon(ver.estado === "verificada" ? "ok" : "pend"), ver.estado === "verificada" ? "Verif." : "pend."))));
     });
@@ -449,7 +484,10 @@ function evidenceTable(s, q) {
   return wrap;
 }
 
-/* ---------- FICHA DE CEPA ---------- */
+/* ---------- FICHA DE CEPA (P1-04) ----------
+   Pantalla 1: tira «¿En qué forma?» con la puerta de cepa · «Quién más consigue lo mismo» · «Cómo lo hace» (+ «¿Dónde está
+   la clave?») · «Qué produce y por qué vía» · «Lo demostrado» agrupado por resultado. Plegados y cerrados: Genoma (P1-05),
+   Ficha técnica y Parecidas (P1-06). Los registros de contexto (sin línea ni resultado) no son evidencia de la cepa. */
 Atlas.registerView({route: "cepa", tab: "especies", cssClass: "v-cepa", render(el, r) {
   const st = D.strain(r.param);
   if (!st) return U.stub(el, "Cepa no encontrada: " + r.param, "P2");
@@ -461,29 +499,322 @@ Atlas.registerView({route: "cepa", tab: "especies", cssClass: "v-cepa", render(e
     h("div", {class: "sp-acts"}, trayBtn(st.id),
       s ? h("a", {class: "btn", href: Atlas.route.href("especie", s.slug)}, "Ir a la especie") : "")));
   el.append(U.readingBox("cepa",
-    "Ver qué está demostrado de esta cepa concreta y su depósito y genoma.",
-    "Lo de la cepa no se hereda a la especie ni al revés.",
-    "La matriz muestra el mejor nivel por resultado de esta cepa."));
-  const kv = h("div", {class: "card kvs"});
+    "Ver qué está demostrado de esta cepa concreta, en qué forma se puede vender y qué lleva en el genoma.",
+    "Lo de la cepa no se hereda a la especie ni al revés. Una mezcla de cepas no cuenta para ninguna de ellas.",
+    "Toca una forma para ver su puerta y el veredicto por línea; toca una fuente para ver la cita."));
+  const kv = h("div", {class: "kvs"});
   kv.append(kvp("Designación", st.designacion || st.nombre_corto));
   if ((st.otros_nombres || []).length) kv.append(kvp("Otros nombres", st.otros_nombres.join(", ")));
   if ((st.depositos || []).length) kv.append(kvp("Depósitos", st.depositos.map(d => d.coleccion + " " + d.numero).join(" · ")));
   kv.append(kvp("Categoría", st.categoria || "—"));
-  kv.append(kvp("Anillo", st.anillo || "—"));
-  if (st.genoma) kv.append(kvp("Genoma", (st.genoma.accesion || "—") + (st.genoma.nivel_ensamblado ? " · " + st.genoma.nivel_ensamblado : "")));
+  kv.append(kvp("Anillo", String(st.anillo || "—").replace(/_/g, " ")));
+  { const vk = Atlas.genoma ? Atlas.genoma.vinculo(st) : {acc: st.genoma && st.genoma.accesion}, ac = vk.acc;
+    kv.append(h("div", {class: "kv"}, h("small", {}, "Genoma"), h("span", {},
+      ac && /^GC[AF]_/.test(ac) ? h("a", {href: "https://www.ncbi.nlm.nih.gov/datasets/genome/" + ac + "/", target: "_blank", rel: "noopener"}, ac)
+        : U.gatePill("genoma", null, "NM", "no medido · sin accesión en el atlas"),
+      vk.porNombre ? h("span", {class: "gn-pill gn-warn"}, vk.texto || "vinculada por nombre: verificar") : "",
+      ac && st.genoma && st.genoma.nivel_ensamblado ? " · " + st.genoma.nivel_ensamblado : ""))); }
   if (st.origen) kv.append(kvp("Origen", st.origen));
   if (st.titular) kv.append(kvp("Titular", st.titular));
-  el.append(kv);
-  // evidencias de la cepa
-  const evs = D.evidenceOf(st.id);
-  el.append(h("h3", {}, "Lo demostrado de la cepa"));
-  if (!evs.length) el.append(h("p", {class: "muted"}, "Sin evidencia propia de cepa cargada."));
-  const ul = h("ul", {class: "claims card"});
-  evs.forEach(e => ul.append(h("li", {}, h("p", {class: "txt"}, e.claim_es),
-    h("div", {class: "meta"}, level(e.nivel), U.direction(e.direccion), h("span", {class: "small"}, U.lineaName(e.linea)), U.sources([e.id])))));
-  if (evs.length) el.append(ul);
-  el.append(h("div", {class: "sp-sections"}, vecinosPanel(st.id)));
+  const evs = D.evidenceOf(st.id).filter(e => e.tipo !== "contexto");
+  el.append(formaStrip(st.id, s));
+  // enlace inverso cepa → «quién más consigue esto» (uno por resultado de producto con evidencia a favor)
+  const outs = outputsDe(st.id).filter(o => (D.linea(o.lin) || {}).tipo === "producto");
+  if (outs.length) el.append(h("p", {class: "who-row"}, h("b", {}, "Quién más consigue lo mismo: "),
+    ...outs.flatMap((o, i) => [i ? " · " : "", h("a", {class: "who-more", href: PIV(o.lin, o.res, st.id)}, o.nombre + " →")])));
+  if (evs.length) { const g2 = h("div", {class: "sp-good"}); g2.append(comoLoHace(st.id, s)); el.append(g2); }
+  el.append(demostradoCepa(st.id, evs));
+  const sec = h("div", {class: "sp-sections"});
+  [foldGenoma(st), fold("Ficha técnica", [(st.depositos || []).map(d => d.coleccion + " " + d.numero).join(" · "), st.categoria].filter(Boolean).join(" · "), kv),
+   vecinosPanel(st.id)].filter(Boolean).forEach(f => sec.append(f));
+  el.append(sec);
 }});
+
+/* ---------- utilidades de evidencia (mezcla, asociación, forma, mecanismo) ---------- */
+const FORMA_TXT = {vivo: "vivo", inactivado: "inactivado", componente: "componente", fermentado: "fermentado", metabolito: "metabolito aislado"};
+const formaTxt = f => f ? (FORMA_TXT[f] || String(f).replace(/_/g, " ")) : "forma no declarada";
+const esMezcla = e => e.alcance === "mezcla";
+const esAsoc = e => e.relacion === "asociacion";
+function scopeTag(e) {
+  if (esMezcla(e)) return h("span", {class: "tag tag-mezcla"}, e.etiqueta_mezcla || "mezcla de cepas");
+  return U.scope(e);
+}
+const BASE_CORTA = {causal: "fenómeno demostrado (mutante o bloqueo)", observado: "fenómeno observado", inferencia: "inferido por los autores", prediccion_genomica: "predicción genómica"};
+const claseCorta = c => U.claseLabel(c).split(" (")[0];
+/** Línea legible del mecanismo de una evidencia: «Exclusión del patógeno · fenómeno observado · determinante desconocido · funciona inactivada».
+    Vive en 00_core (Atlas.ui.mechLine) para que el panel de cita pinte exactamente la misma línea. */
+const mechLine = e => U.mechLine(e);
+
+/* «Lo demostrado de la cepa» agrupado por resultado: una fila por resultado (mejor nivel, n, formas, dirección) y las
+   afirmaciones dentro con su línea de mecanismo. La mezcla se rotula («en mezcla con …») y no cuenta como logro de la cepa;
+   la asociación se rotula y no suma dirección. Nada se oculta: un toque abre las citas. */
+function demostradoCepa(id, evs) {
+  const wrap = h("section", {class: "ld"}, h("h3", {}, "Lo demostrado de la cepa (" + evs.length + ")"));
+  if (!evs.length) { wrap.append(h("p", {class: "muted"}, "Sin evidencia propia de cepa cargada.")); return wrap; }
+  const by = new Map();
+  evs.forEach(e => { const k = (e.linea || "") + "|" + (e.resultado || ""); if (!by.has(k)) by.set(k, []); by.get(k).push(e); });
+  const DIR = {"+": "a favor", "0": "sin efecto", "-": "en contra", mixto: "mixto"};
+  const prodFirst = k => (D.linea(k.split("|")[0]) || {}).tipo === "producto" ? 0 : 1;
+  const rank = E => Math.min(...E.map(e => NIVORD.indexOf(genLabel(e.nivel))));
+  [...by.entries()].sort((a, b) => prodFirst(a[0]) - prodFirst(b[0]) || rank(a[1]) - rank(b[1]))
+    .forEach(([k, E]) => {
+      const [lin, res] = k.split("|"), R = D.resultado(lin, res);
+      const best = E.reduce((b, e) => NIVORD.indexOf(genLabel(e.nivel)) < NIVORD.indexOf(genLabel(b)) ? e.nivel : b, E[0].nivel);
+      const cnt = {}; E.forEach(e => { const x = esMezcla(e) ? "en mezcla" : esAsoc(e) ? "asociación" : DIR[e.direccion] || "sin dirección"; cnt[x] = (cnt[x] || 0) + 1; });
+      const formas = [...new Set(E.map(e => formaTxt(e.forma)))].join(", ");
+      const d = h("details", {class: "ld-g"}, h("summary", {},
+        h("b", {}, R ? R.nombre_corto || R.nombre : String(res || "sin resultado").replace(/_/g, " ")), level(best),
+        h("span", {class: "small muted"}, Object.entries(cnt).map(([x, n]) => n + " " + x).join(" · ") + " · " + formas), icon("chev")),
+        h("ul", {class: "claims"}, E.map(e => h("li", {}, h("p", {class: "txt"}, e.claim_es),
+          h("div", {class: "meta"}, level(e.nivel), e.direccion ? U.direction(e.direccion) : "", h("span", {class: "tag"}, formaTxt(e.forma)),
+            esMezcla(e) ? scopeTag(e) : "", esAsoc(e) ? h("span", {class: "tag tag-asoc", title: "asociación: se observa, no se interviene; no cuenta como efecto"}, "asociación") : "",
+            U.sources([e.id])),
+          mechLine(e)))));
+      wrap.append(d);
+    });
+  return wrap;
+}
+
+/* ---------- «CÓMO LO HACE» (P1-02): una línea por clase de mecanismo ----------
+   Sale del campo `mecanismo` de cada evidencia a favor (v1.2). No infiere nada nuevo: base, determinante y «¿funciona muerta?»
+   (Atlas.pivot.muerta, misma regla que Python) por clase. Sin repetir el pivote: un enlace «Quién más →» por clase.
+   Si la ficha toca un mecanismo del catálogo con candidatos (hoy M35), tarjeta plegable «¿Dónde está la clave?». */
+const FAV = d => d === "+" || d === "mixto";
+const BASE_ORD = ["causal", "observado", "inferencia", "prediccion_genomica"];
+function comoLoHace(subj, sp) {
+  const esCepa = D.resolve(subj).tipo === "cepa";
+  const card = h("div", {class: "card how-card"}, h("h3", {}, "Cómo lo hace"));
+  const evs = D.evidenceOf(subj).filter(e => e.tipo !== "contexto" && FAV(e.direccion) && !esAsoc(e) && !(esCepa && esMezcla(e)));
+  const P = Atlas.pivot;
+  if (!evs.some(e => e.mecanismo)) {
+    card.append(h("p", {class: "muted small"}, "Mecanismo no curado en esta versión de los datos."));
+  } else {
+    const g = new Map(); let desc = 0;
+    evs.forEach(e => {
+      const cl0 = (e.mecanismo || {}).clases || [];
+      if (cl0.includes("no_aplica")) return;   // nicho, taxonomía, seguridad: no hay mecanismo que describir
+      const cl = cl0.filter(c => c !== "desconocido");
+      if (!cl.length) { if (e.direccion === "+") desc++; return; }   // «a favor» = «+» (un resultado mixto no lo es)
+      cl.forEach(c => {
+        if (!g.has(c)) g.set(c, {c, evs: [], genes: new Set(), cepas: new Set()});
+        const x = g.get(c); x.evs.push(e); (e.mecanismo.genes || []).forEach(z => x.genes.add(z));
+        if (e.cepa) x.cepas.add(e.cepa);
+      });
+    });
+    const ul = h("ul", {class: "how-lines"});
+    [...g.values()].sort((a, b) => b.evs.length - a.evs.length).forEach(x => {
+      const best = x.evs.reduce((b, e) => (NIVORD.indexOf(genLabel(e.nivel)) < NIVORD.indexOf(genLabel(b)) ? e.nivel : b), x.evs[0].nivel);
+      const bases = x.evs.map(e => e.mecanismo.base).filter(b => BASE_ORD.includes(b)).sort((a, b) => BASE_ORD.indexOf(a) - BASE_ORD.indexOf(b));
+      const ident = x.evs.some(e => e.mecanismo.determinante === "identificado");
+      const mu = P && P.muerta ? P.muerta(x.evs) : {k: "np"};
+      const fam = (P && P.famOf && P.famOf(x.c)) || "unk";
+      ul.append(h("li", {class: "how-l how-fam-" + fam + (ident ? "" : " how-det"), title: (P && P.FAM && P.FAM[fam] || {}).etq || "sin familia"},
+        h("b", {}, claseCorta(x.c)),
+        x.genes.size ? h("span", {class: "genes-in"}, ...[...x.genes].flatMap((z, i) => [i ? ", " : "", h("a", {class: "gene-link", href: PIVQ("gen", z, subj)}, h("i", {}, z))])) : "",
+        level(best),
+        h("span", {class: "small muted"}, [bases[0] ? BASE_CORTA[bases[0]] : null, ident ? "determinante identificado" : "determinante desconocido"].filter(Boolean).join(" · ")),
+        mu.k === "si" ? h("span", {class: "muerta muerta-si"}, "funciona inactivada") : mu.k === "frac" ? h("span", {class: "muerta muerta-si"}, "funciona con fracción")
+          : mu.k === "nulo" ? h("span", {class: "muerta"}, "probada inactivada: sin efecto") : "",
+        !esCepa ? h("span", {class: "small muted"}, x.cepas.size ? [...x.cepas].map(c => (D.strain(c) || {}).nombre_corto || c).join(", ") : "sin cepa nombrada") : "",
+        !esCepa ? U.sources(x.evs.map(e => e.id)) : "",
+        h("a", {class: "who-more", href: PIVQ("mec", x.c, subj)}, "Quién más →")));
+    });
+    if (!g.size) ul.append(h("li", {class: "muted"}, "Ningún mecanismo descrito en la evidencia a favor."));
+    card.append(ul);
+    if (desc) card.append(h("p", {class: "small muted"}, desc + " evidencia" + (desc > 1 ? "s" : "") + " a favor sin mecanismo descrito (desconocido, no se rellena)."));
+    // «¿Dónde está la clave?»: mecanismos del catálogo con candidatos tocados por esta ficha
+    const ids = [...new Set(evs.flatMap(e => (e.mecanismo || {}).ids || []))];
+    ids.map(D.mecanismo).filter(m => m && (m.candidatos || []).length).forEach(m => card.append(claveCard(m, subj)));
+  }
+  card.append(...queProduce(subj, sp, esCepa));
+  return card;
+}
+const SOLIDEZ = {hipotesis: ["hip", "HIPÓTESIS"], evidencia: ["evi", "EVIDENCIA"], inferencia: ["inf", "INFERENCIA"]};
+const BASE_DESC = {observado: "observado", inferencia: "inferencia", causal: "causal", hipotesis: "hipótesis"};
+/** Fuentes en texto libre del catálogo: ids de evidencia → chip; rutas de fuentes públicas → su descripción, sin guiones bajos */
+function fuenteNodes(txt) {
+  return String(txt || "").split(/\s*(?:\+|,)\s*(?=[a-z])/).filter(Boolean).flatMap(part => {
+    const id = (part.match(/^([a-z]+(?:-[a-z]+)+\.ev\d+[a-z]?)/) || [])[1];
+    if (id && D.evidence(id)) return [U.sourceChip(id)];
+    const par = (part.match(/\(([^)]+)\)\s*$/) || [])[1];
+    if (/\//.test(part)) return [h("span", {class: "small muted", title: part}, "datos públicos" + (par ? ": " + par : ""))];
+    return [h("span", {class: "small muted"}, part.replace(/_/g, " "))];
+  });
+}
+function claveCard(m, subj) {
+  const des = m.descartadas || [], can = m.candidatos || [];
+  const nHip = can.filter(c => c.base === "hipotesis").length;
+  const body = h("div", {class: "clave-body"},
+    h("p", {class: "clave-det"}, h("b", {}, "Determinante DESCONOCIDO. "), m.nota || ""),
+    h("p", {class: "small muted"}, m.nombre));
+  if (des.length) body.append(h("h4", {}, "Descartadas (" + des.length + ")"), h("ul", {class: "clave-list"}, des.map(d => h("li", {},
+    h("b", {}, claseCorta(d.clase)), " ", h("span", {class: "tag"}, BASE_DESC[d.base] || String(d.base || "").replace(/_/g, " ")),
+    h("p", {class: "small"}, d.motivo || ""), (d.fuentes || []).length ? U.sources(d.fuentes.filter(f => f !== "criterio_propio")) : ""))));
+  if (can.length) body.append(h("h4", {}, "Candidatos (" + nHip + " hipótesis)"), h("ul", {class: "clave-list clave-cand"}, can.map(c => {
+    const [k, t] = SOLIDEZ[c.base] || ["inf", String(c.base || "").toUpperCase()];
+    return h("li", {class: "clave-c clave-" + k},
+      h("div", {class: "clave-what"}, h("span", {class: "clave-tag clave-tag-" + k}, t), " ", h("b", {}, c.candidato.replace(/^HIPÓTESIS RIVAL:\s*/, "Rival: ")),
+        h("p", {class: "small"}, c.dato || ""), h("div", {class: "clave-src"}, ...fuenteNodes(c.fuente))),
+      c.lo_refutaria ? h("div", {class: "clave-ref"}, h("b", {}, "Lo refutaría: "), c.lo_refutaria) : "");
+  })));
+  body.append(h("a", {class: "who-more", href: PIVQ("mid", m.id, subj)}, "Quién más comparte este fenómeno →"));
+  return h("details", {class: "clave"}, h("summary", {}, h("b", {}, "¿Dónde está la clave?"),
+    h("span", {class: "small muted"}, " determinante desconocido · " + des.length + " descartadas · " + nHip + " hipótesis"), icon("chev")), body);
+}
+/* E5 · «Qué produce y por qué vía» (rasgos v1.2), una línea por output. El detalle genómico vive en el bloque Genoma (cepa)
+   o en la tabla n/N (especie). Una cepa con evidencia en contra de un rasgo sale en rasgo.cepas_en_contra (rasgos_v12.py):
+   se pinta «No: Bacteriocina (porta Abp118, no la produce)» con el chip de su evidencia; nunca como productora. */
+function enContraTxt(subj, x) {
+  const st = D.strain(subj), vk = st && Atlas.genoma ? Atlas.genoma.vinculo(st) : null, g = vk && vk.acc ? D.genome(vk.acc) : null;
+  const G = D.raw.genomica;
+  const hit = g && Object.entries(g.produccion || {}).find(([, p]) => p.estado === "porta_no_produce" && (p.evidencias || []).some(e => (x.evidencias || []).includes(e)));
+  if (!hit) return "evidencia en contra";
+  const nm = (((G && G.marcadores) || []).find(m => m.id === hit[0]) || {}).nombre || hit[0];
+  return "porta " + nm.split(" (")[0].split(" ").pop() + ", no la produce";
+}
+function queProduce(subj, sp, esCepa) {
+  const todos = (sp && sp.rasgos) || [];
+  const ras = todos.filter(t => !esCepa || (t.cepas || []).includes(subj));
+  const contra = esCepa ? todos.map(t => [t, (t.cepas_en_contra || []).find(x => x.cepa === subj)]).filter(([, x]) => x) : [];
+  if (!ras.length && !contra.length) return [];
+  const VR = (D.raw.catalogo.vocabulario_rasgos || {rasgos: {}}).rasgos;
+  const prop = ras.filter(t => t.alcance === "criterio_propio"), rest = ras.filter(t => t.alcance !== "criterio_propio");
+  const ul = h("ul", {class: "how-lines"});
+  rest.forEach(t => {
+    const fe = (t.fuentes || []).map(D.evidence).filter(Boolean);
+    const propias = esCepa ? fe.filter(e => e.cepa === subj) : [];
+    const no = t.presente === "no" || (esCepa && propias.length && !propias.some(e => FAV(e.direccion)));
+    const via = t.via !== "desconocida" ? t.via_etiqueta + (t.via_en_fuente === "si" ? "" : " (la fuente no la nombra)")
+      : "vía no identificada" + (t.via_candidata_etiqueta ? " (candidata: " + t.via_candidata_etiqueta + ")" : "");
+    // anotador y vínculo visibles por cepa; en la especie, n/N con los indeterminados y su lectura (nunca un 0/8 que oculte 8 indet.)
+    const gen = (t.genomica || []).map(x => esCepa ? (x.cepas_atlas && x.cepas_atlas[subj] ? x.marcador + ": " + U.genCepaTxt(x.cepas_atlas[subj]) : null)
+      : x.marcador + " " + x.taxones.map(z => (x.taxones.length > 1 && z.taxon ? z.taxon.replace(/^.* subsp\. /, "subsp. ") + ": " : "") + U.taxTxt(z)).join(" · ")).filter(Boolean);
+    const np = ((VR[t.rasgo] || {}).productores || []).length;
+    const enc = (t.cepas_en_contra || []);
+    ul.append(h("li", {class: no ? "how-no" : ""},
+      h("b", {}, (no ? "No: " : "") + t.etiqueta),
+      h("span", {class: "small"}, via),
+      (t.genes || []).length ? h("span", {class: "genes-in"}, ...t.genes.flatMap((g, j) => [j ? ", " : "", h("a", {class: "gene-link", href: PIVQ("gen", g.gen, subj)}, h("i", {}, g.gen))])) : "",
+      !esCepa ? h("span", {class: "small muted"}, t.alcance === "cepa" ? (t.cepas || []).map(c => (D.strain(c) || {}).nombre_corto || c).join(", ") : String(t.alcance || "").replace(/_/g, " ")) : "",
+      !esCepa && enc.length ? h("span", {class: "small"}, "en contra: " + enc.map(x => (D.strain(x.cepa) || {}).nombre_corto || x.cepa).join(", ")) : "",
+      gen.length ? h("span", {class: "small muted"}, "genoma: " + gen.join(" · ")) : "",
+      !esCepa && fe.length ? U.sources(fe.map(e => e.id)) : "",
+      np > 1 && t.rasgo !== "bacteriocina" ? h("a", {class: "who-more", href: Atlas.route.href("lineas", null, {out: t.rasgo, s: subj})}, "¿Quién más? (" + np + ") →") : ""));
+  });
+  contra.forEach(([t, x]) => ul.append(h("li", {class: "how-no"},
+    h("b", {}, "No: " + t.etiqueta + " (" + enContraTxt(subj, x) + ")"), U.sources(x.evidencias || []))));
+  const out = [h("h4", {}, "Qué produce y por qué vía"), ul];
+  if (prop.length) out.push(h("p", {class: "small muted"}, "Por criterio propio del atlas, sin fuente: " + prop.map(t => t.etiqueta).join(", ") + "."));
+  return out;
+}
+
+/* ---------- TIRA DE FORMAS (P1-04; sustituye a la pestaña Modo pregunta) ----------
+   Tres chips: vivo / posbiótico / fermentado. Cada uno: evidencias a favor EN ESA FORMA (sin asociaciones; en la cepa, sin
+   mezclas) y la puerta de puerta_cepa.json (cepa) o la ruta de la especie (especie). La puerta posbiótica que sale de la regla
+   de E6 («en forma no viable la AMR informa pero no decide») se rotula «criterio del atlas, no regulatorio».
+   Al tocar un chip: razón + regla, ruta de la especie como contexto sin color y veredicto por línea o el motivo de que no lo haya. */
+const FORMAS = ["vivo", "posbiotico", "fermentado"];
+/* El rótulo y su nota («el atlas la deja condicionada…») solo cuando la puerta ES condicionada por esa regla: con «desconocida»
+   la nota se contradecía. Misma función que el recuento de «Sobre los datos» (Atlas.ui.posbCriterio). */
+const esCriterio = x => U.posbCriterio(x);
+const CRIT_TXT = "criterio del atlas, no regulatorio";
+const REGLA_TXT = {"R-especie": "hereda la ruta de la especie y comprueba el genoma de la cepa", "R-nomedido": "la condición QPS es de cepa y su genoma no está medido",
+                   "R-noqps": "especie sin QPS: una autorización de otra cepa o forma no se hereda y el genoma de esta cepa no está medido",
+                   "R-cerrada": "ruta de la especie cerrada", "R-calif": "calificación QPS sin verificar"};
+function formaStrip(subj, sp) {
+  const esCepa = D.resolve(subj).tipo === "cepa";
+  const evs0 = D.evidenceOf(subj).filter(e => e.tipo !== "contexto");
+  // una mezcla de cepas no cuenta para la cepa y una asociación no es efecto: fuera también del denominador («7 a favor de 10»)
+  const aparte = evs0.filter(e => esAsoc(e) || (esCepa && esMezcla(e)));
+  const evs = evs0.filter(e => !aparte.includes(e));
+  const cuentaFav = e => e.direccion === "+" && !esAsoc(e) && !(esCepa && esMezcla(e));
+  const rpf = (sp && sp.regulatorio && sp.regulatorio.ruta_por_forma) || {};
+  const pc = esCepa ? D.puertaCepa(subj) : null;   // en ficha de cepa manda el estado de la cepa (incluye «no medido»)
+  const wrap = h("section", {class: "forma-strip"}, h("h3", {}, "¿En qué forma? ", h("span", {class: "small muted"}, "inactivado y componente cuentan como posbiótico")));
+  const row = h("div", {class: "fs-chips"});
+  const detail = h("div", {class: "fs-detail", id: "fs-detail-" + subj.replace(/[^\w-]/g, "-")});
+  let sel = null;
+  FORMAS.forEach(f => {
+    const ef = evs.filter(e => U.formaProducto(e.forma) === f), fav = ef.filter(cuentaFav);
+    const x = pc ? pc.puerta_por_forma[f] : rpf[f] || null;
+    const est = x ? x.estado : "desconocida";
+    const b = h("button", {class: "fs-chip", type: "button", "aria-pressed": "false", "aria-controls": detail.id, "data-f": f, onclick: () => {
+      sel = sel === f ? null : f;
+      row.querySelectorAll(".fs-chip").forEach(z => z.setAttribute("aria-pressed", String(z.dataset.f === sel)));
+      detail.innerHTML = ""; if (sel) detail.append(formaDetail(subj, sp, sel, evs, cuentaFav));
+    }},
+      h("b", {}, U.formaLabel(f)),
+      h("span", {class: "fs-n" + (fav.length ? "" : " zero")}, fav.length ? fav.length + " a favor" + (ef.length > fav.length ? " de " + ef.length : "") : ef.length ? "0 a favor de " + ef.length : "sin evidencia"),
+      U.gatePill("regulatorio", pc ? "cepa" : "ruta", est, x && x.regla === "R-calif" && est === "no_medido" ? "no medido (calificación QPS sin verificar)" : null),
+      f === "posbiotico" && esCriterio(x) ? h("span", {class: "fs-crit"}, CRIT_TXT) : "");
+    row.append(b);
+  });
+  wrap.append(row);
+  const nNull = evs.filter(e => !e.forma).length, nMet = evs.filter(e => e.forma && !U.formaProducto(e.forma)).length;
+  const nMz = aparte.filter(esMezcla).length, nAs = aparte.filter(e => !esMezcla(e)).length;
+  if (nNull || nMet || nMz || nAs) wrap.append(h("p", {class: "small muted fs-otras"}, [nNull ? pl(nNull, "evidencia", "evidencias") + " con forma no declarada" : null,
+    nMet ? nMet + " con " + [...new Set(evs.filter(e => e.forma && !U.formaProducto(e.forma)).map(e => formaTxt(e.forma)))].join(", ") : null,
+    nMz ? nMz + " en mezcla de cepas" : null, nAs ? pl(nAs, "asociación", "asociaciones") : null].filter(Boolean).join(" · ") +
+    (nNull + nMet + nMz + nAs === 1 ? ": no cuenta" : ": no cuentan") + " en ninguna de las tres."));
+  wrap.append(detail);
+  return wrap;
+}
+function formaDetail(subj, sp, f, evs, cuentaFav) {
+  const out = h("div", {class: "card"});
+  const ruta = ((sp && sp.regulatorio && sp.regulatorio.ruta_por_forma) || {})[f];
+  const pc = D.resolve(subj).tipo === "cepa" ? D.puertaCepa(subj) : null;
+  if (pc) { const x = pc.puerta_por_forma[f];
+    out.append(h("p", {class: "small k6-why"}, U.gatePill("regulatorio", "Esta cepa", x.estado), " ", x.razon + ".",
+      h("span", {class: "muted"}, " Regla " + x.regla + (REGLA_TXT[x.regla] ? ": " + REGLA_TXT[x.regla] : "") + ".")));
+    if (f === "posbiotico" && esCriterio(x)) out.append(h("p", {class: "fs-crit-note"}, h("b", {}, "Criterio del atlas, no regulatorio. "),
+      "Ninguna norma dice todavía cómo se evalúa una cepa inactivada: el atlas la deja «condicionada» porque en forma no viable la AMR informa pero no decide. Es una regla propia, no una evaluación de EFSA ni de la Comisión."));
+    if (x.estado === "no_medido" && pc.nota_origen) out.append(h("p", {class: "k6-note"},
+      "Origen curado: " + pc.nota_origen + ". «Sin accesión en el atlas» no es «no existe genoma».")); }
+  // con cepa, la ruta de especie es contexto (sin color), no la puerta: así no hay un verde de especie bajo un «no medido» de cepa
+  if (ruta) out.append(h("p", {class: "small fs-ruta"}, pc ? h("b", {}, "Ruta de la especie (contexto): " + String(ruta.estado || "?").replace(/_/g, " ") + ". ")
+    : U.gatePill("regulatorio", "Ruta", ruta.estado || "desconocida"), " ", ruta.texto || "", " ", sourcesList((ruta.fuentes || []).filter(x => x !== "criterio_propio"))));
+  if (!pc && f === "posbiotico" && esCriterio(ruta)) out.append(h("p", {class: "fs-crit-note"}, h("b", {}, "Criterio del atlas, no regulatorio.")));
+  const lineas = [...new Set(evs.map(e => e.linea))].filter(l => (D.linea(l) || {}).tipo === "producto");
+  const ul = h("ul", {class: "claims fs-lines"});
+  lineas.forEach(l => {
+    const v = D.verdict(subj, l, f), st = D.verdictState(subj, l, f);
+    const nf = evs.filter(e => e.linea === l && U.formaProducto(e.forma) === f);
+    const otras = [...new Set(evs.filter(e => e.linea === l).map(e => U.formaProducto(e.forma)))].filter(x => x && x !== f);
+    let li;
+    if (v) {
+      const det = h("details", {class: "fs-why"}, h("summary", {}, "Razones y fuentes"),
+        ...[["A favor", v.a_favor], ["En contra", v.en_contra], ["Lo que falta", v.lo_que_falta]].map(([t, rs]) => h("div", {},
+          h("p", {class: "sub"}, t), h("ul", {class: "mini-list"}, (rs || []).length ? rs.map(r => h("li", {}, U.reasonText(r, v), " ", (r.fuentes || []).length ? U.sources(r.fuentes) : "")) : h("li", {class: "muted"}, "—")))),
+        v.puertas ? h("div", {class: "gates"}, U.gatePill("seguridad", "Seguridad", v.puertas.seguridad),
+          // en una cepa, la puerta regulatoria es la de la cepa en esa forma (incluye «no medido»), no la ruta de especie
+          U.gatePill("regulatorio", "Regulación", pc ? pc.puerta_por_forma[f].estado : v.puertas.regulatorio), U.gatePill("tecnologia", "Tecnología", v.puertas.tecnologia)) : "",
+        h("p", {class: "small muted"}, "Regla " + (v.regla_aplicada || "—") + " · " + (v.autor === "estratega" ? "dossier del estratega" : "automático")));
+      li = h("li", {}, h("p", {class: "txt"}, h("b", {}, U.lineaName(l)), " ", U.verdictBadge(v)), det);
+    } else {
+      const e = st && st.estado;
+      const txt = (e === "sin_evidencia_en_forma" || (!st && !nf.length)) ? "Sin evidencia en esta forma" + (otras.length ? " (sí en " + otras.map(U.formaLabel).join(", ").toLowerCase() + ")" : "")
+        : e === "sin_resultado_a_favor" || (nf.length && !nf.some(cuentaFav)) ? nf.length + " evidencia" + (nf.length > 1 ? "s" : "") + " en esta forma, ninguna a favor"
+        : "No calculado: hay " + nf.length + " evidencia" + (nf.length > 1 ? "s" : "") + " en esta forma y aún no tiene veredicto";
+      li = h("li", {class: "fs-nov"}, h("p", {class: "txt"}, h("b", {}, U.lineaName(l)), " ", h("span", {class: "small muted"}, txt)));
+    }
+    ul.append(li);
+  });
+  if (!lineas.length) ul.append(h("li", {class: "muted"}, "Sin evidencia de producto."));
+  out.append(ul);
+  return out;
+}
+
+/* ---------- Bloque «Genoma» (P1-05): lo pinta js/25_genoma.js (Atlas.genoma) desde genomica.json + puerta_cepa.json ---------- */
+function foldGenoma(st) {
+  if (!Atlas.genoma) return fold("Genoma", "capa genómica no cargada · no medido", h("p", {class: "k6-note"}, "No medido ≠ ausente."));
+  const r = Atlas.genoma.cepa(st);
+  return fold("Genoma", r.sum, r.body);
+}
+function foldGenomaEspecie(s) {
+  if (!Atlas.genoma) return null;
+  const r = Atlas.genoma.especie(s);
+  return r ? fold("Genoma (genomas públicos)", r.sum, r.body) : null;
+}
 
 /* ---------- utilidades compartidas del paquete ---------- */
 function kvp(k, v, fuentes) { return h("div", {class: "kv"}, h("small", {}, k), h("span", {}, v, " ", sourcesList(fuentes))); }

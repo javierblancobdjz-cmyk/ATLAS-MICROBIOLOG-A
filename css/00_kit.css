@@ -11,9 +11,10 @@
   --l1:#3A2F85; --l2:#4E4396; --l3:#6458AA; --l4:#887EC2; --l5:#A098D1; --l6:#B4AEDC;
   --l1-ink:#FFFFFF; --l2-ink:#FFFFFF; --l3-ink:#FFFFFF; --l4-ink:#1D1A3A; --l5-ink:#1D1A3A; --l6-ink:#1D1A3A;
   /* estado (reservados: nunca como serie) */
-  --ok:#2F7D62; --ok-soft:#E3F1EB;
+  --ok:#2A6F57; --ok-soft:#E3F1EB;                               /* ≥ 5:1 sobre ok-soft (AA a 13 px) */
   --warn:#94600F; --warn-mark:#B7791F; --warn-soft:#FBF1DF;     /* warn = texto; warn-mark = bordes/diana */
-  --bad:#B4505E; --bad-soft:#F8E7EA;
+  --bad:#A3434F; --bad-soft:#F8E7EA;                             /* ≥ 5:1 sobre bad-soft */
+  --nd:#5F6E71; --nd-soft:#EEF2F1; --nd-line:#8A9799;                 /* no medido / desconocido / no probada: gris + borde discontinuo */
   --hatch-fg:#B4AEDC; --hatch-bg:#FFFFFF;
   /* tipografía */
   --serif:"Source Serif 4",Charter,"Bitstream Charter",Georgia,serif;
@@ -38,6 +39,7 @@
   --l1:#CEC8FF; --l2:#B4ABF4; --l3:#9F96E8; --l4:#8C83D6; --l5:#665EA6; --l6:#524C86;
   --l1-ink:#141B1E; --l2-ink:#141B1E; --l3-ink:#141B1E; --l4-ink:#141B1E; --l5-ink:#FFFFFF; --l6-ink:#FFFFFF;
   --ok:#6CC3A0; --ok-soft:#1D3830; --warn:#E2A84E; --warn-mark:#E2A84E; --warn-soft:#3A2F1C; --bad:#E58C98; --bad-soft:#3D2329;
+  --nd:#A3B0B0; --nd-soft:#212B2F; --nd-line:#6E7E83;
   --hatch-fg:#524C86; --hatch-bg:#1C2529;
   --sh-1:none; --sh-panel:-12px 0 32px rgba(0,0,0,.45); --sh-sheet:0 -12px 32px rgba(0,0,0,.5);}}
 :root[data-theme="dark"]{
@@ -47,6 +49,7 @@
   --l1:#CEC8FF; --l2:#B4ABF4; --l3:#9F96E8; --l4:#8C83D6; --l5:#665EA6; --l6:#524C86;
   --l1-ink:#141B1E; --l2-ink:#141B1E; --l3-ink:#141B1E; --l4-ink:#141B1E; --l5-ink:#FFFFFF; --l6-ink:#FFFFFF;
   --ok:#6CC3A0; --ok-soft:#1D3830; --warn:#E2A84E; --warn-mark:#E2A84E; --warn-soft:#3A2F1C; --bad:#E58C98; --bad-soft:#3D2329;
+  --nd:#A3B0B0; --nd-soft:#212B2F; --nd-line:#6E7E83;
   --hatch-fg:#524C86; --hatch-bg:#1C2529;
   --sh-1:none; --sh-panel:-12px 0 32px rgba(0,0,0,.45); --sh-sheet:0 -12px 32px rgba(0,0,0,.5);}
 
@@ -109,7 +112,7 @@ svg.ic{width:1.05em;height:1.05em;vertical-align:-.17em;flex:none}
 /* -- alcance, verificación, dirección -- */
 .mark{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-xs);color:var(--ink-2);white-space:nowrap}
 .mark.ok{color:var(--ok);font-weight:600} .mark.pend{color:var(--warn);font-weight:600} .mark.no{color:var(--bad);font-weight:600}
-.mark.atk{color:var(--warn);font-weight:600}
+.mark.atk{color:var(--accent);font-weight:600}
 .qps{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-sm);padding:3px 10px;font-size:var(--fs-xs);font-weight:600}
 .qps.yes{background:var(--ok-soft);color:var(--ok)} .qps.nope{background:var(--bad-soft);color:var(--bad)}
 .tag{display:inline-flex;align-items:center;border-radius:var(--r-sm);padding:3px 10px;font-size:var(--fs-xs);font-weight:600;background:var(--surface-2);color:var(--ink-2)}
@@ -213,7 +216,7 @@ svg.ic{width:1.05em;height:1.05em;vertical-align:-.17em;flex:none}
 .cell.gap{background:transparent;border:1.5px dashed var(--line-strong);color:var(--ink-3);font-weight:400;cursor:default}
 .cell.atk{background:var(--warn-soft);border:1.5px solid var(--warn-mark);color:var(--warn)}
 .cell.neg{background:var(--bad-soft);color:var(--bad)}
-.cell .n{font-weight:400;opacity:.85}
+.cell .n{font-weight:400}
 .strain{font-weight:600;display:block}
 .strain small{display:block;font-weight:400;color:var(--ink-3);font-size:var(--fs-xs)}
 @media (max-width:760px){.mx thead th{min-width:96px}.cell .n{display:none}}

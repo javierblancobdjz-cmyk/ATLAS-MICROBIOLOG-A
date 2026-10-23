@@ -1,0 +1,39 @@
+accession,organismo,cepa,categoria_material_tipo,nivel_ensamblaje
+GCF_000829055.1,Lacticaseibacillus casei DSM 20011 = JCM 1134 = ATCC 393,ATCC 393,TYPE_MATERIAL,Complete Genome
+GCF_004123795.1,Lacticaseibacillus chiayiensis,NCYUAS,TYPE_MATERIAL,Contig
+GCF_000159495.1,Lacticaseibacillus paracasei subsp. paracasei ATCC 25302 = DSM 5622 = JCM 8130,ATCC 25302,TYPE_MATERIAL,Scaffold
+GCF_000829035.1,Lacticaseibacillus paracasei subsp. paracasei,JCM 8130,TYPE_MATERIAL,Complete Genome
+GCF_001436385.1,Lacticaseibacillus paracasei subsp. paracasei ATCC 25302 = DSM 5622 = JCM 8130,DSM 5622,TYPE_MATERIAL,Contig
+GCF_004354655.1,Lacticaseibacillus paracasei subsp. paracasei,ATCC 25302,TYPE_MATERIAL,Scaffold
+GCF_007989125.1,Lacticaseibacillus paracasei subsp. paracasei,NBRC 15889,TYPE_MATERIAL,Contig
+GCF_001435405.1,Lacticaseibacillus rhamnosus DSM 20021 = JCM 1136 = NBRC 3425,DSM 20021,TYPE_MATERIAL,Scaffold
+GCF_002849515.1,Lacticaseibacillus rhamnosus,NRRL B-442,TYPE_MATERIAL,Contig
+GCF_007990855.1,Lacticaseibacillus rhamnosus DSM 20021 = JCM 1136 = NBRC 3425,NBRC 3425,TYPE_MATERIAL,Contig
+GCF_900636965.1,Lacticaseibacillus rhamnosus,NCTC13764,TYPE_MATERIAL,Complete Genome
+GCF_000260435.1,Lacticaseibacillus zeae DSM 20178 = KCTC 3804,KCTC 3804,TYPE_MATERIAL,Contig
+GCF_001433745.1,Lacticaseibacillus zeae DSM 20178 = KCTC 3804,DSM 20178,TYPE_MATERIAL,Scaffold
+GCF_030770335.1,Lacticaseibacillus zeae subsp. silagei,NCIMB 15474,TYPE_MATERIAL,Complete Genome
+GCF_001435215.1,Lactiplantibacillus argentoratensis DSM 16365,DSM 16365,TYPE_MATERIAL,Scaffold
+GCF_003641165.1,Lactiplantibacillus argentoratensis,DSM 16365,TYPE_MATERIAL,Complete Genome
+GCF_007991855.1,Lactiplantibacillus argentoratensis,NBRC 106468,TYPE_MATERIAL,Contig
+GCF_000498955.2,Lactiplantibacillus fabifermentans DSM 21115,DSM 21115,TYPE_MATERIAL,Scaffold
+GCF_001435655.1,Lactiplantibacillus paraplantarum DSM 10667,DSM 10667,TYPE_MATERIAL,Scaffold
+GCF_003641145.1,Lactiplantibacillus paraplantarum,DSM 10667,TYPE_MATERIAL,Complete Genome
+GCF_007991915.1,Lactiplantibacillus paraplantarum,NBRC 107151,TYPE_MATERIAL,Contig
+GCF_001433755.1,Lactiplantibacillus pentosus DSM 20314,DSM 20314,TYPE_MATERIAL,Scaffold
+GCF_003641185.1,Lactiplantibacillus pentosus,DSM 20314,TYPE_MATERIAL,Complete Genome
+GCF_004354685.1,Lactiplantibacillus pentosus,ATCC 8041,TYPE_MATERIAL,Scaffold
+GCF_007991835.1,Lactiplantibacillus pentosus,NBRC 106467,TYPE_MATERIAL,Contig
+GCF_000143745.1,Lactiplantibacillus plantarum subsp. plantarum ATCC 14917 = JCM 1149 = CGMCC 1.2437,ATCC 14917,TYPE_MATERIAL,Scaffold
+GCF_001434175.1,Lactiplantibacillus plantarum subsp. plantarum ATCC 14917 = JCM 1149 = CGMCC 1.2437,CGMCC 1.2437,TYPE_MATERIAL,Scaffold
+GCF_001436855.1,Lactiplantibacillus plantarum,DSM 13273,TYPE_MATERIAL_SYN,Scaffold
+GCF_007989145.1,Lactiplantibacillus plantarum subsp. plantarum,NBRC 15891,TYPE_MATERIAL,Contig
+GCF_014131735.1,Lactiplantibacillus plantarum,DSM 20174,TYPE_MATERIAL,Complete Genome
+GCF_051712885.1,Lactiplantibacillus plantarum,JCM 1149,TYPE_MATERIAL,Scaffold
+GCF_001438845.1,Lactiplantibacillus xiangfangensis,LMG 26013,TYPE_MATERIAL,Scaffold
+GCF_001435955.1,Ligilactobacillus salivarius DSM 20555 = ATCC 11741,DSM 20555,TYPE_MATERIAL,Contig
+GCF_002079585.1,Ligilactobacillus salivarius,DSM 20554,TYPE_MATERIAL_SYN,Scaffold
+GCF_029823545.1,Ligilactobacillus salivarius,LMG 9477,TYPE_MATERIAL,Contig
+GCF_053470885.1,Ligilactobacillus salivarius,LMG9476,TYPE_MATERIAL_SYN,Contig
+GCF_053470905.1,Ligilactobacillus salivarius,LMG9477,TYPE_MATERIAL,Contig
+GCF_965136025.1,Ligilactobacillus salivarius,CIP103140T,TYPE_MATERIAL,Scaffold

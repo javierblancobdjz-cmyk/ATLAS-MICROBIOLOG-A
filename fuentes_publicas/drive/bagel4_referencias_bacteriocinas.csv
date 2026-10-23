@@ -1,0 +1,77 @@
+accession,especie,bacteriocina,clase,identidad_pct,novedad,longitud_aa,aoi,inicio,fin
+GCF_050308165.1,Bifidobacterium bifidum,Propionicin_SM1,II,37.805,candidata nueva,190,NZ_CP1695601.0.AOI_01,1948962,1949534
+GCF_001042595.1,Bifidobacterium dentium,Propionicin_SM1,II,28.571,candidata nueva,191,NZ_AP0123261.0.AOI_01,1065686,1066258
+GCF_050407865.1,Bifidobacterium dentium,Propionicin_SM1,II,29.032,candidata nueva,190,NZ_CP1629191.0.AOI_01,1053106,1053678
+GCF_050407875.1,Bifidobacterium dentium,Propionicin_SM1,II,29.032,candidata nueva,191,NZ_CP1629201.0.AOI_01,1067773,1068345
+GCF_050407885.1,Bifidobacterium dentium,Propionicin_SM1,II,29.032,candidata nueva,166,NZ_CP1629211.0.AOI_01,1037811,1038308
+GCF_050407895.1,Bifidobacterium dentium,Propionicin_SM1,II,29.032,candidata nueva,190,NZ_CP1629221.0.AOI_01,2232298,2232870
+GCF_000155515.2,Lacticaseibacillus paracasei,Thermophilin_A,II,43.056,candidata nueva,84,NC_0221121.0.AOI_01,2705217,2705471
+GCF_000155515.2,Lacticaseibacillus paracasei,LSEI_2386,II,100.0,conocida,63,NC_0221121.0.AOI_02,2389802,2389993
+GCF_000155515.2,Lacticaseibacillus paracasei,Enterocin_X_chain_beta,II,46.154,candidata nueva,60,NC_0221121.0.AOI_02,2385770,2385952
+GCF_000155515.2,Lacticaseibacillus paracasei,Carnocin_CP52,II,31.818,candidata nueva,111,NC_0221121.0.AOI_02,2381417,2381752
+GCF_026013725.1,Lacticaseibacillus paracasei,Thermophilin_A,II,43.056,candidata nueva,84,NZ_CP1102141.1.AOI_01,2962247,2962501
+GCF_026013725.1,Lacticaseibacillus paracasei,LSEI_2386,II,100.0,conocida,63,NZ_CP1102141.1.AOI_02,2627098,2627287
+GCF_026013725.1,Lacticaseibacillus paracasei,Enterocin_X_chain_beta,II,46.154,candidata nueva,60,NZ_CP1102141.1.AOI_02,2622012,2622194
+GCF_026013725.1,Lacticaseibacillus paracasei,Carnocin_CP52,II,32.727,candidata nueva,111,NZ_CP1102141.1.AOI_02,2616598,2616933
+GCF_028609725.1,Lacticaseibacillus paracasei,LSEI_2386,II,100.0,conocida,63,NZ_CP0529361.1.AOI_01,810478,810667
+GCF_028609725.1,Lacticaseibacillus paracasei,Carnocin_CP52,II,32.727,candidata nueva,111,NZ_CP0529361.1.AOI_01,801032,801367
+GCF_028609725.1,Lacticaseibacillus paracasei,Enterocin_X_chain_beta,II,46.154,candidata nueva,60,NZ_CP0529361.1.AOI_01,805392,805574
+GCF_028609725.1,Lacticaseibacillus paracasei,Thermophilin_A,II,43.056,candidata nueva,84,NZ_CP0529361.1.AOI_02,2932797,2933051
+GCF_030061895.1,Lacticaseibacillus paracasei,LSEI_2163,II,100.0,conocida,39,NZ_CP0954061.0.AOI_01,1042546,1042663
+GCF_030061895.1,Lacticaseibacillus paracasei,LSEI_2386,II,97.778,conocida,63,NZ_CP0954061.0.AOI_02,1281467,1281656
+GCF_030061895.1,Lacticaseibacillus paracasei,Enterocin_X_chain_beta,II,50.98,divergente,57,NZ_CP0954061.0.AOI_02,1277432,1277605
+GCF_030061895.1,Lacticaseibacillus paracasei,Carnocin_CP52,II,32.727,candidata nueva,111,NZ_CP0954061.0.AOI_02,1272512,1272847
+GCF_030061895.1,Lacticaseibacillus paracasei,Enterolysin_A,III,70.492,variante,350,NZ_CP0954061.0.AOI_03,2906194,2907246
+GCF_000829035.1,Lacticaseibacillus paracasei,LSEI_2163,II,100.0,conocida,39,NZ_AP0125411.1.AOI_01,2207157,2207274
+GCF_000829035.1,Lacticaseibacillus paracasei,LSEI_2386,II,100.0,conocida,63,NZ_AP0125411.1.AOI_02,2433100,2433289
+GCF_000829035.1,Lacticaseibacillus paracasei,Enterocin_X_chain_beta,II,50.98,divergente,57,NZ_AP0125411.1.AOI_02,2428009,2428182
+GCF_000829035.1,Lacticaseibacillus paracasei,Carnocin_CP52,II,31.818,candidata nueva,111,NZ_AP0125411.1.AOI_02,2423655,2423990
+GCF_000829035.1,Lacticaseibacillus paracasei,Butyrivibriocin_AR10230.2;Pentocin,I,,sin dato,94,NZ_AP0125421.2.AOI_01,4005,4289
+GCF_002290185.1,Lactiplantibacillus plantarum,Plantaricin_K,II,100.0,conocida,57,NZ_CP0231741.3.AOI_01,3013791,3013964
+GCF_002290185.1,Lactiplantibacillus plantarum,Plantaricin_J,II,100.0,conocida,50,NZ_CP0231741.3.AOI_01,3013608,3013760
+GCF_002290185.1,Lactiplantibacillus plantarum,Plantaricin_N,II,100.0,conocida,55,NZ_CP0231741.3.AOI_01,3012236,3012403
+GCF_002290185.1,Lactiplantibacillus plantarum,Plantaricin_A,II,100.0,conocida,51,NZ_CP0231741.3.AOI_01,3009118,3009273
+GCF_002290185.1,Lactiplantibacillus plantarum,Plantaricin_F,II,100.0,conocida,52,NZ_CP0231741.3.AOI_01,3004658,3004816
+GCF_002290185.1,Lactiplantibacillus plantarum,Plantaricin_E,II,100.0,conocida,56,NZ_CP0231741.3.AOI_01,3004463,3004633
+GCF_001704335.1,Lactiplantibacillus plantarum,Plantaricin_E,II,100.0,conocida,56,NZ_CP0137531.1.AOI_01,690011,690181
+GCF_001704335.1,Lactiplantibacillus plantarum,Plantaricin_F,II,100.0,conocida,52,NZ_CP0137531.1.AOI_01,690206,690364
+GCF_001704335.1,Lactiplantibacillus plantarum,Plantaricin_A,II,100.0,conocida,51,NZ_CP0137531.1.AOI_01,694666,694821
+GCF_001704335.1,Lactiplantibacillus plantarum,Plantaricin_N,II,100.0,conocida,55,NZ_CP0137531.1.AOI_01,697784,697951
+GCF_001704335.1,Lactiplantibacillus plantarum,Plantaricin_J,II,100.0,conocida,55,NZ_CP0137531.1.AOI_01,699141,699308
+GCF_001704335.1,Lactiplantibacillus plantarum,Plantaricin_K,II,100.0,conocida,57,NZ_CP0137531.1.AOI_01,699339,699512
+GCF_001704315.1,Lactiplantibacillus plantarum,Plantaricin_E,II,100.0,conocida,56,NZ_CP0137491.3.AOI_01,314891,315061
+GCF_001704315.1,Lactiplantibacillus plantarum,Plantaricin_F,II,100.0,conocida,52,NZ_CP0137491.3.AOI_01,315086,315244
+GCF_001704315.1,Lactiplantibacillus plantarum,Plantaricin_A,II,100.0,conocida,51,NZ_CP0137491.3.AOI_01,319546,319701
+GCF_001704315.1,Lactiplantibacillus plantarum,Plantaricin_N,II,100.0,conocida,55,NZ_CP0137491.3.AOI_01,322664,322831
+GCF_001704315.1,Lactiplantibacillus plantarum,Plantaricin_J,II,100.0,conocida,55,NZ_CP0137491.3.AOI_01,324021,324188
+GCF_001704315.1,Lactiplantibacillus plantarum,Plantaricin_K,II,100.0,conocida,57,NZ_CP0137491.3.AOI_01,324219,324392
+GCF_009913655.1,Lactiplantibacillus plantarum,Plantaricin_K,II,100.0,conocida,57,NZ_CP0282211.0.AOI_01,1741577,1741750
+GCF_009913655.1,Lactiplantibacillus plantarum,Plantaricin_J,II,98.182,conocida,55,NZ_CP0282211.0.AOI_01,1741379,1741546
+GCF_009913655.1,Lactiplantibacillus plantarum,Plantaricin_N,II,100.0,conocida,55,NZ_CP0282211.0.AOI_01,1740022,1740189
+GCF_009913655.1,Lactiplantibacillus plantarum,Plantaricin_A,II,100.0,conocida,51,NZ_CP0282211.0.AOI_01,1736904,1737059
+GCF_009913655.1,Lactiplantibacillus plantarum,Plantaricin_F,II,96.154,conocida,52,NZ_CP0282211.0.AOI_01,1732455,1732613
+GCF_009913655.1,Lactiplantibacillus plantarum,Plantaricin_E,II,100.0,conocida,56,NZ_CP0282211.0.AOI_01,1732260,1732430
+GCF_004730965.1,Lactiplantibacillus plantarum,Plantaricin_E,II,100.0,conocida,56,NZ_CP0311401.0.AOI_01,3190121,3190291
+GCF_004730965.1,Lactiplantibacillus plantarum,Plantaricin_F,II,100.0,conocida,52,NZ_CP0311401.0.AOI_01,3190316,3190474
+GCF_004730965.1,Lactiplantibacillus plantarum,Plantaricin_J,II,100.0,conocida,56,NZ_CP0311401.0.AOI_01,3196930,3197097
+GCF_003176835.1,Lactococcus lactis,Enterolysin_A,III,52.98,divergente,265,NZ_CP0281601.0.AOI_01,1515789,1516586
+GCF_029023865.1,Lactococcus lactis,Lactococcin_B_(LCN-B),II,95.833,conocida,41,NZ_CP1189691.2.AOI_01,82537,82662
+GCF_016028835.1,Lactococcus lactis,Lactococcin_B_(LCN-B),II,95.833,conocida,45,NZ_CP0657371.1.AOI_01,1080139,1080276
+GCF_016649195.2,Lactococcus lactis,Lactococcin_B_(LCN-B),II,91.667,conocida,45,NZ_CP1174091.2.AOI_01,2501430,2501567
+GCF_016649195.2,Lactococcus lactis,Enterolysin_A,III,54.088,divergente,231,NZ_CP1174091.2.AOI_02,815465,816160
+GCF_028994235.1,Lactococcus lactis,Lactococcin_A_(LCN-A),II,,sin dato,110,NZ_CP1187381.0.AOI_01,1831760,1832092
+GCF_028994235.1,Lactococcus lactis,Lactococcin_B_(LCN-B),II,45.455,candidata nueva,57,NZ_CP1187381.0.AOI_01,1832652,1832822
+GCF_028994235.1,Lactococcus lactis,Enterolysin_A,III,50.0,divergente,396,NZ_CP1187381.0.AOI_02,1885255,1886445
+GCF_011045395.1,Ligilactobacillus salivarius,Enterolysin_A,III,36.538,candidata nueva,621,NZ_CP0276441.2.AOI_01,719458,721323
+GCF_011045395.1,Ligilactobacillus salivarius,Enterolysin_A,III,36.538,candidata nueva,906,NZ_CP0276441.2.AOI_02,1714907,1717627
+GCF_030062785.1,Ligilactobacillus salivarius,Enterolysin_A,III,35.714,candidata nueva,591,NZ_CP1145431.5.AOI_01,1233880,1235655
+GCF_030062785.1,Ligilactobacillus salivarius,Enterolysin_A,III,35.714,candidata nueva,895,NZ_CP1145431.5.AOI_02,208529,211216
+GCF_030062785.1,Ligilactobacillus salivarius,salivaricin_P_chain_a,II,100.0,conocida,67,NZ_CP1145451.1.AOI_01,97610,97813
+GCF_030062785.1,Ligilactobacillus salivarius,salivaricin_P_chain_b,II,98.529,conocida,68,NZ_CP1145451.1.AOI_01,97832,98038
+GCF_030062805.1,Ligilactobacillus salivarius,Enterolysin_A,III,35.714,candidata nueva,591,NZ_CP1145011.1.AOI_01,1842381,1844156
+GCF_030062805.1,Ligilactobacillus salivarius,Enterolysin_A,III,35.714,candidata nueva,895,NZ_CP1145011.1.AOI_02,820564,823251
+GCF_030062805.1,Ligilactobacillus salivarius,salivaricin_P_chain_a,II,100.0,conocida,67,NZ_CP1145021.0.AOI_01,91838,92041
+GCF_030062805.1,Ligilactobacillus salivarius,salivaricin_P_chain_b,II,98.529,conocida,68,NZ_CP1145021.0.AOI_01,92060,92266
+GCF_014841055.1,Ligilactobacillus salivarius,Enterolysin_A,III,36.25,candidata nueva,771,NZ_CP0620711.1.AOI_01,524015,526330
+GCF_014841055.1,Ligilactobacillus salivarius,Enterolysin_A,III,36.25,candidata nueva,970,NZ_CP0620711.1.AOI_02,1809639,1812551
+GCF_014841055.1,Ligilactobacillus salivarius,MR10B,II,58.537,divergente,35,NZ_CP0620731.0.AOI_01,25209,25313

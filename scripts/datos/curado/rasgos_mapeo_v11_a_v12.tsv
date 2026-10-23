@@ -1,0 +1,41 @@
+especie	idx	rasgo_v11	rasgo	via	via_candidata	candidata_a_curar	justificacion
+akkermansia-muciniphila	0	mucina	degradacion_mucina	glicosidasas_mucina			ev021 (GEN-p) habla de genes candidatos a mucinasa: vía predicha, no medida
+akkermansia-muciniphila	1	propionato	propionato	desconocida			ev020 solo dice que los filogrupos difieren; no nombra ruta
+bifidobacterium-adolescentis	0	gaba	gaba	glutamato_descarboxilasa			ev008 mide GABA; gadB/gadC con respaldo genómico ACI01
+bifidobacterium-adolescentis	1	folato	folato	desconocida			ev008 mide folato; no nombra genes. VIT02 no se usa (ver nota VIT)
+bifidobacterium-bifidum	0	mucina	degradacion_mucina	glicosidasas_mucina			ev003 es GEN-p sobre PRL2010 (una cepa): el alcance se rebaja a cepa; HMO02 da n/N en especie
+bifidobacterium-dentium	0	gaba	gaba	glutamato_descarboxilasa			ev003 nombra genes gad en B. dentium
+bifidobacterium-longum	0	hmo	uso_hmo	cluster_hmo			ev015/ev016 no mencionan ureasa: se retira «ureasa» de genes (crearía una falsa convergencia con S. salivarius M18)
+christensenella-minuta	0	otro	lps_atipico	desconocida			componente estructural; sale de «otro»
+clostridium-butyricum	0	butirato	butirato	desconocida	ptb_buk	PMID 39892707 (CBM588: ptb/buk sobreexpresados aumentan butirato)	ev001 (revisión) dice «producción de butirato» sin ruta; M20 no puede afirmar la CoA-transferasa
+faecalibacterium-duncaniae	0	butirato	butirato	desconocida	coa_transferasa_butirato	PMID 15028695; PMID 33729711 (gen BUT clonado de F. prausnitzii)	ev005 (cribado in silico) no nombra genes; but/buk retirados de genes hasta curar
+faecalibacterium-prausnitzii	0	butirato	butirato	desconocida	coa_transferasa_butirato	PMID 15028695; PMID 33729711 (gen BUT clonado de F. prausnitzii)	ev013 (cribado in silico) no nombra genes; but/buk retirados de genes hasta curar
+lacticaseibacillus-rhamnosus	0	lactato	lactato	desconocida			criterio propio (tipo fermentativo)
+lactiplantibacillus-plantarum	0	bacteriocina	bacteriocina	desconocida			clase y gen: E3 (plnEF en ev003)
+lactiplantibacillus-plantarum	1	gaba	gaba	glutamato_descarboxilasa			ev011 nombra genes gad
+lactiplantibacillus-plantarum	2	lactato	lactato	desconocida			criterio propio
+lactobacillus-crispatus	0	lactato	lactato	desconocida			criterio propio
+lactococcus-lactis	0	bacteriocina	bacteriocina	desconocida			clase y gen: E3 (nisA en ev005)
+lactococcus-lactis	1	lactato	lactato	desconocida			criterio propio
+ligilactobacillus-salivarius	0	bacteriocina	bacteriocina	desconocida			clase y gen: E3 (Abp118)
+ligilactobacillus-salivarius	1	bsh	bsh	hidrolasa_sales_biliares			ev001 nombra «hidrolasa de sales biliares» en pMP118 de UCC118; SAL01 17/17 obliga a reescribir «variable_cepa»
+ligilactobacillus-salivarius	2	lactato	lactato	desconocida			criterio propio
+ligilactobacillus-salivarius	3	acetato	acetato	desconocida			ev009: se separa el H2O2 que estaba escondido en «acetato»
+ligilactobacillus-salivarius	3	acetato	h2o2	desconocida	piruvato_oxidasa	ninguna: solo genómica (ANT01 spxB en GCF_000143435.1)	ev009 mide H2O2 en CECT 5713 y no nombra enzima; spxB está en 17/17 genomas, así que no explica por qué esta cepa
+ligilactobacillus-salivarius	4	mucina	degradacion_mucina	desconocida			ev008: CECT 5713 NO degrada mucina (presente=no es dato)
+ligilactobacillus-salivarius	5	otro	adhesion_epitelio	desconocida			ev008: adhesión a Caco-2/HT-29; determinante desconocido (E4)
+limosilactobacillus-reuteri	0	bacteriocina	reuterina	desconocida			la reuterina no es bacteriocina; fuente = criterio propio
+propionibacterium-freudenreichii	0	vitamina_b12	vitamina_b12	desconocida			ev004 mide B12 activa; no nombra genes
+propionibacterium-freudenreichii	1	vitamina_k2	vitamina_k2	desconocida			ev005 mide menaquinona en ET-3
+propionibacterium-freudenreichii	2	propionato	propionato	desconocida			ev005 no menciona la vía del metilmalonil-CoA: esa frase es criterio propio
+streptococcus-australis	0	otro	alcalinizacion	arginina_deiminasa			ev001 nombra ADS en A12
+streptococcus-australis	1	otro	h2o2	piruvato_oxidasa			ev002 nombra piruvato oxidasa en A12
+streptococcus-australis	2	otro	interferencia_quorum	proteasa_challisina			ev003 nombra Sgc
+streptococcus-dentisani	0	otro	alcalinizacion	desconocida	arginina_deiminasa	PMID 28344574 («arginolytic pathway»); PMID 31249697	ev006 (revisión sistemática) solo dice «mayor alcalinidad salival»: el output está, la vía no
+streptococcus-dentisani	1	bacteriocina	bacteriocina	desconocida			clase y gen: E3
+streptococcus-oligofermentans	0	otro	h2o2	lactato_oxidasa			ev001: el mutante lox pierde la inhibición (causal)
+streptococcus-oligofermentans	1	otro	h2o2	piruvato_oxidasa			ev002: el mutante pox no inhibe (causal)
+streptococcus-oligofermentans	2	otro	h2o2	aminoacido_oxidasa			ev004: el mutante aaoSo inhibe mucho menos (causal sobre la inhibición; el H2O2 es química de la enzima)
+streptococcus-salivarius	0	bacteriocina	bacteriocina	desconocida			clase y gen: E3
+streptococcus-salivarius	1	otro	degradacion_glucanos_placa	dextranasa			ev008 nombra dextranasa en M18; «dexB» no está en la fuente
+streptococcus-salivarius	2	otro	alcalinizacion	ureasa			ev008 nombra ureasa en M18; «ure» no está en la fuente

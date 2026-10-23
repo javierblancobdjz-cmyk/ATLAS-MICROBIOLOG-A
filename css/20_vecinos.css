@@ -1,8 +1,5 @@
 /* «Parecidas a esta» (vecinos por parecido · P2) */
-.vecinos .vec-weights{margin:6px 0 16px;gap:8px}
-.vecinos .vec-sel-lab{align-self:center;color:var(--ink-3);font-weight:600;margin-right:2px}
-.vecinos .vec-weights .chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-.vec-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.vec-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
 .vec{padding:16px;display:flex;flex-direction:column;gap:10px}
 .vec-aviso{border-color:var(--warn-mark);background:color-mix(in srgb,var(--warn-soft) 55%,var(--surface))}
 .vec-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
@@ -10,26 +7,13 @@
 .vec-name a{text-decoration:none;color:var(--ink)}
 .vec-name a:hover{text-decoration:underline}
 .vec-score{display:flex;align-items:baseline;gap:2px;flex:none;color:var(--accent)}
-.vec-score b{font-family:var(--serif);font-size:var(--fs-xl);line-height:1}
 .vec-score small{color:var(--ink-3)}
 .vec-badges{display:flex;flex-wrap:wrap;gap:6px}
 .vec-badges .chip{min-height:auto;padding:3px 10px;font-size:var(--fs-xs);cursor:default}
-.vec-flag.is-ev{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.vec-flag.is-ev{background:var(--accent-soft);color:var(--accent);border-color:transparent}   /* etiqueta (atributo), no estado de puerta */
 .vec-flag.is-inf{background:var(--surface-2);color:var(--ink-3)}
 .vec-warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn-mark);gap:4px}
 .vec-warn svg{width:15px;height:15px}
-.vec-axes{display:grid;gap:5px}
-.vec-axis{display:grid;grid-template-columns:116px 1fr 30px;align-items:center;gap:8px;font-size:var(--fs-xs)}
-.vec-axis-lab{color:var(--ink-2)}
-.vec-axis .track{height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden}
-.vec-axis .fill{display:block;height:100%;border-radius:999px;background:var(--accent)}
-.vec-axis .fill[data-l="1"]{background:var(--l1)}
-.vec-axis .fill[data-l="2"]{background:var(--l2)}
-.vec-axis .fill[data-l="4"]{background:var(--l4)}
-.vec-axis .fill[data-l="5"]{background:var(--l5)}
-.vec-axis-val{text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.vec-axis.off{opacity:.5}
-.vec-axis.off .vec-axis-val{color:var(--ink-3)}
 .vec-sub{font-size:var(--fs-xs);font-weight:600;color:var(--ink-3);margin:2px 0 0}
 .vec-traits{display:flex;flex-wrap:wrap;gap:6px}
 .vec-trait{min-height:auto;padding:3px 10px;font-size:var(--fs-xs);cursor:default;white-space:normal}
@@ -42,6 +26,19 @@
 .vec-trait-wrap .chip-src{min-height:auto;padding:3px 8px;font-size:var(--fs-xs)}
 .vec-inf{font-size:var(--fs-sm);color:var(--ink-2);margin:2px 0 0;line-height:1.45}
 .vec-inf-tag{display:inline-block;font-size:var(--fs-xs);font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:var(--r-sm);padding:1px 7px;margin-right:4px;text-transform:uppercase;letter-spacing:.03em}
-.vec-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
-.vec-acts .btn{padding:6px 14px;min-height:38px}
-@media (max-width:420px){.vec-list{grid-template-columns:1fr}.vec-axis{grid-template-columns:96px 1fr 26px}}
+@media (max-width:420px){.vec-list{grid-template-columns:1fr}}
+
+/* v2 · P1-06: chips de lo compartido con su fuente (aquí / allí) y lista compacta de «solo parecido taxonómico» */
+.vec-traits{list-style:none;margin:0;padding:0;flex-direction:column;align-items:flex-start}
+.vec-trait-wrap{flex-wrap:wrap;gap:4px 6px}
+.vec-trait small{font-weight:600}
+.vec-trait.is-out{background:var(--surface-2);color:var(--ink);border-color:transparent}
+.vec-src{display:inline-flex;align-items:center;gap:3px}
+.vec-src .chip-src{min-height:auto;padding:2px 8px;font-size:var(--fs-xs)}
+.vec-tax{margin-top:16px}
+.vec-tax-list{list-style:none;margin:6px 0 0;padding:0;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
+.vec-tax-list li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:8px 12px;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.vec-tax-list li:first-child{border-top:0}
+.vec-tax-list a{color:var(--ink);text-decoration:none}
+.vec-tax-list a:hover{text-decoration:underline}
+.vec-tax-list .chip{min-height:auto;padding:2px 8px;font-size:var(--fs-xs);cursor:default}

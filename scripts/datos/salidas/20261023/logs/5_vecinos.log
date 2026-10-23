@@ -1,0 +1,2 @@
+$ scripts/datos/vecinos_v12.py --data scripts/datos/salidas/20261023/trabajo/data
+vecinos: 109 sujetos, 1308 pares · {'misma familia de efecto': 66, 'mismo resultado': 123, 'nada en común (distinta familia)': 306, 'mismo resultado y mecanismo': 18, 'solo parecido taxonómico': 780, 'misma clase, otro resultado': 15}

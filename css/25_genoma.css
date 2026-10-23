@@ -1,0 +1,59 @@
+/* 25_genoma.css · P1-05. Bloque «Genoma» de la cepa y tabla n/N de la especie. Solo tokens del kit (00_kit.css).
+   Estados: verde = ok · ámbar = indeterminado / refutado / vínculo por verificar · rojo solo vía gate-bad (AMR adquirida)
+   · gris con borde discontinuo = no medido / no evaluable (nunca «ausente»). Presencia de un gen = neutro (no es bueno ni malo). */
+.gn{display:flex;flex-direction:column;gap:6px;min-width:0}
+.gn .sub{margin-top:14px}
+.gn-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;overflow-wrap:anywhere}
+.gn-acc{font-weight:600;font-variant-numeric:tabular-nums}
+.gn-pill{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-xs);line-height:1.35;border-radius:var(--r-sm);padding:2px 8px;
+  background:var(--surface-2);color:var(--ink-2);border:1px solid transparent;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.gn-ok{background:var(--ok-soft);color:var(--ok)}
+.gn-warn{background:var(--warn-soft);color:var(--warn);border-color:color-mix(in srgb,var(--warn-mark) 40%,transparent)}
+.gn-nd{background:transparent;color:var(--ink-3);border:1px dashed var(--ink-3)}
+.gn-pres{background:var(--accent-soft);color:var(--accent)}
+.gn-aus{background:var(--surface);color:var(--ink-2);border-color:var(--line-strong)}
+.gn-const{background:var(--surface-2);color:var(--ink-2)}
+.gn-var{background:var(--accent-soft);color:var(--accent)}
+.gn-anot{display:inline-block;font-size:13px;color:var(--ink-3);border:1px solid var(--line);border-radius:var(--r-sm);padding:0 6px;font-style:normal}
+.gn-est{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
+.gn-est .chip-src{min-height:auto;padding:2px 8px;font-size:var(--fs-xs)}
+.gn-extra{margin-top:4px;overflow-wrap:anywhere}
+.gn-extra i{font-style:italic}
+.gn-nm{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;font-size:var(--fs-sm);color:var(--ink-2)}
+.gn-flag{font-size:var(--fs-xs);color:var(--warn);background:var(--warn-soft);border-radius:var(--r-sm);padding:6px 10px;margin:6px 0 0;overflow-wrap:anywhere}
+.gn-sec .gates{margin-top:2px}
+
+/* tabla de marcadores (cepa) y n/N (especie): tabla en escritorio, tarjetas apiladas en móvil */
+.gn-tblwrap{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface)}
+table.gn-tbl{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+.gn-tbl thead th{text-align:left;font-weight:600;font-size:13px;color:var(--ink-3);background:var(--surface-2);padding:8px 10px;border-bottom:1px solid var(--line)}
+.gn-tbl tbody th,.gn-tbl td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line);font-weight:400}
+.gn-tbl tbody tr:last-child>*{border-bottom:0}
+.gn-tbl tbody th{width:24%}
+.gn-tbl tbody th b{font-weight:600}
+.gn-nN{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:2px 4px}
+.gn-nN>b{font-variant-numeric:tabular-nums;font-size:var(--fs-base)}
+@media (max-width:760px){
+  table.gn-tbl,.gn-tbl tbody,.gn-tbl tr,.gn-tbl th,.gn-tbl td{display:block;width:auto}
+  .gn-tbl thead{display:none}
+  .gn-tbl tbody tr{padding:8px 12px;border-bottom:1px solid var(--line)}
+  .gn-tbl tbody tr:last-child{border-bottom:0}
+  .gn-tbl tbody th,.gn-tbl td{border:0;padding:2px 0;width:auto}
+  .gn-tbl td[data-l]{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px}
+  .gn-tbl td[data-l]::before{content:attr(data-l) ":";color:var(--ink-3);font-size:13px}
+  .gn-tbl td[data-l] .gn-est{display:inline-flex}
+  .gn-tbl td[data-l] .gn-extra{flex-basis:100%;margin-top:0}
+  .gn-tbl td.gn-sin{display:none}
+}
+
+/* superficie y ANI */
+.gn-kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;margin:0;font-size:var(--fs-sm)}
+.gn-kv dt{color:var(--ink-2)} .gn-kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+@media (min-width:761px){.gn-kv{grid-template-columns:repeat(2,minmax(0,1fr) auto);column-gap:24px}}
+.gn-ani li{padding:4px 0;overflow-wrap:anywhere}
+.gn-ani-n{font-weight:600;font-variant-numeric:tabular-nums}
+.gn .sub .gn-pill{margin-left:6px;font-weight:400}
+.gn-bagel li{overflow-wrap:anywhere}
+
+/* banda de cobertura (ficha de especie) */
+.gn-banda{border-left:4px solid var(--line-strong);background:var(--surface-2);border-radius:var(--r-sm);padding:8px 12px;font-size:var(--fs-sm);display:flex;flex-direction:column;gap:4px}

@@ -1,0 +1,6 @@
+$ scripts/datos/rasgos_v12.py --data scripts/datos/salidas/20261023/trabajo/data --genomica scripts/datos/salidas/20261023/trabajo/data/genomica.json --curado scripts/datos/curado --salida scripts/datos/salidas/20261023 --fecha 20261023 --en-sitio
+rasgos v11: 39 | v12: 40 | 'otro': 0
+via_en_fuente: {'si': 13, None: 25, 'no': 2}
+presente_origen: {'curado_v11': 40}
+con genómica E2 medida: 13 | con genómica no_medido: 0
+tipos: {"degradacion_mucina": "via_generica", "propionato": "output_compartido_via_desconocida", "gaba": "gen_compartido", "folato": "productor_unico", "uso_hmo": "productor_unico", "lps_atipico": "productor_unico", "butirato": "convergencia_por_curar", "bacteriocina": "output_compartido_via_desconocida", "bsh": "productor_unico", "acetato": "productor_unico", "h2o2": "convergencia_de_output", "adhesion_epitelio": "productor_unico", "vitamina_b12": "productor_unico", "vitamina_k2": "productor_unico", "alcalinizacion": "convergencia_de_output", "interferencia_quorum": "productor_unico", "degradacion_glucanos_placa": "productor_unico"}

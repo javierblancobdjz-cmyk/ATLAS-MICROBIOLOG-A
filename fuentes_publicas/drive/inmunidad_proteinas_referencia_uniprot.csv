@@ -1,0 +1,374 @@
+uniprot_acc,categoria,gen,proteina,organismo
+P0A3M7,inmunidad_bacteriocina,lciA,Lactococcin-A immunity protein,Lactococcus lactis subsp. lactis
+P36496,inmunidad_bacteriocina,pedB,Pediocin PA-1 immunity protein,Pediococcus acidilactici
+P42708,inmunidad_bacteriocina,nisI,Nisin immunity protein,Lactococcus lactis subsp. lactis
+P0A3M8,inmunidad_bacteriocina,lciA,Lactococcin-A immunity protein,Lactococcus lactis subsp. cremoris
+P35517,inmunidad_bacteriocina,lciB,Lactococcin-B immunity protein,Lactococcus lactis subsp. cremoris
+P0A1B9,inmunidad_lantibiotico,sctN1,SPI-1 type 3 secretion system ATPase,Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)
+P0C0R7,inmunidad_lantibiotico,rlmE,Ribosomal RNA large subunit methyltransferase E,Escherichia coli (strain K12)
+Q3UMC0,inmunidad_lantibiotico,Afg2a,ATPase family gene 2 protein homolog A,Mus musculus
+Q8NB90,inmunidad_lantibiotico,AFG2A,ATPase family gene 2 protein homolog A,Homo sapiens
+P0A1C0,inmunidad_lantibiotico,sctN1,SPI-1 type 3 secretion system ATPase,Salmonella typhi
+P39774,inmunidad_lantibiotico,spaB,Subtilin biosynthesis protein SpaB,Bacillus subtilis
+P42708,inmunidad_lantibiotico,nisI,Nisin immunity protein,Lactococcus lactis subsp. lactis
+Q8U1M0,resistencia_nisina_NSR,nsr,NAD(P)H sulfur oxidoreductase (CoA-dependent),Pyrococcus furiosus (strain ATCC 43587 / DSM 3638 / JCM 8422 / Vc1)
+A0A2I1C3T4,resistencia_nisina_NSR,nsrP,Cytochrome P450 monooxygenase nsrP,Aspergillus novofumigatus (strain IBT 16806)
+A0A2I1C3U2,resistencia_nisina_NSR,nsrF,Baeyer-Villiger monooxygenase nsrF,Aspergillus novofumigatus (strain IBT 16806)
+P0A9E9,resistencia_nisina_NSR,yeiL,Regulatory protein YeiL,Escherichia coli (strain K12)
+P23648,resistencia_nisina_NSR,nsr,Nisin-resistance protein,Lactococcus lactis subsp. lactis
+O34697,resistencia_BceAB,bceA,Bacitracin export ATP-binding protein BceA,Bacillus subtilis (strain 168)
+O34741,resistencia_BceAB,bceB,Bacitracin export permease protein BceB,Bacillus subtilis (strain 168)
+O34951,resistencia_BceAB,bceR,Sensory transduction protein BceR,Bacillus subtilis (strain 168)
+O35044,resistencia_BceAB,bceS,Sensor protein BceS,Bacillus subtilis (strain 168)
+Q9K620,resistencia_BceAB,bceS,Sensor protein BceS,Halalkalibacterium halodurans (strain ATCC BAA-125 / DSM 18197 / FERM 7344 / JCM 9153 / C-125)
+O06980,resistencia_BceAB,yvcR,Uncharacterized ABC transporter ATP-binding protein YvcR,Bacillus subtilis (strain 168)
+O06981,resistencia_BceAB,yvcS,Uncharacterized ABC transporter permease YvcS,Bacillus subtilis (strain 168)
+Q9K618,resistencia_BceAB,bceB,Bacitracin export permease protein BceB,Halalkalibacterium halodurans (strain ATCC BAA-125 / DSM 18197 / FERM 7344 / JCM 9153 / C-125)
+Q9K619,resistencia_BceAB,bceA,Bacitracin export ATP-binding protein BceA,Halalkalibacterium halodurans (strain ATCC BAA-125 / DSM 18197 / FERM 7344 / JCM 9153 / C-125)
+Q9K621,resistencia_BceAB,bceR,Sensory transduction protein BceR,Halalkalibacterium halodurans (strain ATCC BAA-125 / DSM 18197 / FERM 7344 / JCM 9153 / C-125)
+P39580,resistencia_envoltura_Dlt,dltB,Teichoic acid D-alanyltransferase,Bacillus subtilis (strain 168)
+Q5M4V4,resistencia_envoltura_Dlt,dltB,Teichoic acid D-alanyltransferase,Streptococcus thermophilus (strain ATCC BAA-250 / LMG 18311)
+Q81G39,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain ATCC 14579 / DSM 31 / CCUG 7414 / JCM 2152 / NBRC 15305 / NCIMB 9373 / NCTC 2599 / NRRL B-3711)
+A0AH92,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Listeria welshimeri serovar 6b (strain ATCC 35897 / DSM 20650 / CCUG 15529 / CIP 8149 / NCTC 11857 / SLCC 5334 / V8)
+A0RBJ0,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus thuringiensis (strain Al Hakam)
+A2RE45,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M5 (strain Manfredo)
+A5IRB0,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain JH9)
+A6QFE3,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain Newman)
+A6U039,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain JH1)
+A7GMR0,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cytotoxicus (strain DSM 22905 / CIP 110041 / 391-98 / NVH 391-98)
+A7X0D6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain Mu3 / ATCC 700698)
+A7ZA74,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus velezensis (strain DSM 23117 / BGSC 10A6 / LMG 26770 / FZB42)
+A8Z1J1,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain USA300 / TCH1516)
+A9VKV6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus mycoides (strain KBAB4)
+B3WC77,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Lacticaseibacillus casei (strain BL23)
+B5XLX5,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M49 (strain NZ131)
+B7HHC6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain B4264)
+B7HK95,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain AH187)
+B7IN64,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain G9842)
+B7JFV5,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain AH820)
+B8DEG2,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Listeria monocytogenes serotype 4a (strain HCC23)
+B8ZQ14,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae (strain ATCC 700669 / Spain 23F-1)
+B9IUW2,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain Q1)
+C0MBD6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus equi subsp. equi (strain 4047)
+C1CB20,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae (strain 70585)
+C1CNE9,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae (strain P1031)
+C1CU95,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae (strain Taiwan19F-14)
+C1EM80,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain 03BB102)
+C1L1P5,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Listeria monocytogenes serotype 4b (strain CLIP80459)
+C3LAH8,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus anthracis (strain CDC 684 / NRRL 3495)
+C3P4I7,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus anthracis (strain A0248)
+P0A398,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae serotype 4 (strain ATCC BAA-334 / TIGR4)
+P0A399,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae (strain ATCC BAA-255 / R6)
+P0C397,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus
+P0DA64,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M3 (strain ATCC BAA-595 / MGAS315)
+P0DA65,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M3 (strain SSI-1)
+P35854,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Lacticaseibacillus rhamnosus
+P35855,resistencia_envoltura_Dlt,dltB,Teichoic acid D-alanyltransferase,Lacticaseibacillus rhamnosus
+P39579,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus subtilis (strain 168)
+P39581,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus subtilis (strain 168)
+P59591,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R)
+P68876,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain Mu50 / ATCC 700699)
+P68878,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain MW2)
+P99107,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain N315)
+Q03AZ2,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Lacticaseibacillus paracasei (strain ATCC 334 / BCRC 17002 / CCUG 31169 / CIP 107868 / KCTC 3260 / NRRL B-441)
+Q04HZ7,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pneumoniae serotype 2 (strain D39 / NCTC 7466)
+Q1J667,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M4 (strain MGAS10750)
+Q1JGF0,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M2 (strain MGAS10270)
+Q1JLB7,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M12 (strain MGAS9429)
+Q2FIE3,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain USA300)
+Q2FZW3,resistencia_envoltura_Dlt,dltD,Protein DltD,Staphylococcus aureus (strain NCTC 8325 / PS 47)
+Q2FZW4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain NCTC 8325 / PS 47)
+Q2FZW6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain NCTC 8325 / PS 47)
+Q2YWQ8,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain bovine RF122 / ET3-1)
+Q3JZ94,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus agalactiae serotype Ia (strain ATCC 27591 / A909 / CDC SS700)
+Q48SZ3,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M28 (strain MGAS6180)
+Q4L4U5,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus haemolyticus (strain JCSC1435)
+Q53526,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus mutans serotype c (strain ATCC 700610 / UA159)
+Q5HHF2,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain COL)
+Q5HQN0,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus epidermidis (strain ATCC 35984 / DSM 28319 / BCRC 17069 / CCUG 31568 / BM 3577 / RP62A)
+Q5M4V3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus thermophilus (strain ATCC BAA-250 / LMG 18311)
+Q5XBN5,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M6 (strain ATCC BAA-946 / MGAS10394)
+Q63E02,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain ZK / E33L)
+Q65DH1,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus licheniformis (strain ATCC 14580 / DSM 13 / JCM 2505 / CCUG 7422 / NBRC 12200 / NCIMB 9375 / NCTC 10341 / NRRL NRS-1264 / Gibson 46)
+Q6GAZ4,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain MSSA476)
+Q6GIF6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus aureus (strain MRSA252)
+Q6HLH7,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus thuringiensis subsp. konkukian (strain 97-27)
+Q721J2,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Listeria monocytogenes serotype 4b (strain F2365)
+Q73BD2,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus cereus (strain ATCC 10987 / NRS 248)
+Q81T97,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Bacillus anthracis
+Q88VM6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Lactiplantibacillus plantarum (strain ATCC BAA-793 / NCIMB 8826 / WCFS1)
+Q8CT93,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus epidermidis (strain ATCC 12228 / FDA PCI 1200)
+Q8P0J9,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M18 (strain MGAS8232)
+Q8VM67,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus agalactiae serotype III (strain NEM316)
+Q8Y8D4,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Listeria monocytogenes serovar 1/2a (strain ATCC BAA-679 / EGD-e)
+Q92D47,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Listeria innocua serovar 6a (strain ATCC BAA-680 / CLIP 11262)
+Q99ZA6,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Streptococcus pyogenes serotype M1
+Q9CG49,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Lactococcus lactis subsp. lactis (strain IL1403)
+Q9X2N4,resistencia_envoltura_Dlt,dltA,D-alanine--D-alanyl carrier protein ligase,Staphylococcus xylosus
+A0AH90,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Listeria welshimeri serovar 6b (strain ATCC 35897 / DSM 20650 / CCUG 15529 / CIP 8149 / NCTC 11857 / SLCC 5334 / V8)
+A2RE47,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M5 (strain Manfredo)
+A2RKK0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactococcus lactis subsp. cremoris (strain MG1363)
+A3CR85,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus sanguinis (strain SK36)
+A4VU17,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus suis (strain 05ZYH33)
+A4W0A9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus suis (strain 98HAH33)
+A5IRB2,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain JH9)
+A6QFE5,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain Newman)
+A6U041,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain JH1)
+A7X0D9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain Mu3 / ATCC 700698)
+A7ZA76,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus velezensis (strain DSM 23117 / BGSC 10A6 / LMG 26770 / FZB42)
+A8AUB8,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus gordonii (strain Challis / ATCC 35105 / BCRC 15272 / CH1 / DL1 / V288)
+A8FFX3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus pumilus (strain SAFR-032)
+A8YTM4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactobacillus helveticus (strain DPC 4571)
+A8Z1J3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain USA300 / TCH1516)
+A9VKV4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus mycoides (strain KBAB4)
+B1I9Y6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain Hungary19A-6)
+B1MZW0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Leuconostoc citreum (strain KM20)
+B2INJ3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain CGSP14)
+B3WC79,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lacticaseibacillus casei (strain BL23)
+B4U3P0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus equi subsp. zooepidemicus (strain MGCS10565)
+B5E3R6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae serotype 19F (strain G54)
+B5XLX3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M49 (strain NZ131)
+B7HHC4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain B4264)
+B7HK93,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain AH187)
+B7IN62,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain G9842)
+B7JFV3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain AH820)
+B8DEG4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Listeria monocytogenes serotype 4a (strain HCC23)
+B8ZQ12,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain ATCC 700669 / Spain 23F-1)
+B9DIY6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus carnosus (strain TM300)
+B9DSG7,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus uberis (strain ATCC BAA-854 / 0140J)
+B9IUW0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain Q1)
+C0MBD4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus equi subsp. equi (strain 4047)
+C0MDC9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus equi subsp. zooepidemicus (strain H70)
+C1CB19,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain 70585)
+C1CHH5,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain JJA)
+C1CNE7,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain P1031)
+C1CU93,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain Taiwan19F-14)
+C1EM78,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain 03BB102)
+C1L1P3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Listeria monocytogenes serotype 4b (strain CLIP80459)
+C3LAI0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus anthracis (strain CDC 684 / NRRL 3495)
+C3P4I5,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus anthracis (strain A0248)
+O70055,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus mutans serotype c (strain ATCC 700610 / UA159)
+P0A018,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain Mu50 / ATCC 700699)
+P0A019,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain N315)
+P0A020,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain MW2)
+P0A3A0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus agalactiae serotype III (strain NEM316)
+P0A3A1,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus agalactiae serotype V (strain ATCC BAA-611 / 2603 V/R)
+P0C426,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus
+P0DA66,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M3 (strain ATCC BAA-595 / MGAS315)
+P0DA67,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M3 (strain SSI-1)
+P39578,resistencia_envoltura_Dlt,dltD,Protein DltD,Bacillus subtilis (strain 168)
+P55153,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lacticaseibacillus rhamnosus
+P55154,resistencia_envoltura_Dlt,dltD,Protein DltD,Lacticaseibacillus rhamnosus
+P61398,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain ATCC 10987 / NRS 248)
+P61399,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactobacillus johnsonii (strain CNCM I-12250 / La1 / NCC 533)
+P63957,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae serotype 4 (strain ATCC BAA-334 / TIGR4)
+P63958,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae (strain ATCC BAA-255 / R6)
+P63959,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M1
+P63961,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M18 (strain MGAS8232)
+Q02YS9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactococcus lactis subsp. cremoris (strain SK11)
+Q03AZ0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lacticaseibacillus paracasei (strain ATCC 334 / BCRC 17002 / CCUG 31169 / CIP 107868 / KCTC 3260 / NRRL B-441)
+Q03L69,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus thermophilus (strain ATCC BAA-491 / LMD-9)
+Q03V70,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Leuconostoc mesenteroides subsp. mesenteroides (strain ATCC 8293 / DSM 20343 / BCRC 11652 / CCM 1803 / JCM 6124 / NCDO 523 / NBRC 100496 / NCIMB 8023 / NCTC 12954 / NRRL B-1118 / 37Y)
+Q040N1,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactobacillus gasseri (strain ATCC 33323 / DSM 20243 / BCRC 14619 / CIP 102991 / JCM 1131 / KCTC 3163 / NCIMB 11718 / NCTC 13722 / AM63)
+Q047K9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactobacillus delbrueckii subsp. bulgaricus (strain ATCC BAA-365 / Lb-18)
+Q04HZ9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pneumoniae serotype 2 (strain D39 / NCTC 7466)
+Q1G852,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactobacillus delbrueckii subsp. bulgaricus (strain ATCC 11842 / DSM 20081 / BCRC 10696 / JCM 1002 / NBRC 13953 / NCIMB 11778 / NCTC 12712 / WDCM 00102 / Lb 14)
+Q1J669,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M4 (strain MGAS10750)
+Q1JBD6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M12 (strain MGAS2096)
+Q1JGF2,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M2 (strain MGAS10270)
+Q1JLB9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M12 (strain MGAS9429)
+Q2FIE1,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain USA300)
+Q2YWQ6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain bovine RF122 / ET3-1)
+Q38YM9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Latilactobacillus sakei subsp. sakei (strain 23K)
+Q3JZ96,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus agalactiae serotype Ia (strain ATCC 27591 / A909 / CDC SS700)
+Q48SZ5,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M28 (strain MGAS6180)
+Q49W73,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus saprophyticus subsp. saprophyticus (strain ATCC 15305 / DSM 20229 / NCIMB 8711 / NCTC 7292 / S-41)
+Q4L4U7,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus haemolyticus (strain JCSC1435)
+Q5FHV3,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactobacillus acidophilus (strain ATCC 700396 / NCK56 / N2 / NCFM)
+Q5HHF0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain COL)
+Q5HQM8,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus epidermidis (strain ATCC 35984 / DSM 28319 / BCRC 17069 / CCUG 31568 / BM 3577 / RP62A)
+Q5M0A6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus thermophilus (strain CNRZ 1066)
+Q5XBN7,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Streptococcus pyogenes serotype M6 (strain ATCC BAA-946 / MGAS10394)
+Q63E04,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain ZK / E33L)
+Q65DG9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus licheniformis (strain ATCC 14580 / DSM 13 / JCM 2505 / CCUG 7422 / NBRC 12200 / NCIMB 9375 / NCTC 10341 / NRRL NRS-1264 / Gibson 46)
+Q6GAZ2,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain MSSA476)
+Q6GIF4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus aureus (strain MRSA252)
+Q6HLH9,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus thuringiensis subsp. konkukian (strain 97-27)
+Q721J4,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Listeria monocytogenes serotype 4b (strain F2365)
+Q81G41,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus cereus (strain ATCC 14579 / DSM 31 / CCUG 7414 / JCM 2152 / NBRC 15305 / NCIMB 9373 / NCTC 2599 / NRRL B-3711)
+Q81T99,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Bacillus anthracis
+Q830N2,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Enterococcus faecalis (strain ATCC 700802 / V583)
+Q8CPW0,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus epidermidis (strain ATCC 12228 / FDA PCI 1200)
+Q8GR69,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Abiotrophia defectiva
+Q92D49,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Listeria innocua serovar 6a (strain ATCC BAA-680 / CLIP 11262)
+Q9CG51,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Lactococcus lactis subsp. lactis (strain IL1403)
+Q9S389,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Listeria monocytogenes serovar 1/2a (strain ATCC BAA-679 / EGD-e)
+Q9X2N6,resistencia_envoltura_Dlt,dltC,D-alanyl carrier protein,Staphylococcus xylosus
+Q2G2M2,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain NCTC 8325 / PS 47)
+C0H3X7,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Bacillus subtilis (strain 168)
+Q4L667,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus haemolyticus (strain JCSC1435)
+Q5HG59,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain COL)
+Q5HPI1,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus epidermidis (strain ATCC 35984 / DSM 28319 / BCRC 17069 / CCUG 31568 / BM 3577 / RP62A)
+Q6G9J9,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain MSSA476)
+Q6GH45,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain MRSA252)
+Q7A5R9,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain N315)
+Q8CPC0,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus epidermidis (strain ATCC 12228 / FDA PCI 1200)
+Q8NWU7,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain MW2)
+Q93QY7,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus xylosus
+Q99UB9,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus (strain Mu50 / ATCC 700699)
+Q9AIV3,resistencia_envoltura_MprF,mprF,Phosphatidylglycerol lysyltransferase,Staphylococcus aureus
+Q7A2Q1,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain Mu50 / ATCC 700699)
+O32197,resistencia_LiaFSR,liaR,Transcriptional regulatory protein LiaR,Bacillus subtilis (strain 168)
+O32198,resistencia_LiaFSR,liaS,Sensor histidine kinase LiaS,Bacillus subtilis (strain 168)
+P0C0Z1,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain Mu3 / ATCC 700698)
+Q2FX09,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain NCTC 8325 / PS 47)
+Q7A4R9,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain N315)
+Q99SZ7,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain N315)
+O32199,resistencia_LiaFSR,liaF,Protein LiaF,Bacillus subtilis (strain 168)
+Q49YS9,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus saprophyticus subsp. saprophyticus (strain ATCC 15305 / DSM 20229 / NCIMB 8711 / NCTC 7292 / S-41)
+Q49YT0,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus saprophyticus subsp. saprophyticus (strain ATCC 15305 / DSM 20229 / NCIMB 8711 / NCTC 7292 / S-41)
+Q4L7J5,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus haemolyticus (strain JCSC1435)
+Q4L7J6,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus haemolyticus (strain JCSC1435)
+Q5HEN9,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain COL)
+Q5HEP0,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain COL)
+Q5HN49,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus epidermidis (strain ATCC 35984 / DSM 28319 / BCRC 17069 / CCUG 31568 / BM 3577 / RP62A)
+Q5HN50,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus epidermidis (strain ATCC 35984 / DSM 28319 / BCRC 17069 / CCUG 31568 / BM 3577 / RP62A)
+Q6G849,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain MSSA476)
+Q6G850,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain MSSA476)
+Q6GFH2,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain MRSA252)
+Q6GFH3,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain MRSA252)
+Q7A0H9,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain MW2)
+Q7A0I0,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus aureus (strain MW2)
+Q7A2Q0,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain Mu50 / ATCC 700699)
+Q8CNP9,resistencia_LiaFSR,vraR,Response regulator protein VraR,Staphylococcus epidermidis (strain ATCC 12228 / FDA PCI 1200)
+Q8CRV2,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus epidermidis (strain ATCC 12228 / FDA PCI 1200)
+Q9KWK8,resistencia_LiaFSR,vraS,Sensor protein VraS,Staphylococcus aureus (strain Mu3 / ATCC 700698)
+A8U4V8_9LACT,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Carnobacterium sp. AT7
+Q045B5_LACGA,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Lactobacillus gasseri (strain ATCC 33323 / DSM 20243)
+Q88W84_LACPL,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Lactobacillus plantarum
+Q88W88_LACPL,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Lactobacillus plantarum
+Q1WSR8_LACS1,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Lactobacillus salivarius subsp. salivarius (strain UCC118)
+Q8Z3T4_SALTI,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Salmonella typhi
+A8Z5P6_STAA3,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,Staphylococcus aureus subsp. aureus USA300_TCH959
+B0QAX6_BACAN,inmunidad_bacteriocina_BAGEL4,,"Bacteriocin immunity protein, putative",Bacillus anthracis str. A0193
+Q4EIU2_LISMO,inmunidad_bacteriocina_BAGEL4,,"Bacteriocin immunity protein, putative",Listeria monocytogenes str. 4b H7858
+Q4HDB4_CAMCO,resistencia_bacteriocina_BAGEL4,,"Bacteriocin resistance protein, putative",Campylobacter coli RM2228
+Q4HP04_CAMUP,resistencia_bacteriocina_BAGEL4,,"Bacteriocin resistance protein, putative",Campylobacter upsaliensis RM3195
+A9M2C3_NEIM0,resistencia_bacteriocina_BAGEL4,,"Bacteriocin resistance protein, putative",Neisseria meningitidis serogroup C (strain 053442)
+A9M403_NEIM0,resistencia_bacteriocina_BAGEL4,,"Bacteriocin resistance protein, putative",Neisseria meningitidis serogroup C (strain 053442)
+A9M474_NEIM0,resistencia_bacteriocina_BAGEL4,,"Bacteriocin resistance protein, putative",Neisseria meningitidis serogroup C (strain 053442)
+Q5M2X2_STRT2,inmunidad_bacteriocina_BAGEL4,,"Bacteriocin self-immunity protein, putative",Streptococcus thermophilus (strain ATCC BAA-250 / LMG 18311)
+NP_046577.1,inmunidad_bacteriocina_BAGEL4,,possibly involved in bacteriocin production or immunity,
+AAC95140.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein,
+AAZ29032.1,inmunidad_bacteriocina_BAGEL4,,divergicin A immunity protein,
+AAX21353.1,inmunidad_bacteriocina_BAGEL4,,putative piscicolin 126 immunity protein,
+AAB18990.1,inmunidad_bacteriocina_BAGEL4,,putative carnocin CP52 immunity protein,
+AAK69418.1,inmunidad_bacteriocina_BAGEL4,,AF275938_1 putative piscicolin 126 immunity protein PisI,
+IMMC_ECOLX,inmunidad_bacteriocina_BAGEL4,,Cloacin immunity protein,Escherichia coli
+IMMA_CITFR,inmunidad_bacteriocina_BAGEL4,,Colicin-A immunity protein,Citrobacter freundii
+IMMB_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-B immunity protein,Escherichia coli
+IMMD_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-D immunity protein,Escherichia coli
+IMM2_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E2 immunity protein,Escherichia coli
+IMM3_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E3 immunity protein,Escherichia coli
+IMMY_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E5 immunity protein in ColE9,Escherichia coli PE
+IMM5_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E5 immunity protein,Escherichia coli
+IMM6_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E6 immunity protein,Escherichia coli
+IMMX_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E8 immunity protein in ColE6,Escherichia coli
+IMM8_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E8 immunity protein,Escherichia coli
+IMM9_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-E9 immunity protein,Escherichia coli
+IMMI_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-Ia immunity protein,Escherichia coli PE
+IMMJ_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-Ib immunity protein,Escherichia coli PE
+IMMK_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-K immunity protein,Escherichia coli
+IMMM_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-M immunity protein,Escherichia coli
+IMMN_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-N immunity protein,Escherichia coli
+IMMV_ECOLX,inmunidad_bacteriocina_BAGEL4,,Colicin-V immunity protein,Escherichia coli
+AAL39166.1,inmunidad_bacteriocina_BAGEL4,,enterocin 1071 immunity protein,
+BAC00781.1,inmunidad_bacteriocina_BAGEL4,,enterocin immunity protein,
+AAC45871.1,inmunidad_bacteriocina_BAGEL4,,putative bacteriocin immunity protein,
+AAF44687.1,inmunidad_bacteriocina_BAGEL4,,AF240561_2 putative immunity protein EntI,
+AAQ95743.1,inmunidad_bacteriocina_BAGEL4,,enterocin CRL 35 immunity protein,
+AAC46221.1,inmunidad_bacteriocina_BAGEL4,,haemocin immunity protein,
+AAD04333.1,inmunidad_bacteriocina_BAGEL4,,microcin E492 immunity protein,
+NP_542218.1,inmunidad_bacteriocina_BAGEL4,,putative immunity protein,
+AAP73782.1,inmunidad_bacteriocina_BAGEL4,,putative gassericin K7 B immunity protein,
+AAL09347.1,inmunidad_bacteriocina_BAGEL4,,putative immunity protein,
+AAO18428.1,inmunidad_bacteriocina_BAGEL4,,putative immunity protein,
+NP_786516.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein,
+CAD64181.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein (putative),
+CAD64185.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein (putative),
+NP_785333.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein (putative),
+NP_785337.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein (putative),
+AAP44571.1,inmunidad_bacteriocina_BAGEL4,,brochocin immunity protein BcrI-like protein,
+CAF25009.1,inmunidad_bacteriocina_BAGEL4,,putative bacteriocin immunity protein,
+CAF25011.1,inmunidad_bacteriocina_BAGEL4,,putative bacteriocin immunity protein,
+CAH60308.1,inmunidad_bacteriocina_BAGEL4,,sakacin Q immunity protein,
+AAM73711.1,inmunidad_bacteriocina_BAGEL4,,AF395533_1 sakacin G immunity protein SkgI,
+CAF25023.1,inmunidad_bacteriocina_BAGEL4,,putative bacteriocin immunity protein,
+CAF25025.1,inmunidad_bacteriocina_BAGEL4,,putative bacteriocin immunity protein,
+YP_395171.1,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,
+YP_395178.1,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin Immunity protein,
+LCIA_LACLA,inmunidad_bacteriocina_BAGEL4,,Lactococcin-A immunity protein,Lactococcus lactis subsp. lactis
+AAB22371.1,inmunidad_bacteriocina_BAGEL4,,lactococcin A immunity,
+NP_862433.1,inmunidad_bacteriocina_BAGEL4,,hypothetical lactococcin 972 immunity protein,
+AAF64055.1,inmunidad_bacteriocina_BAGEL4,,AF242367_6 hypothetical lactococcin 972 immunity protein,
+AAK19402.1,inmunidad_bacteriocina_BAGEL4,,immunity protein,
+AAT05531.1,inmunidad_bacteriocina_BAGEL4,,putative bacteriocin immunity protein,
+EAL09706.1,inmunidad_bacteriocina_BAGEL4,,"bacteriocin immunity protein, putative",
+MCCF_ECOLX,inmunidad_bacteriocina_BAGEL4,,Microcin C7 self-immunity protein mccF,Escherichia coli
+IM92_KLEPN,inmunidad_bacteriocina_BAGEL4,,Microcin E492 immunity protein,Klebsiella pneumoniae
+IM24_ECOLX,inmunidad_bacteriocina_BAGEL4,,Microcin-24 immunity protein,Escherichia coli
+NISI_LACLA,inmunidad_bacteriocina_BAGEL4,,Nisin immunity protein,Lactococcus lactis subsp. lactis
+LCCI_LEUGE,inmunidad_bacteriocina_BAGEL4,,Probable leucocin-A immunity protein,Leuconostoc gelidum PE
+MESI_LEUME,inmunidad_bacteriocina_BAGEL4,,Probable mesentericin-Y105 immunity protein,Leuconostoc mesenteroides
+YP_025637.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity protein,
+A2RGX6_STRPG,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein -,
+B0S2X5_PEPMA,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein -,
+O30435_ENTFC,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Enterococcus faecium (Streptococcus faecium)
+Q6D1R9_ERWCT,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Erwinia carotovora subsp. atroseptica (Pectobacterium atrosepticum)
+Q6KCG1_LACSK,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Lactobacillus sakei
+Q71VY5_LISMF,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Listeria monocytogenes serotype 4b (strain F2365)
+Q2TF07_STAAU,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Staphylococcus aureus
+Q9JZX8_NEIMB,resistencia_bacteriocina_BAGEL4,,Putative bacteriocin resistance protein,Neisseria meningitidis serogroup B
+Q9K0L2_NEIMB,resistencia_bacteriocina_BAGEL4,,Putative bacteriocin resistance protein,Neisseria meningitidis serogroup B
+CB2I_CARML,inmunidad_bacteriocina_BAGEL4,,Putative carnobacteriocin-B2 immunity protein,Carnobacterium maltaromaticum PE
+CB1I_CARML,inmunidad_bacteriocina_BAGEL4,,Putative carnobacteriocin-BM1 immunity protein,Carnobacterium maltaromaticum PE
+Q8DU11_STRMU,inmunidad_bacteriocina_BAGEL4,,"Putative transporter, ATP-binding protein; bacteriocin immunity protein",Streptococcus mutans
+Q8DU09_STRMU,inmunidad_bacteriocina_BAGEL4,,"Putative transporter, trans-membrane domain bacteriocin immunity protein",Streptococcus mutans
+IMM1_PSEAE,inmunidad_bacteriocina_BAGEL4,,Pyocin-S1 immunity protein,Pseudomonas aeruginosa
+IMM2_PSEAE,inmunidad_bacteriocina_BAGEL4,,Pyocin-S2 immunity protein,Pseudomonas aeruginosa
+YP_031715.1,inmunidad_bacteriocina_BAGEL4,,hypothetical bacteriocin immunity protein,
+NP_722331.1,inmunidad_bacteriocina_BAGEL4,,conserved hypothetical protein; possible bacteriocin immunity protein,
+AAN58840.1,inmunidad_bacteriocina_BAGEL4,,"AE014951_11 putative transporter, ATP-binding protein; bacteriocin immunity protein",
+AAN58841.1,inmunidad_bacteriocina_BAGEL4,,"AE014951_12 putative transporter, trans-membrane domain bacteriocin immunity protein",
+AAN58842.1,inmunidad_bacteriocina_BAGEL4,,"AE014951_13 putative transporter, trans-membrane domain bacteriocin immunity protein",
+CAA90861.1,inmunidad_bacteriocina_BAGEL4,,pesticin immunity protein,
+CAH19389.1,inmunidad_bacteriocina_BAGEL4,,putative colicin immunity protein,
+AAA25164.1,inmunidad_bacteriocina_BAGEL4,,bacteriocin immunity,
+GI:482592,inmunidad_bacteriocina_BAGEL4,,A49786 bacteriocin immunity protein A3,Lactococcus lactis subsp. cremoris (strain 9B4) plasmid p9B4-6
+TR:A5A639,inmunidad_bacteriocina_BAGEL4,,"A5A639_BACLD Lantibiotic immunity protein, MFS type transporter",Bacillus licheniformis (strain DSM 13 / ATCC 14580)
+TR:A6QI01,inmunidad_bacteriocina_BAGEL4,,A6QI01_STAAE Lantibiotic immunity protein F,Staphylococcus aureus (strain Newman)
+TR:B3DPV8,inmunidad_bacteriocina_BAGEL4,,B3DPV8_BIFLD Lantibiotic immunity protein,Bifidobacterium longum (strain DJO10A)
+P34035,inmunidad_bacteriocina_BAGEL4,,LCCI_LEUGE Probable leucocin A immunity protein,
+P71462,inmunidad_bacteriocina_BAGEL4,,P71462_LACPL Immunity protein PlnM,
+P71468,inmunidad_bacteriocina_BAGEL4,,"P71468_LACPL PlnI (Immunity protein PlnI, membrane-bound protease CAAX family)",
+Q1WQX9_LACS1,inmunidad_bacteriocina_BAGEL4,,AbpIM bacteriocin immunity protein,Lactobacillus salivarius subsp. salivarius (strain UCC118)
+Q2FFS5_STAA3,inmunidad_bacteriocina_BAGEL4,,Lantibiotic epidermin immunity protein F,Staphylococcus aureus (strain USA300)
+Q2FFS6_STAA3,inmunidad_bacteriocina_BAGEL4,,Lantibiotic epidermin immunity protein F,Staphylococcus aureus (strain USA300)
+Q2FFS7_STAA3,inmunidad_bacteriocina_BAGEL4,,Lantibiotic epidermin immunity protein F,Staphylococcus aureus (strain USA300)
+Q57052_STAEP,inmunidad_bacteriocina_BAGEL4,,Immunity protein,Staphylococcus epidermidis
+Q57161_LACSK,inmunidad_bacteriocina_BAGEL4,,SpiA (Putative sakacin P immunity protein) (OrfY protein),
+Q5QGN0_KLEOX,inmunidad_bacteriocina_BAGEL4,,Klebicin D immunity protein,
+Q5V9J9_KLEPN,inmunidad_bacteriocina_BAGEL4,,Klebicin C immunity,
+Q65DD1_BACLD,inmunidad_bacteriocina_BAGEL4,,"Lantibiotic immunity protein,ABC transporter",Bacillus licheniformis (strain DSM 13 / ATCC 14580)
+Q65DD3_BACLD,inmunidad_bacteriocina_BAGEL4,,Lantibiotic immunity protein,Bacillus licheniformis (strain DSM 13 / ATCC 14580)
+Q65DD4_BACLD,inmunidad_bacteriocina_BAGEL4,,"Lantibiotic immunity protein,ABC transporter",Bacillus licheniformis (strain DSM 13 / ATCC 14580)
+Q65DD5_BACLD,inmunidad_bacteriocina_BAGEL4,,Lantibiotic immunity protein,Bacillus licheniformis (strain DSM 13 / ATCC 14580)
+Q6D1R5_ERWCT,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Erwinia carotovora subsp. atroseptica (Pectobacterium atrosepticum)
+Q6KCF9_LACSK,inmunidad_bacteriocina_BAGEL4,,Putative bacteriocin immunity protein,Lactobacillus sakei
+Q8Z3T3_SALTI,inmunidad_bacteriocina_BAGEL4,,Bacteriocin immunity protein,
+SAIA_LACSK,inmunidad_bacteriocina_BAGEL4,,Sakacin A immunity factor,
+MCHI_ECOLX,inmunidad_bacteriocina_BAGEL4,,Microcin H47 immunity protein mchI,Escherichia coli
+TFXG_RHILT,inmunidad_bacteriocina_BAGEL4,,Trifolitoxin immunity protein,Rhizobium leguminosarum bv. trifolii
+Q188S4_CLOD6,resistencia_bacteriocina_BAGEL4,,Putative lantibiotic resistance two-component response regulator,Clostridium difficile (strain 630)
+B3W7X1_LACCB,resistencia_bacteriocina_BAGEL4,,Putative lantibiotic resistance two-component response regulator,Lactobacillus casei (strain BL23)
+Q188S3_CLOD6,resistencia_bacteriocina_BAGEL4,,Putative lantibiotic resistance twocomponent sensor kinase precursor,Clostridium difficile (strain 630)

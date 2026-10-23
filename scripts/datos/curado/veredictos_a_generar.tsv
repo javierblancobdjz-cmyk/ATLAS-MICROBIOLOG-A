@@ -1,0 +1,7 @@
+sujeto	linea	reemplazar_v11	justificacion
+ligilactobacillus-salivarius.st-cect-5713	oral	no	Caso de referencia de Javier: evidencia anti-S. mutans con célula inactivada (ev013a CEL + ev013b OBS); en v1.1 no estaba calculado
+ligilactobacillus-salivarius	oral	no	Misma evidencia vista desde la especie: debe decir explícitamente que es de una sola cepa (C1)
+ligilactobacillus-salivarius.st-cect-5713	salud_femenina	no	Lote E9: dos ECA de mastitis (uno en mezcla con L. gasseri) y uno de embarazo con CECT 5713 viva; en v1.1 no había evidencia de esta cepa en la línea
+ligilactobacillus-salivarius	salud_femenina	si	El veredicto v1.1 (prometedora · «una sola cepa», PS2) quedó falso con el lote E9: ahora hay ECA a favor de dos cepas (PS2 y CECT 5713)
+lacticaseibacillus-paracasei.st-dsmz16671	oral	no	Lote E9: cepa nueva con CEL, rata y ECA piloto con célula inactivada frente a S. mutans
+lacticaseibacillus-paracasei	oral	no	Ídem desde la especie: la coagregación NO es rasgo de especie (ev007), C1 tiene que aplicarse

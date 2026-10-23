@@ -1,0 +1,9 @@
+paso	estado	segundos
+1_correcciones	OK	0.0
+2_generador	OK	0.2
+3_genomica	OK	0.3
+4_rasgos	OK	0.1
+5_vecinos	OK	0.1
+6_puerta_cepa	OK	0.4
+7_control_publico	OK	14.4
+8_tests	OK	0.5

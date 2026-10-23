@@ -1,0 +1,42 @@
+accession,especie,contig_AOI,inicio_en_contig,fin_en_contig,hebra,tamano_AOI_bp,tamano_contig_bp,mejor_coincidencia,clase,identidad_%,e_value,bacteriocinas_en_el_cluster,n_genes_AOI,n_genes_con_asignacion
+GCF_050308165.1,Bifidobacterium bifidum,NZ_CP1695601.0.AOI_01,1939100,1959529,+,20429,2503841,Propionicin_SM1,"Clase II (no modificada, termoestable)",37.805,2.33e-26,Propionicin_SM1,44,1
+GCF_001042595.1,Bifidobacterium dentium,NZ_AP0123261.0.AOI_01,1055688,1076255,-,20567,2635669,Propionicin_SM1,"Clase II (no modificada, termoestable)",28.571,1.36e-13,Propionicin_SM1,56,4
+GCF_050407865.1,Bifidobacterium dentium,NZ_CP1629191.0.AOI_01,1043108,1063675,-,20567,2758140,Propionicin_SM1,"Clase II (no modificada, termoestable)",29.032,3.38e-14,Propionicin_SM1,46,1
+GCF_050407875.1,Bifidobacterium dentium,NZ_CP1629201.0.AOI_01,1057774,1078341,-,20567,2634020,Propionicin_SM1,"Clase II (no modificada, termoestable)",29.032,3.41e-14,Propionicin_SM1,70,4
+GCF_050407885.1,Bifidobacterium dentium,NZ_CP1629211.0.AOI_01,1027738,1048305,-,20567,2671532,Propionicin_SM1,"Clase II (no modificada, termoestable)",29.032,3.81e-14,Propionicin_SM1,58,3
+GCF_050407895.1,Bifidobacterium dentium,NZ_CP1629221.0.AOI_01,2222300,2242867,+,20567,2729428,Propionicin_SM1,"Clase II (no modificada, termoestable)",29.032,2.59e-14,Propionicin_SM1,42,1
+GCF_000155515.2,Lacticaseibacillus paracasei,NC_0221121.0.AOI_01,2695230,2715467,-,20237,2939026,Thermophilin_13_ChainA(ThmA),"Clase II (no modificada, termoestable)",43.056,1.48e-11,Thermophilin_A,38,2
+GCF_000155515.2,Lacticaseibacillus paracasei,NC_0221121.0.AOI_02,2371419,2399990,-,28571,2939026,LSEI_2386,"Clase II (no modificada, termoestable)",100.0,2.50e-28,"LSEI_2386, Enterocin_X_chain_beta, Carnocin_CP52",73,8
+GCF_026013725.1,Lacticaseibacillus paracasei,NZ_CP1102141.1.AOI_01,2952266,2972497,-,20231,3124497,Thermophilin_A,"Clase II (no modificada, termoestable)",43.056,1.58e-11,Thermophilin_A,42,2
+GCF_026013725.1,Lacticaseibacillus paracasei,NZ_CP1102141.1.AOI_02,2606600,2637286,-,30686,3124497,LSEI_2386,"Clase II (no modificada, termoestable)",100.0,2.66e-28,"LSEI_2386, Enterocin_X_chain_beta, Carnocin_CP52",79,7
+GCF_028609725.1,Lacticaseibacillus paracasei,NZ_CP0529361.1.AOI_01,791033,820666,+,29633,3186433,LSEI_2386,"Clase II (no modificada, termoestable)",100.0,2.71e-28,"LSEI_2386, Carnocin_CP52, Enterocin_X_chain_beta",76,7
+GCF_028609725.1,Lacticaseibacillus paracasei,NZ_CP0529361.1.AOI_02,2922816,2943047,-,20231,3186433,Thermophilin_13_ChainA(ThmA),"Clase II (no modificada, termoestable)",43.056,1.61e-11,Thermophilin_A,38,2
+GCF_030061895.1,Lacticaseibacillus paracasei,NZ_CP0954061.0.AOI_01,1032549,1052663,-,20114,3140923,LSEI_2163,"Clase II (no modificada, termoestable)",100.0,4.88e-25,LSEI_2163,57,2
+GCF_030061895.1,Lacticaseibacillus paracasei,NZ_CP0954061.0.AOI_02,1262514,1291655,-,29141,3140923,LSEI_2386,"Clase II (no modificada, termoestable)",97.778,3.63e-27,"LSEI_2386, Enterocin_X_chain_beta, Carnocin_CP52",84,8
+GCF_030061895.1,Lacticaseibacillus paracasei,NZ_CP0954061.0.AOI_03,2896793,2916973,+,20180,3140923,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",70.492,5.98e-25,Enterolysin_A,30,1
+GCF_000829035.1,Lacticaseibacillus paracasei,NZ_AP0125411.1.AOI_01,2197160,2217274,-,20114,2995875,LSEI_2163,"Clase II (no modificada, termoestable)",100.0,4.22e-25,LSEI_2163,64,2
+GCF_000829035.1,Lacticaseibacillus paracasei,NZ_AP0125411.1.AOI_02,2413658,2443288,-,29630,2995875,LSEI_2386,"Clase II (no modificada, termoestable)",100.0,2.55e-28,"LSEI_2386, Enterocin_X_chain_beta, Carnocin_CP52",75,5
+GCF_000829035.1,Lacticaseibacillus paracasei,NZ_AP0125421.2.AOI_01,0,11153,-,11153,11154,Butyrivibriocin_AR10,Clase I (modificada / lantibiotico),56.0,4.62e-27,Butyrivibriocin_AR10230.2;Pentocin,22,1
+GCF_002290185.1,Lactiplantibacillus plantarum,NZ_CP0231741.3.AOI_01,2994464,3023962,-,29498,3407160,Plantaricin_J,"Clase II (no modificada, termoestable)",100.0,3.85e-35,"Plantaricin_K, Plantaricin_J, Plantaricin_N, Plantaricin_A, Plantaricin_F, Plantaricin_E",60,6
+GCF_001704335.1,Lactiplantibacillus plantarum,NZ_CP0137531.1.AOI_01,680012,709507,+,29495,3423963,Plantaricin_J,"Clase II (no modificada, termoestable)",100.0,3.87e-35,"Plantaricin_E, Plantaricin_F, Plantaricin_A, Plantaricin_N, Plantaricin_J, Plantaricin_K",60,6
+GCF_001704315.1,Lactiplantibacillus plantarum,NZ_CP0137491.3.AOI_01,304892,334387,+,29495,3418468,Plantaricin_J,"Clase II (no modificada, termoestable)",100.0,3.86e-35,"Plantaricin_E, Plantaricin_F, Plantaricin_A, Plantaricin_N, Plantaricin_J, Plantaricin_K",60,6
+GCF_009913655.1,Lactiplantibacillus plantarum,NZ_CP0282211.0.AOI_01,1722262,1751748,-,29486,3223643,Plantaricin_J,"Clase II (no modificada, termoestable)",98.182,1.48e-34,"Plantaricin_K, Plantaricin_J, Plantaricin_N, Plantaricin_A, Plantaricin_F, Plantaricin_E",60,6
+GCF_004730965.1,Lactiplantibacillus plantarum,NZ_CP0311401.0.AOI_01,3180122,3207094,+,26972,3534932,Plantaricin_J,"Clase II (no modificada, termoestable)",100.0,4.00e-35,"Plantaricin_E, Plantaricin_F, Plantaricin_J",49,3
+GCF_003176835.1,Lactococcus lactis,NZ_CP0281601.0.AOI_01,1505905,1526364,-,20459,2579381,enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",52.98,2.21e-48,Enterolysin_A,49,1
+GCF_029023865.1,Lactococcus lactis,NZ_CP1189691.2.AOI_01,80426,100495,+,20069,2518868,Lactococcin_B_(LCN-B),"Clase II (no modificada, termoestable)",95.833,1.68e-12,Lactococcin_B_(LCN-B),54,6
+GCF_016028835.1,Lactococcus lactis,NZ_CP0657371.1.AOI_01,1073705,1093774,-,20069,2518866,Lactococcin_B_(LCN-B),"Clase II (no modificada, termoestable)",95.833,1.68e-12,Lactococcin_B_(LCN-B),55,6
+GCF_016649195.2,Lactococcus lactis,NZ_CP1174091.2.AOI_01,2494996,2515065,-,20069,2603291,Lactococcin_B_(LCN-B),"Clase II (no modificada, termoestable)",91.667,6.74e-12,Lactococcin_B_(LCN-B),50,6
+GCF_016649195.2,Lactococcus lactis,NZ_CP1174091.2.AOI_02,805469,825919,+,20450,2603291,enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",54.088,6.40e-51,Enterolysin_A,50,1
+GCF_028994235.1,Lactococcus lactis,NZ_CP1187381.0.AOI_01,1822685,1842814,+,20129,2568009,Lactococcin_B_(LCN-B),"Clase II (no modificada, termoestable)",45.455,3.71e-08,"Lactococcin_A_(LCN-A), Lactococcin_B_(LCN-B)",57,2
+GCF_028994235.1,Lactococcus lactis,NZ_CP1187381.0.AOI_02,1875728,1896178,-,20450,2568009,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",50.0,2.53e-43,Enterolysin_A,52,1
+GCF_011045395.1,Ligilactobacillus salivarius,NZ_CP0276441.2.AOI_01,710333,730780,+,20447,1921419,enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",36.538,4.50e-28,Enterolysin_A,34,1
+GCF_011045395.1,Ligilactobacillus salivarius,NZ_CP0276441.2.AOI_02,1707134,1727623,-,20489,1921419,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",36.538,4.50e-28,Enterolysin_A,20,1
+GCF_030062785.1,Ligilactobacillus salivarius,NZ_CP1145431.5.AOI_01,1224580,1244979,-,20399,1896062,enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",34.532,7.64e-22,Enterolysin_A,25,1
+GCF_030062785.1,Ligilactobacillus salivarius,NZ_CP1145431.5.AOI_02,200723,221212,+,20489,1896062,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",35.714,1.91e-26,Enterolysin_A,22,1
+GCF_030062785.1,Ligilactobacillus salivarius,NZ_CP1145451.1.AOI_01,87620,108034,+,20414,213661,salivaricin_P_chain_b,"Clase II (no modificada, termoestable)",98.529,1.69e-46,"salivaricin_P_chain_a, salivaricin_P_chain_b",40,4
+GCF_030062805.1,Ligilactobacillus salivarius,NZ_CP1145011.1.AOI_01,1833081,1853480,-,20399,1890748,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",35.714,1.90e-26,Enterolysin_A,25,1
+GCF_030062805.1,Ligilactobacillus salivarius,NZ_CP1145011.1.AOI_02,812759,833248,+,20489,1890748,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",35.714,1.90e-26,Enterolysin_A,21,1
+GCF_030062805.1,Ligilactobacillus salivarius,NZ_CP1145021.0.AOI_01,81848,102262,+,20414,213660,salivaricin_P_chain_b,"Clase II (no modificada, termoestable)",98.529,1.69e-46,"salivaricin_P_chain_a, salivaricin_P_chain_b",39,4
+GCF_014841055.1,Ligilactobacillus salivarius,NZ_CP0620711.1.AOI_01,514694,535150,+,20456,2003344,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",36.25,5.02e-30,Enterolysin_A,31,1
+GCF_014841055.1,Ligilactobacillus salivarius,NZ_CP0620711.1.AOI_02,1802058,1822547,-,20489,2003344,Enterolysin_A,"Clase III (bacteriolisina, >30 kDa)",36.25,5.02e-30,Enterolysin_A,19,1
+GCF_014841055.1,Ligilactobacillus salivarius,NZ_CP0620731.0.AOI_01,15209,31824,+,16615,31824,MR10B,"Clase II (no modificada, termoestable)",58.537,4.85e-12,MR10B,35,1

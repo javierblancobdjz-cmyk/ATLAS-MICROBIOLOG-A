@@ -1,0 +1,10 @@
+id	nombre_v11	motivo	sustituto
+M04	Bacteria pasteurizada como posbiotico metabolico	Es una forma (célula entera pasteurizada), no un mecanismo: duplica el campo forma=inactivado de la evidencia	forma=inactivado; mecanismo.clases=[desconocido] salvo que el claim nombre uno
+M10	Celula entera inactivada por calor con efecto inmunitario	Es una forma (célula entera inactivada por calor)	forma=inactivado; clase según claim (inmunomodulación si lo dice)
+M11	Celula entera inactivada por calor con efecto sobre estres y sueno	Es una forma; además no la cita ninguna evidencia	forma=inactivado
+M12	Producto de fermentacion lactea infantil	Es una forma (fermentado), no un mecanismo	forma=fermentado
+M13	Celula entera inactivada por calor sobre masa y fuerza muscular	Es una forma (célula inactivada)	forma=inactivado
+M16	Mezcla de probioticos sobre eje microbiota-intestino-cerebro en envejecimiento	Describe un consorcio vivo, no un mecanismo; no la cita ninguna evidencia	forma=vivo
+M17	Probiotico vivo sobre memoria y estres oxidativo en raton senescente	Es una forma (célula viva); no la cita ninguna evidencia	forma=vivo
+M18	Celula viva sobre funcion cognitiva en mayores sanos	Es una forma (célula viva)	forma=vivo
+M22	Efecto de celula inactivada por calor sobre sintomas intestinales	Es una forma (célula tindalizada/pasteurizada); no la cita ninguna evidencia	forma=inactivado

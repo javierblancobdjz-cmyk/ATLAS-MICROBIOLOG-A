@@ -1,0 +1,2 @@
+especie	linea	resultado	campo	valor_v11	valor_nuevo	autor	justificacion
+streptococcus-salivarius	oral	caries	que_falta	ECA grandes con desenlace de caries (no solo marcadores intermedios como s_mutans y placa).	ECA grandes con desenlace de caries (no solo marcadores intermedios como el recuento de S. mutans y la placa).	arquitecto_datos	El texto de v1.1 llevaba el código crudo del resultado (s_mutans) y la vista lo pinta tal cual en «Qué falta». Solo cambia la redacción, no el contenido.

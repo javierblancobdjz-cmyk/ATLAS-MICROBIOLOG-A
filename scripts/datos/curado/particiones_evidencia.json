@@ -1,0 +1,21 @@
+{"_que_es": "Evidencias v1.1 que mezclaban dos ensayos de distinto nivel en un solo registro. Se parten en dos; el id original queda como alias en meta.ids_partidos y toda referencia a él se expande a las dos. Propuesta de E9 (ronda 1), aplicada por E1; fragmentos verificados literalmente en el abstract de PubMed (curado/lotes/verificacion_E9_r1.tsv).",
+ "ligilactobacillus-salivarius.ev013": {
+  "justificacion": "El artículo (PMID 28950179) contiene dos ensayos: adhesión de S. mutans a discos de hidroxiapatita in vitro (CEL) y un piloto abierto autocontrolado en voluntarios (OBS, sin grupo control). v1.1 los fundía en un OBS, de modo que el mecanismo (anti-adhesión) colgaba de un estudio humano que no lo mide, y el nivel OBS se atribuía al ensayo in vitro.",
+  "principal": "ligilactobacillus-salivarius.ev013a",
+  "partes": [
+   {"id": "ligilactobacillus-salivarius.ev013a",
+    "nivel": "CEL", "nivel_num": 5, "modelo": "bioquimico", "via": "no_aplica", "poblacion": null, "poblacion_clase": null,
+    "condicion": "ensayo in vitro de adhesión de S. mutans a discos de hidroxiapatita con células inactivadas por calor",
+    "objetivo_primario": null, "alertas": [],
+    "efecto_texto": "Menor adhesión de S. mutans a hidroxiapatita (p<0.05); efecto in vitro mantenido hasta 36 meses de almacenamiento",
+    "claim_es": "Las células inactivadas por calor de CECT 5713 impiden la adhesión de Streptococcus mutans a discos de hidroxiapatita in vitro; el efecto se mantuvo hasta 36 meses de almacenamiento.",
+    "fragmento": {"inicio": "Heat-inactivated L. salivarius CECT 5713 prevents", "fin": "S. mutans adhesion to hydroxyapatite"},
+    "fragmento_2": {"inicio": "The in vitro effect of non-viable L. salivarius", "fin": "was maintained until 36 months of storage."}},
+   {"id": "ligilactobacillus-salivarius.ev013b",
+    "nivel": "OBS", "nivel_num": 3,
+    "condicion": "voluntarios sanos, estudio piloto abierto autocontrolado (sin grupo control), enjuague con células inactivadas",
+    "efecto_texto": "Reducción de S. mutans en saliva significativa desde el día 3 hasta las 2 semanas; piloto abierto sin grupo control",
+    "claim_es": "En un piloto abierto autocontrolado con voluntarios sanos, el enjuague con células inactivadas por calor de CECT 5713 redujo la concentración salival de S. mutans de forma significativa desde el tercer día hasta las dos semanas; no hubo grupo control.",
+    "fragmento": {"inicio": "the reduction of S. mutans salivary concentration in the volunteers", "fin": "until two weeks of treatment."}}
+  ]}
+}

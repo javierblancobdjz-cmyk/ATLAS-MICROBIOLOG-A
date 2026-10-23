@@ -13,7 +13,7 @@ Se actualiza en cada cambio de fase.
 | Especialistas, ronda 1 | Hecho · 23-10 |
 | Evaluación del director, ronda 1 | Hecho · 23-10 (2 aceptadas, 7 a mejorar) |
 | Especialistas, ronda 2 | En curso |
-| Ampliación genómica a todo el atlas (NCBI) | En curso |
+| Ampliación genómica a todo el atlas (NCBI) | Hecho · 23-10 (161 genomas nuevos) |
 | Cierre del director (especificación) | Pendiente |
 | Arquitectos y diseñadores implementan | Pendiente |
 
@@ -44,3 +44,11 @@ Orden de integración que fija: primero el modelo de datos, después **una sola*
 ## Ampliación genómica
 
 Con NCBI abierto, se aplican las mismas 53 reglas de marcadores a la anotación oficial de NCBI (PGAP) de las cepas del atlas con genoma y de genomas de referencia de las especies que no lo tenían, validando la concordancia contra las llamadas Bakta existentes.
+
+### Resultado de la ampliación
+
+- **161 genomas RefSeq nuevos.** Ninguna especie bacteriana del atlas queda sin genoma; hasta 8 por especie, priorizando cepa tipo y cepas con depósito público. *S. oligofermentans* solo tiene uno.
+- **39 cepas del atlas vinculadas a su genoma**: 23 por accesión y 16 por nombre, depósito o cepa tipo (estas 16, por verificar). 32 cepas del atlas no tienen genoma en RefSeq (p. ej. CNCM I-745, SF68, Shirota).
+- **Fiabilidad de cada marcador sobre la anotación de NCBI**, validada contra Bakta en 62 genomas: 16 fiables (entre ellos GAD, ADI, adhesión ADH01, lactato, fibra, coagregación), 14 poco fiables porque los anotadores nombran distinto los mismos genes (entre ellos BSH, bacteriocinas BAC01–03, mucina, EPS), 5 sin positivos para validar. La app tiene que enseñar esa diferencia.
+- **ANI real** con pyskani (skani 0.3.0): 708 pares dentro de cada género; los 460 pares que ya existían salen idénticos.
+- Comprobación de privacidad: sin cepas propias.

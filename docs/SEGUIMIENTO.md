@@ -12,10 +12,10 @@ Se actualiza en cada cambio de fase.
 | Encargo del director | Hecho · 23-10 |
 | Especialistas, ronda 1 | Hecho · 23-10 |
 | Evaluación del director, ronda 1 | Hecho · 23-10 (2 aceptadas, 7 a mejorar) |
-| Especialistas, ronda 2 | En curso |
+| Especialistas, ronda 2 | Hecho · 23-10 |
 | Ampliación genómica a todo el atlas (NCBI) | Hecho · 23-10 (161 genomas nuevos) |
-| Cierre del director (especificación) | Pendiente |
-| Arquitectos y diseñadores implementan | Pendiente |
+| Cierre del director (especificación) | Hecho · 23-10 (conforme) |
+| Arquitectos y diseñadores implementan | En curso, rama `mejora-v2` |
 
 ## Diagnóstico de los consultores
 
@@ -52,3 +52,22 @@ Con NCBI abierto, se aplican las mismas 53 reglas de marcadores a la anotación 
 - **Fiabilidad de cada marcador sobre la anotación de NCBI**, validada contra Bakta en 62 genomas: 16 fiables (entre ellos GAD, ADI, adhesión ADH01, lactato, fibra, coagregación), 14 poco fiables porque los anotadores nombran distinto los mismos genes (entre ellos BSH, bacteriocinas BAC01–03, mucina, EPS), 5 sin positivos para validar. La app tiene que enseñar esa diferencia.
 - **ANI real** con pyskani (skani 0.3.0): 708 pares dentro de cada género; los 460 pares que ya existían salen idénticos.
 - Comprobación de privacidad: sin cepas propias.
+
+## Cierre del director
+
+Conforme. La especificación completa está en la rama `mejora-v2`, en `docs/ESPECIFICACION_v2.md`. Esta entrega implementa siete piezas:
+
+1. **Datos reconstruibles:** un único script regenera todos los datos desde sus fuentes y comprueba que no entra ninguna cepa privada.
+2. **Mecanismo en cada evidencia** y la pregunta «¿funciona con la célula muerta?» como eje de producto.
+3. **Vista por output:** «este output lo comparten estos microorganismos», con su mecanismo y si funciona inactivado.
+4. **Ficha de cepa y especie:** formas vendibles, lo demostrado, cómo lo hace y «¿dónde está la clave?».
+5. **Bloque de genoma por cepa** y tabla de presencia por especie, ahora con la ampliación de NCBI.
+6. **«Parecidas a esta»** con frases que dicen qué se comparte y hasta dónde extrapolar.
+7. **Buscador por gen, molécula, mecanismo o propiedad.**
+
+Se elimina la pestaña Pregunta (pasa a la ficha), los pesos de «parecidas» y los marcadores genómicos poco fiables.
+
+**Decisiones por defecto sobre las preguntas del director**, reversibles:
+- Mastitis animal: fuera de esta entrega.
+- Forma posbiótica: puerta «condicionada», rotulada como criterio del atlas y no regulatorio.
+- BAGEL4 y ABRicate pendientes: a P3; esas cepas quedan en gris «no medido».

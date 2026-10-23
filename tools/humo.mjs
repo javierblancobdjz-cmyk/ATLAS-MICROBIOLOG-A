@@ -13,6 +13,9 @@ const rutas = [
   '#/comparar?ids=ligilactobacillus-salivarius.st-cect-5713,streptococcus-salivarius,streptococcus-oligofermentans',
   '#/lineas', '#/lineas/oral', '#/lineas/oral?res=s_mutans', '#/lineas/oral?res=s_mutans&muerta=1',
   '#/lineas/oral?res=s_mutans&s=ligilactobacillus-salivarius', '#/lineas/oral?ataque=1', '#/lineas/salud_femenina?res=mastitis', '#/lineas/seguridad',
+  '#/lineas/seguridad?res=amr', '#/lineas/seguridad?res=bacteriemia&s=bifidobacterium-breve', '#/lineas/tecnologia', '#/lineas/ecologia?res=rasgo_funcional',
+  '#/lineas?out=h2o2&s=ligilactobacillus-salivarius.st-cect-5713', '#/lineas?mid=M35&s=ligilactobacillus-salivarius.st-cect-5713',
+  '#/cepa/akkermansia-muciniphila.st-wst01', '#/especie/akkermansia-muciniphila', '#/especie/bifidobacterium-adolescentis',
   '#/lineas?gen=spxB', '#/lineas?out=h2o2', '#/lineas?mec=exclusion_patogeno', '#/lineas?mid=M35', '#/lineas?q=hidroxiapatita',
   '#/biblioteca', '#/datos',
 ];
@@ -35,9 +38,12 @@ async function pagina(w, h) {
 const inspecciona = page => page.evaluate(() => {
   const v = document.getElementById('view'); const c = v.cloneNode(true);
   c.querySelectorAll('code').forEach(x => x.remove());
-  const t = c.innerText || c.textContent || '';
+  // también los atributos que lee el usuario (title, aria-label): ahí se coló «[object HTMLSpanElement]» (H2)
+  const t = (c.innerText || c.textContent || '') + ' ' + [...v.querySelectorAll('[title],[aria-label]')].map(x => (x.getAttribute('title') || '') + ' ' + (x.getAttribute('aria-label') || '')).join(' ');
   return {
     len: (v.innerText || '').length, h1: v.querySelector('h1')?.innerText || '',
+    // texto y atributos que se ven, sin <code>: ningún slug de cepa crudo («cect-5713») ni guion bajo de código (H4)
+    slug: (t.match(/\b(?:cepa|cepas): [a-z0-9]+-[a-z0-9-]+\b/g) || []),
     roto: !!v.querySelector('.stub') && /Error en la vista/.test(v.innerText),
     crudo: (t.match(/\[object|undefined|\bNaN\b/g) || []),
     tabs: [...document.querySelectorAll('#tabs a')].map(a => a.dataset.tab),
@@ -55,6 +61,7 @@ for (const r of rutas) {
   if (a.roto) fallos.push(`${r}: la vista lanzó un error`);
   if (a.len < 40) fallos.push(`${r}: vista vacía`);
   if (a.crudo.length) fallos.push(`${r}: texto crudo ${[...new Set(a.crudo)].join(', ')}`);
+  if (a.slug.length) fallos.push(`${r}: slug de cepa crudo ${[...new Set(a.slug)].join(', ')}`);
   if (out) await page.screenshot({ path: `${out}/${r.replace(/[#/?&=,%|]/g, '_')}.png`, fullPage: false });
   await m390.goto(base + r, { waitUntil: 'networkidle' });
   await m390.waitForTimeout(200);

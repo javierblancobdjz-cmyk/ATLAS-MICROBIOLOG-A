@@ -169,10 +169,14 @@ function viaTxt(t) {
 function viaLines(r) {
   if (!r.vias || !r.vias.length) return "";
   const vs = r.vias.filter(t => t.rasgo !== "bacteriocina" && t.alcance !== "criterio_propio");
+  // un rasgo refutado en ensayo (presente = no) se dice «No: …» y sin «¿quién más?», igual que en la ficha (queProduce);
+  // una cepa con evidencia en contra (cepas_en_contra) tampoco se pinta como productora
+  const enContra = t => t.presente === "no" || (r.cepa && (t.cepas_en_contra || []).some(x => x.cepa === r.cepa));
   if (!vs.length) return "";
   const by = new Map(); vs.forEach(t => { if (!by.has(t.rasgo)) by.set(t.rasgo, []); by.get(t.rasgo).push(t); });
   return h("div", {class: "pv-via"}, [...by.values()].map(ts => {
-    const t = ts[0], v = VR().rasgos[t.rasgo] || {}, np = (v.productores || []).length;
+    const t = ts[0], v = VR().rasgos[t.rasgo] || {}, np = (v.productores || []).length, no = ts.every(enContra);
+    if (no) return h("small", {class: "pv-no"}, h("b", {}, "No: " + (t.etiqueta || v.etiqueta || etq({}, t.rasgo))), " · refutado en ensayo");
     return h("small", {}, h("b", {}, t.etiqueta || v.etiqueta || etq({}, t.rasgo)), " · ", [...new Set(ts.map(viaTxt))].join("; "),
       np > 1 ? " · " : "", np > 1 ? h("a", {href: Atlas.route.href("lineas", null, {out: t.rasgo})}, "¿quién más? (" + np + " especies)") : "");
   }));
@@ -183,7 +187,7 @@ function mecCell(r) {
 }
 function mecCell0(r) {
   // mezcla y asociación: el mecanismo se nombra, pero sin color (no es efecto atribuible a esta unidad)
-  if (r.grupo !== "efecto") return h("span", {class: "pv-unk"}, r.clases.length ? r.clases.map(claseEtq).join(" + ") + " (sin color: no cuenta)" : "Desconocido");
+  if (r.grupo !== "efecto") return h("span", {class: "pv-unk"}, r.clases.length ? r.clases.map(claseEtq).join(" + ") + " (sin color: no cuenta)" : "mecanismo ?");
   if (r.clases.length) return h("div", {class: "pv-mec"},
     h("div", {class: "fams"}, r.familias.map(f => famDot(f, FAM[f].corto + (r.det === "desconocido" ? " (" + DET_TXT + ")" : "")))),
     h("span", {}, r.clases.map(claseEtq).join(" + ")),
@@ -195,7 +199,7 @@ function mecCell0(r) {
     h("small", {class: "muted"}, "propuesto en línea de ataque (inferencia) · sin evidencia de mecanismo en este resultado"));
   if (!r.curado) return h("span", {class: "muted"}, "sin curar");
   if (r.estudiadoNulo && !r.aFavor) return h("div", {class: "pv-mec"}, h("span", {class: "pv-unk"}, "—"), nuloTxt(r));
-  return h("span", {class: "pv-unk"}, r.aFavor ? "Desconocido" : "—");
+  return h("span", {class: "pv-unk", title: r.aFavor ? "a favor, sin mecanismo identificado en la fuente" : null}, r.aFavor ? "mecanismo ?" : "—");
 }
 /** Fila sin efecto o en contra: el mecanismo se estudió en esta misma unidad y salió nulo. Texto con fuente, sin color. */
 function nuloTxt(r) {
@@ -226,7 +230,12 @@ const funciona = r => r.muerta.k === "si" || r.muerta.k === "frac";
 
 /** Pinta el pivote. highlight = slug de especie o cepa a resaltar (viene de tocar una celda). */
 function render(el, linea, res, highlight, soloMuerta) {
+  // Seguridad tiene su propio marco (el eje es el riesgo, no el efecto a favor): misma ruta, otra lectura
+  if (linea === "seguridad") return renderSeguridad(el, linea, res, highlight);
   const L = D.linea(linea), R = D.resultado(linea, res);
+  // «¿Funciona muerta?» es el eje de producto: en las líneas transversales (tecnología, ecología) no se pinta
+  const prodLinea = !L || L.tipo === "producto";
+  if (!prodLinea) soloMuerta = false;
   const rows = rowsFor(linea, res);
   const pos0 = rows.filter(r => r.aFavor), neg0 = rows.filter(r => !r.aFavor);
   // E7: filtro «funciona con célula muerta» (observado: forma inactivada/fracción con efecto a favor; nunca inferido).
@@ -258,9 +267,9 @@ function render(el, linea, res, highlight, soloMuerta) {
     h("b", {}, pos0.length + (pos0.length === 1 ? " microorganismo" : " microorganismos")), " con resultado a favor (",
     [nCepa + " a nivel de cepa", pos0.length - nCepa ? (pos0.length - nCepa) + " solo de especie" : ""].filter(Boolean).join(", ") + "; " + nEsp + (nEsp === 1 ? " especie" : " especies") + "). ",
     rows.some(r => r.curado) ? ["Mecanismo con evidencia en ", h("b", {}, String(conMec)), ". "] : "Mecanismo: sin curar en estos datos. ",
-    nSi + nFrac ? ["Funciona con célula muerta: ", h("b", {}, String(nSi)), " con célula inactivada"].concat(nFrac ? [" y ", h("b", {}, String(nFrac)), " con fracción"] : [])
+    !prodLinea ? "" : nSi + nFrac ? ["Funciona con célula muerta: ", h("b", {}, String(nSi)), " con célula inactivada"].concat(nFrac ? [" y ", h("b", {}, String(nFrac)), " con fracción"] : [])
       : "Ninguno probado con célula muerta y a favor",
-    nNulo ? "; " + nNulo + " probada" + (nNulo === 1 ? "" : "s") + " muerta" + (nNulo === 1 ? "" : "s") + " sin efecto" : "", ".",
+    prodLinea && nNulo ? "; " + nNulo + " probada" + (nNulo === 1 ? "" : "s") + " muerta" + (nNulo === 1 ? "" : "s") + " sin efecto" : "", prodLinea ? "." : "",
     neg0.length ? " " + neg0.length + " sin efecto o en contra." : "",
     aparte.length ? " No cuentan: " + aparte.join(" y ") + "." : ""));
 
@@ -273,7 +282,7 @@ function render(el, linea, res, highlight, soloMuerta) {
     unk ? h("span", {class: "fam fam-unk"}, h("i", {"aria-hidden": "true"}), "Mecanismo ? · " + unk) : ""));
 
   const nMu = pos0.filter(funciona).length;
-  el.append(h("div", {class: "filters bar"}, h("a", {class: "switch", role: "switch", "aria-checked": String(!!soloMuerta),
+  if (prodLinea) el.append(h("div", {class: "filters bar"}, h("a", {class: "switch", role: "switch", "aria-checked": String(!!soloMuerta),
     href: Atlas.route.href("lineas", linea, {res, s: highlight, muerta: soloMuerta ? null : "1"})}, h("i", {}),
     "Solo lo que funciona con célula muerta (" + nMu + ")")));
   if (pos.length) el.append(table(pos, highlight, "A favor"));
@@ -281,11 +290,13 @@ function render(el, linea, res, highlight, soloMuerta) {
     ? "Ninguna fila con célula inactivada o fracción y resultado a favor: no se ha probado o no funcionó."
     : "Ningún resultado a favor curado."));
   if (neg.length) el.append(h("h3", {class: "pv-h3"}, soloMuerta ? "Probado con célula muerta, sin efecto" : "Probado sin efecto o en contra"), table(neg, highlight, "Sin efecto"));
+  if (!prodLinea) el.querySelectorAll("table.pv").forEach(t => t.classList.add("pv-sin-muerta"));
   if (soloMuerta) {
     const ocultas = pos0.length - pos.length + neg0.length - neg.length + nAparte;
     if (ocultas) el.append(h("p", {class: "small muted pv-oculto"}, "El filtro oculta " + ocultas + (ocultas === 1 ? " fila" : " filas") +
       ": no se han probado con célula muerta (o la fuente no declara la forma), o no cuentan como efecto. No quiere decir que no funcionen."));
   } else extraTables(el, rows, highlight);
+  if (!prodLinea) el.querySelectorAll("table.pv").forEach(t => t.classList.add("pv-sin-muerta"));
 
   el.append(h("details", {class: "pv-foot small muted"}, h("summary", {}, "Cómo se lee esta tabla"),
     h("p", {}, "Cada fila es la unidad que se ensayó: si el artículo no declara cepa, la fila es la especie y no se atribuye a ninguna cepa. ",
@@ -294,6 +305,65 @@ function render(el, linea, res, highlight, soloMuerta) {
     "Un ensayo nulo, en contra o con resultado mixto de la misma unidad se cita en texto, sin color. Una mezcla de cepas no cuenta para ninguna de ellas, y una asociación (se observa, no se interviene) no cuenta como efecto: van aparte. ",
     "Orden: primero el mejor nivel a favor. Genes: solo los nombrados en la evidencia, no los del genoma. Ausencia aquí = no curado en el atlas (corte " + (D.meta.fecha_corte || "?") + "), no incapacidad demostrada.")));
 }
+/* ---------- Seguridad: pivote con marco de riesgo (D01) ----------
+   En Seguridad «-» es una señal de riesgo (resistencia adquirida, virulencia, bacteriemia, aminas…), no un «en contra», y
+   «+»/«0» no son un logro sino «sin riesgo observado» / «sin señal». Misma regla que generar_v12.estado_de y que la celda de
+   la matriz: una serie de casos asociada cuenta como señal (criterio propio del atlas, rotulado). Sin «¿funciona muerta?». */
+const DIR_SEG = {"-": "señal de riesgo", "0": "sin señal", "+": "sin riesgo observado", mixto: "resultado mixto"};
+function renderSeguridad(el, linea, res, highlight) {
+  const L = D.linea(linea), R = D.resultado(linea, res);
+  el.append(h("nav", {class: "crumbs small"}, h("a", {href: Atlas.route.href("lineas", linea)}, "← Matriz de " + (L ? L.nombre : linea))));
+  el.append(h("h1", {class: "pv-title"}, (R ? R.nombre : res), h("span", {class: "muted"}, " · señales de riesgo")));
+  if (highlight) { const who = D.resolve(highlight); if (who) el.append(h("p", {class: "small pv-from"}, "Vienes de ",
+    h("a", {href: Atlas.route.href(who.tipo === "cepa" ? "cepa" : "especie", highlight)}, U.name(highlight)), ": su fila va resaltada.")); }
+  const todas = Object.values(D.raw.evidencias).filter(e => e.tipo === "evidencia" && e.linea === linea);
+  const resWith = (L ? L.resultados : []).filter(x => todas.some(e => e.resultado === x.id));
+  el.append(h("div", {class: "line-chips scroller pv-res"}, resWith.map(x =>
+    h("a", {class: "chip", "aria-pressed": String(x.id === res), href: Atlas.route.href("lineas", linea, {res: x.id})}, x.nombre_corto || x.nombre))));
+  const evs = todas.filter(e => e.resultado === res);
+  if (!evs.length) { el.append(h("p", {class: "muted"}, "Nada curado para este riesgo. No significa que no exista: es un hueco de curación.")); return; }
+  const by = new Map();
+  evs.forEach(e => { const k = esMezcla(e) ? "mz:" + e.id : e.cepa || ("sp:" + e.especie + ":" + e.alcance); if (!by.has(k)) by.set(k, []); by.get(k).push(e); });
+  const rows = [...by.entries()].map(([k, E]) => {
+    const riesgo = E.filter(e => e.direccion === "-"), ref = riesgo.length ? riesgo : E;
+    return {key: k, grupo: esMezcla(E[0]) ? "mezcla" : "efecto", especie: E[0].especie, cepa: E[0].cepa || null, alcance: E[0].alcance,
+      etiquetaMezcla: esMezcla(E[0]) ? (E[0].etiqueta_mezcla || "en mezcla con otras cepas") : null, evs: E, riesgo: riesgo.length > 0,
+      porAsociacion: riesgo.length > 0 && riesgo.every(esAsociacion), nivel: ref.reduce((a, e) => nn(e.nivel) < nn(a.nivel) ? e : a).nivel};
+  }).sort((a, b) => (b.riesgo - a.riesgo) || (nn(a.nivel) - nn(b.nivel)) || a.key.localeCompare(b.key));
+  const conR = rows.filter(r => r.riesgo), sinR = rows.filter(r => !r.riesgo), nAso = conR.filter(r => r.porAsociacion).length;
+  // recuento por especie (una especie puede tener fila de especie, de cepa y extrapolada): la que tiene alguna señal cuenta con señal
+  const espR = new Set(conR.map(r => r.especie)), espN = new Set(sinR.map(r => r.especie).filter(x => !espR.has(x)));
+  const nEsp = n => n + (n === 1 ? " especie" : " especies");
+  el.append(h("p", {class: "pv-lede"},
+    h("b", {}, nEsp(espR.size) + " con señal de riesgo"),
+    nAso ? " (" + nAso + (nAso === 1 ? " fila" : " filas") + " solo por serie de casos asociada: criterio propio del atlas)" : "", "; ",
+    nEsp(espN.size) + " sin señal registrada. «Sin señal» no es «seguro»: puede que nadie la haya buscado."));
+  el.append(h("div", {class: "mx-legend small", role: "note"}, h("div", {class: "mx-leg-row"},
+    h("span", {}, h("span", {class: "sw sw-neg", "aria-hidden": "true"}), "Señal de riesgo"),
+    h("span", {}, h("span", {class: "sw sw-aso", "aria-hidden": "true"}), "Sin señal registrada (no es «seguro»)"))));
+  const tabla = (rs, cap) => {
+    const tb = h("tbody", {});
+    rs.forEach(r => tb.append(h("tr", {class: "pv-row " + (r.riesgo ? "seg-row-r" : "seg-row-n") + (isHl(r, highlight) ? " hl" : ""), id: "pv-" + r.key.replace(/[^\w-]/g, "-")},
+      h("th", {scope: "row", "data-k": "Quién"}, quien(r)),
+      h("td", {"data-k": "Nivel"}, level(r.nivel)),
+      h("td", {"data-k": "Lectura"}, h("span", {class: "seg-pill " + (r.riesgo ? "seg-r" : "seg-n")}, r.riesgo ? "señal de riesgo" : "sin señal registrada"),
+        r.porAsociacion ? h("small", {class: "muted pv-nul"}, "por serie de casos asociada: criterio propio del atlas") : ""),
+      h("td", {"data-k": "Qué se registró"}, h("div", {class: "pv-otros seg-evs"}, r.evs.map(e => h("small", {class: "pv-nul"},
+        h("b", {}, may(DIR_SEG[e.direccion] || etq({}, e.direccion))), " · ", e.nivel, esAsociacion(e) ? " · asociación" : "", " · ",
+        U.truncate(e.claim_es, 150), " ", U.sourceChip(e.id))))))));
+    const w = h("div", {class: "pv-wrap"});
+    w.append(h("table", {class: "pv pv-seg"}, h("caption", {class: "sr"}, cap),
+      h("thead", {}, h("tr", {}, ["Quién", "Nivel", "Lectura", "Qué se registró"].map(x => h("th", {scope: "col"}, x)))), tb));
+    return w;
+  };
+  if (conR.length) el.append(tabla(conR, "Con señal de riesgo"));
+  if (sinR.length) el.append(h("h3", {class: "pv-h3"}, "Sin señal de riesgo registrada", h("span", {class: "muted small"}, " · no es «seguro»")), tabla(sinR, "Sin señal registrada"));
+  el.append(h("details", {class: "pv-foot small muted"}, h("summary", {}, "Cómo se lee esta tabla"),
+    h("p", {}, "En Seguridad el eje es el riesgo, no un efecto a favor. «Señal de riesgo» = alguna evidencia de esa unidad lo registra (resistencia adquirida, virulencia, bacteriemia, aminas biógenas…); el nivel es el de la señal. ",
+      "«Sin señal registrada» quiere decir que lo curado no lo registra, no que esté demostrado que no ocurre. Una serie de casos asociada cuenta como señal por criterio propio del atlas, rotulado. ",
+      "Cada fila es la unidad que se estudió: si la fuente no declara cepa, la fila es la especie y no se atribuye a ninguna cepa. La seguridad del genoma de cada cepa está en su ficha (bloque Genoma).")));
+}
+
 /** Secciones aparte, sin color y fuera de los recuentos: mezcla de cepas y solo asociación. Mismas columnas. */
 function extraTables(el, rows, highlight) {
   if ((rows.mezcla || []).length) el.append(h("h3", {class: "pv-h3"}, "En mezcla de cepas", h("span", {class: "muted small"}, " · no cuenta para ninguna de ellas")),
@@ -356,7 +426,7 @@ function genomaCell(t) {
   return h("div", {class: "pv-gen"}, g.map(x => {
     const mine = Object.entries(x.cepas_atlas || {}).filter(([, d]) => d.es_cepa_del_rasgo);
     return h("small", {}, h("b", {}, x.marcador), " ", x.taxones.map(z => (z.taxon && x.taxones.length > 1 ? z.taxon.replace(/^.* subsp\. /, "subsp. ") + ": " : "") + z.texto).join(" · "),
-      ...mine.flatMap(([c, d]) => [" · ", h("i", {}, (D.strain(c) || {}).nombre_corto || c), ": " + d.texto + (d.pmid ? " (PMID " + d.pmid + ")" : "")]));
+      ...mine.flatMap(([c, d]) => [" · ", h("i", {}, (D.strain(c) || {}).nombre_corto || c), ": " + U.genCepaTxt(d) + (d.pmid ? " (PMID " + d.pmid + ")" : "")]));
   }));
 }
 function renderOutput(el, out, highlight) {
@@ -369,10 +439,17 @@ function renderOutput(el, out, highlight) {
   const otros = Object.entries(V.rasgos).filter(([k, x]) => (x.productores || []).length > 1 && k !== out && k !== "bacteriocina");
   el.append(h("div", {class: "line-chips scroller pv-res"}, [[out, v]].concat(otros).map(([k, x]) =>
     h("a", {class: "chip", "aria-pressed": String(k === out), href: Atlas.route.href("lineas", null, {out: k})}, x.etiqueta))));
-  const vias = [...new Set(filas.filter(f => f.t.via !== "desconocida").map(f => f.t.via_etiqueta))];
+  const vias = [...new Set(filas.filter(f => f.t.via !== "desconocida" && f.t.presente !== "no").map(f => f.t.via_etiqueta))];
   const tc = V.tipos_convergencia[v && v.tipo_convergencia];
+  // mismo recuento que «Bucea por patrón» de Inicio (productores = especies con el rasgo no refutado); el dato «no» se cuenta aparte
+  const fNo = filas.filter(f => f.t.presente === "no"), fSi = filas.filter(f => f.t.presente !== "no");
+  const nProd = new Set(fSi.map(f => f.sp.slug)).size;
+  if (highlight) { const who = D.resolve(highlight); if (who) el.append(h("p", {class: "small pv-from"}, "Vienes de ",
+    h("a", {href: Atlas.route.href(who.tipo === "cepa" ? "cepa" : "especie", highlight)}, U.name(highlight)), ": su fila va resaltada.")); }
   el.append(h("p", {class: "pv-lede"}, tc ? [h("b", {}, tc), ". "] : "",
-    filas.length + " filas en " + new Set(filas.map(f => f.sp.slug)).size + " especies; vías identificadas: " + (vias.length ? vias.join(", ") : "ninguna") + ". ",
+    h("b", {}, nProd + (nProd === 1 ? " especie lo produce" : " especies lo producen")), " (" + fSi.length + (fSi.length === 1 ? " fila" : " filas") + ")",
+    fNo.length ? "; " + fNo.length + (fNo.length === 1 ? " fila con dato «no» (se ensayó y no lo hace)" : " filas con dato «no» (se ensayó y no lo hace)") : "",
+    "; vías identificadas: " + (vias.length ? vias.join(", ") : "ninguna") + ". ",
     "Misma molécula ≠ mismo efecto: el resultado (p. ej. frente a S. mutans) está en la matriz."));
   filas.sort((a, b) => (a.t.presente === "no") - (b.t.presente === "no") || (a.t.via === "desconocida") - (b.t.via === "desconocida") || a.sp.slug.localeCompare(b.sp.slug));
   const wrap = h("div", {class: "pv-wrap"});
@@ -382,7 +459,8 @@ function renderOutput(el, out, highlight) {
     const who = h("span", {class: "pv-who"}, h("a", {href: Atlas.route.href("especie", sp.slug)}, U.name(sp.slug)),
       t.cepas.length ? h("span", {}, ...t.cepas.flatMap((c, i) => [i ? ", " : "", h("a", {href: Atlas.route.href("cepa", c)}, (D.strain(c) || {}).nombre_corto || c)])) : "",
       h("span", {class: "pv-scope"}, etq(ALC, t.alcance) + " · " + etq(PRES, t.presente)));
-    tb.append(h("tr", {class: "pv-row" + (highlight && sp.slug === highlight ? " hl" : "")},
+    const hl = !!highlight && (sp.slug === highlight || (t.cepas || []).includes(highlight) || ((D.strain(highlight) || {}).especie === sp.slug && !filas.some(f => (f.t.cepas || []).includes(highlight))));
+    tb.append(h("tr", {class: "pv-row" + (hl ? " hl" : "") + (t.presente === "no" ? " pv-g-asociacion" : "")},
       h("th", {scope: "row", "data-k": "Quién"}, who),
       h("td", {"data-k": "Vía"}, h("div", {class: "pv-mec"}, h("span", {}, viaTxt(t)), h("small", {class: "muted"}, etq(BASE2, t.base)))),
       h("td", {"data-k": "Genes"}, t.genes.length ? h("span", {class: "genes"}, t.genes.map(g => h("i", {title: etq(RESP, g.respaldo)}, g.gen))) : h("span", {class: "muted"}, "—")),
@@ -393,7 +471,7 @@ function renderOutput(el, out, highlight) {
   wrap.append(h("table", {class: "pv"}, h("thead", {}, h("tr", {}, ["Quién", "Vía", "Genes", "Genoma público", "¿Funciona muerta?", "Fuentes"].map(x => h("th", {scope: "col"}, x)))), tb));
   el.append(wrap);
   el.append(h("p", {class: "pv-foot small muted"}, "Vía «no identificada» = la fuente mide el output y no dice por qué enzima; la candidata no es un dato. ",
-    "Genoma público: lecturas de genomica.json (E2): «constante de especie» no distingue cepas; «no medido» no es ausencia. Porta el gen ≠ produce la molécula."));
+    "Genoma público: lecturas de los genomas públicos (las mismas del bloque Genoma de cada ficha), con su anotador (Bakta o PGAP de NCBI): «constante de especie» no distingue cepas; «no medido» no es ausencia; «vinculada por nombre: verificar» = genoma asociado a la cepa por nombre, no por accesión. Porta el gen ≠ produce la molécula."));
 }
 
 /* ---------- E7 r2 · entradas por gen, clase de mecanismo, mecanismo del catálogo o texto: MISMO motor y misma tabla ----------
@@ -408,7 +486,7 @@ function queryEvs(q) {
   if (q.mec) return all.filter(e => e.mecanismo && (e.mecanismo.clases || []).includes(q.mec));
   if (q.mid) { const m = D.mecanismo(q.mid) || {}; const ids = new Set(m.fuentes || []);
     return all.filter(e => ids.has(e.id) || (e.mecanismo && (e.mecanismo.ids || []).includes(q.mid))); }
-  if (q.q) { const qw = wds(q.q); return all.filter(e => { const w = wds(e.claim_es); return qw.every(x => w.some(y => infl(y, x))); }); }
+  if (q.q) { const qw = wds(q.q); return all.filter(e => { const w = wds([e.claim_es, ...((e.mecanismo && e.mecanismo.genes) || [])].join(" ")); return qw.every(x => w.some(y => infl(y, x))); }); }
   return [];
 }
 function renderQuery(el, q, highlight) {
@@ -433,8 +511,12 @@ function renderQuery(el, q, highlight) {
   if (!evs.length) { if (ras.length) return; el.append(h("p", {class: "muted"}, "Ninguna evidencia curada lo nombra. No significa que no exista: no está curado (corte " + (D.meta.fecha_corte || "?") + ").")); return; }
   const by = new Map();
   evs.forEach(e => { const k = e.linea + "|" + e.resultado; if (!by.has(k)) by.set(k, []); by.get(k).push(e); });
+  const nEsp = new Set(evs.map(e => e.especie)).size, nUnid = new Set(evs.map(e => e.cepa || e.especie)).size;
   el.append(h("p", {class: "pv-lede"}, h("b", {}, evs.length + (evs.length === 1 ? " evidencia" : " evidencias")), " en " + by.size + (by.size === 1 ? " resultado" : " resultados") + " y " +
-    new Set(evs.map(e => e.especie)).size + " especies. Cada tabla es el pivote de ese resultado restringido a esta consulta; «todos los que lo consiguen» abre el pivote completo."));
+    nEsp + (nEsp === 1 ? " especie" : " especies") + ". Cada tabla es el pivote de ese resultado restringido a esta consulta; «todos los que lo consiguen» abre el pivote completo."));
+  // un fenómeno que solo tiene la propia ficha no es un callejón sin salida: se dice y se ofrece el pivote del resultado
+  if (highlight && nUnid === 1 && evs.every(e => e.cepa === highlight || (!e.cepa && e.especie === highlight)))
+    el.append(h("p", {class: "pv-vacio"}, "Por ahora solo ", U.name(highlight), " tiene evidencia de esto en el atlas. Para ver quién consigue el mismo resultado por otra vía, abre «todos los que lo consiguen»."));
   [...by.entries()].sort((a, b) => b[1].length - a[1].length).forEach(([k, E]) => {
     const [lin, res] = k.split("|"), R = D.resultado(lin, res), L = D.linea(lin);
     const rows = rowsFromEvs(E, lin, res);

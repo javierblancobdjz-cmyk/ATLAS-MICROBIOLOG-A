@@ -125,6 +125,9 @@ Atlas.registerView({route: "datos", tab: "datos", cssClass: "v-datos", render(el
       h("p", {}, "No cuentan como efecto, y van en gris discontinuo con su rótulo: ", h("b", {}, "asociación"), " (", EST.solo_asociacion || "se observa, no se interviene", "; " + fmt(n.solo_asociacion || 0) + " celdas) y ",
         h("b", {}, "en mezcla"), " (", EST.solo_mezcla || "solo en mezcla de cepas", "; " + fmt(n.solo_mezcla || 0) + " celdas). Tampoco suman en el pivote: salen en secciones aparte.",
         ej ? h("span", {}, " Ejemplo: ", h("a", {href: Atlas.route.href("lineas", ej)}, (D.linea(ej) || {}).nombre || ej), ".") : ""),
+      h("p", {}, "La línea transversal ", h("a", {href: Atlas.route.href("lineas", "seguridad")}, "Seguridad"),
+        " se lee al revés: el eje es el riesgo. En rojo, «señal de riesgo» (" + fmt(n.senal_de_riesgo || 0) + " celdas; una serie de casos asociada cuenta como señal por criterio propio); en gris discontinuo, «sin señal registrada» (" +
+        fmt(n.sin_senal_de_riesgo || 0) + " celdas), que no es «seguro». Su pivote no tiene «¿funciona muerta?»."),
       h("p", {class: "small muted"}, "Toda celda lleva al pivote de su resultado con la fila de la especie resaltada. Una columna sin celdas es un hueco de curación, no una ausencia demostrada.")));
   }
 
@@ -231,7 +234,7 @@ function criterioPropio() {
   const relEtq = id => (((R.catalogo.relacion_valores || []).find(x => x.id === id) || {}).etiqueta || sinGuion(id)).split(" (")[0];
   const subcl = evs.filter(e => e.mecanismo && (e.mecanismo.subclases || []).length).length;
   const pc = (R.puerta_cepa && R.puerta_cepa.cepas) || {};
-  const posbCP = Object.values(pc).filter(c => { const p = (c.puerta_por_forma || {}).posbiotico; return p && /criterio propio/.test(p.razon || ""); }).length;
+  const posbCP = Object.values(pc).filter(c => Atlas.ui.posbCriterio((c.puerta_por_forma || {}).posbiotico)).length;   // misma regla que la ficha
   const segE = (R.puerta_cepa && R.puerta_cepa.seguridad_especie) || {};
   /* «a revisar» sin decisión de EFSA detrás (ni no-recomendación ni exclusión de QPS): es juicio del atlas */
   const aRevisar = Object.entries(segE).filter(([, s]) => s.estado === "a_revisar" && !(s.motivos || []).some(x => /EFSA|excluida de la evaluaci/.test(x)))

@@ -10,7 +10,7 @@
 .vec-score small{color:var(--ink-3)}
 .vec-badges{display:flex;flex-wrap:wrap;gap:6px}
 .vec-badges .chip{min-height:auto;padding:3px 10px;font-size:var(--fs-xs);cursor:default}
-.vec-flag.is-ev{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.vec-flag.is-ev{background:var(--accent-soft);color:var(--accent);border-color:transparent}   /* etiqueta (atributo), no estado de puerta */
 .vec-flag.is-inf{background:var(--surface-2);color:var(--ink-3)}
 .vec-warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn-mark);gap:4px}
 .vec-warn svg{width:15px;height:15px}
@@ -31,8 +31,8 @@
 /* v2 · P1-06: chips de lo compartido con su fuente (aquí / allí) y lista compacta de «solo parecido taxonómico» */
 .vec-traits{list-style:none;margin:0;padding:0;flex-direction:column;align-items:flex-start}
 .vec-trait-wrap{flex-wrap:wrap;gap:4px 6px}
-.vec-trait small{font-weight:600;opacity:.8}
-.vec-trait.is-out{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.vec-trait small{font-weight:600}
+.vec-trait.is-out{background:var(--surface-2);color:var(--ink);border-color:transparent}
 .vec-src{display:inline-flex;align-items:center;gap:3px}
 .vec-src .chip-src{min-height:auto;padding:2px 8px;font-size:var(--fs-xs)}
 .vec-tax{margin-top:16px}

@@ -115,6 +115,18 @@ OK     P1-02 seguridad: toda celda con señal de riesgo la lleva en alguna forma
 OK     P1-06 eje funcional: rasgos compartidos solo con base causal u observado en los dos lados (0)
 OK     P1-06 ningún chip de vecinos cita un registro de contexto
 OK     UX «Qué falta» de ataques sin códigos crudos
+OK     D03 toda celda de Seguridad lleva nivel (el de la señal, o el de lo registrado) (0 sin nivel)
+OK     D03 en una señal de riesgo el nivel mostrado es el de la señal
+OK     H4 «Qué hace bien» de especie sin slugs crudos («1 cepa: cect-5713»)
+OK     H4 qb02 (UCC118 produce Abp118): nivel de su evidencia (GEN-v) y sin el nulo de CECT 5713
+OK     H4 qb04 nombra la cepa como «CECT 5713»
+OK     QA-05 ninguna vecina de distinta familia sale como «solo parecido taxonómico»
+OK     QA-01 DSMZ 16671 → M18: la frase no niega el mecanismo de DSMZ 16671 en S. mutans salival
+OK     H9 la cita corta conserva el apellido con partícula («do Carmo 2018», no «do 2018»)
+OK     H9 ninguna cita corta «? AAAA»
+OK     QA-02 exactamente 11 cepas con píldora verde y todas con genoma medido (11: [])
+OK     D11/H6/D12 la prosa de M35 no cita ids crudos (ev009, M41…) y su nombre lleva tildes
+OK     QA-08 ningún gen en minúsculas con guion bajo («amuc_1100» → «Amuc_1100», como el artículo)
 OK     P1-01 control_publico revisa TODO el repositorio (también salidas/ versionadas) y nunca imprime el código
 OK     P1-01 si falta cualquier CSV de fuentes_publicas (aunque ningún paso lo lea), genómica da FAIL y no escribe nada
 

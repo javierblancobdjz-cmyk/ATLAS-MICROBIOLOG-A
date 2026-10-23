@@ -3,6 +3,8 @@
 (function () {
 const U = Atlas.ui, D = new Proxy({}, {get: (_, k) => Atlas.data[k]}), h = U.h, icon = U.icon, level = U.level, name = U.name;
 const etq = k => String(k == null ? "" : k).replace(/_/g, " ");
+/** Nombre en texto plano para atributos (title): U.name devuelve un nodo y concatenado daba «[object HTMLSpanElement]» */
+const nombreTxt = id => { const x = U.name(id); return (x && x.textContent) || String(id); };
 /* P1-02: requiere_viabilidad de la celda copiada en la línea de ataque; «desconocido» se dice, no se pinta como «no». */
 const VIAB = {si: "su mecanismo exige célula viva", no: "no la exige (funciona inactivada o con fracción)", desconocido: "no se sabe si exige célula viva"};
 /** mecanismo_id de la línea de ataque («M01,M02» o «desconocido» explícito) → enlaces al pivote por mecanismo del catálogo. */
@@ -32,22 +34,28 @@ Atlas.registerView({route: "lineas", tab: "lineas", cssClass: "v-lineas", render
     if (r.query.s) requestAnimationFrame(() => { const x = el.querySelector("tr.hl"); if (x) x.scrollIntoView({block: "center"}); });
     return;
   }
-  el.append(h("h1", {}, "Líneas de producto"),
+  const transv = D.lineas("transversal");
+  el.append(h("h1", {}, linea.tipo === "producto" ? "Líneas de producto" : "Línea transversal: " + linea.nombre),
     U.readingBox("lineas",
       "Ver de un golpe qué bacterias consiguen cada resultado y por qué familia de mecanismo.",
       "Tres estados. Color = evidencia a favor con familia de mecanismo y fuente (relleno pálido y «det. ?» = se vio cómo actúa, no con qué molécula o gen). Borde gris discontinuo = evidencia a favor, mecanismo sin identificar («mecanismo ?»). Rosa = nulo o en contra. Un punto = nada curado: hueco de curación, no ausencia.",
       "Toca el nombre de un resultado para ver quién lo consigue, con qué forma, si funciona con la célula muerta y por qué mecanismo. Una celda abre ese mismo pivote con su fila resaltada."));
 
-  // selector de línea
+  // selector de línea: las de producto y, separadas, las transversales (Seguridad, Tecnología, Ecología), que antes no
+  // se alcanzaban navegando
   const chips = h("div", {class: "line-chips scroller"});
   lineas.forEach(l => chips.append(h("a", {class: "chip", "aria-pressed": String(l.id === active),
     href: Atlas.route.href("lineas", l.id, onlyAtk ? {ataque: "1"} : null)}, l.nombre)));
+  if (transv.length) chips.append(h("span", {class: "lc-sep", "aria-hidden": "true"}, "· Transversales:"),
+    ...transv.map(l => h("a", {class: "chip", "aria-pressed": String(l.id === active), href: Atlas.route.href("lineas", l.id)}, l.nombre)));
   el.append(chips);
 
-  const bar = h("div", {class: "filters bar"},
-    h("a", {class: "switch", role: "switch", "aria-checked": String(onlyAtk),
-      href: Atlas.route.href("lineas", active, onlyAtk ? null : {ataque: "1"})}, h("i", {}), "Solo líneas de ataque"));
-  el.append(bar);
+  if (linea.tipo === "producto") {
+    const bar = h("div", {class: "filters bar"},
+      h("a", {class: "switch", role: "switch", "aria-checked": String(onlyAtk),
+        href: Atlas.route.href("lineas", active, onlyAtk ? null : {ataque: "1"})}, h("i", {}), "Solo líneas de ataque"));
+    el.append(bar);
+  }
 
   const mat = D.raw.matriz[active] || {};
   const resultados = linea.resultados || [];
@@ -188,7 +196,7 @@ function matCell0(c, subj, linea, res) {
     return h("a", {class: "cell cm fam-bg-" + fams[0] + (unk ? " det-unk" : ""), href,
       title: "Mecanismo: " + fams.map(f => Atlas.pivot.FAM[f].etq).join(" + ") + (inf ? " (inferido)" : "") +
         (unk ? " · " + Atlas.pivot.DET_TXT : " · determinante identificado") +
-        (otroNivel ? " · el mecanismo se vio en " + otroNivel + (mc.unidades.length ? " (" + mc.unidades.map(u => u.startsWith("sp:") ? "especie, sin cepa" : U.name(u)).join(", ") + ")" : "") + ", el efecto llega a " + c.mejor_nivel : "") +
+        (otroNivel ? " · el mecanismo se vio en " + otroNivel + (mc.unidades.length ? " (" + mc.unidades.map(u => u.startsWith("sp:") ? "especie, sin cepa" : nombreTxt(u)).join(", ") + ")" : "") + ", el efecto llega a " + c.mejor_nivel : "") +
         atk + " · " + (c.n || 0) + " evidencias"},
       h("span", {class: "l1"}, level(c.mejor_nivel), n),
       h("span", {class: "l2"}, fams.map(f => Atlas.pivot.FAM[f].corto).join("+") + (inf ? " ?" : "") + (otroNivel ? " · " + otroNivel : "")),

@@ -188,7 +188,8 @@ Atlas.ui = {
   sourceChip(id) {
     const e = Atlas.data.evidence(id), w = !e && Atlas.data.web(id);
     if (id === "criterio_propio") return Atlas.ui.h("span", {class: "chip chip-cp"}, "criterio propio");
-    if (w) return Atlas.ui.h("a", {class: "chip chip-web", href: w.url, target: "_blank", rel: "noopener"}, w.what.slice(0, 40));
+    if (w) { const t = String(w.what || ""), c = t.length > 48 ? t.slice(0, 48).replace(/\s+\S*$/, "") + "…" : t;   // corte por palabra, con elipsis
+      return Atlas.ui.h("a", {class: "chip chip-web", href: w.url, target: "_blank", rel: "noopener", title: t}, c); }
     if (!e) return Atlas.ui.h("span", {class: "chip chip-missing"}, "fuente retirada");
     const r = Atlas.data.ref(e.ref);
     return Atlas.ui.h("button", {class: "chip chip-src", type: "button", "data-ev": id, onclick: () => Atlas.ui.openCitation(id)},
@@ -257,6 +258,24 @@ Atlas.ui = {
     return p.join(" · ");
   },
   mechLine(e) { const t = Atlas.ui.mechText(e); return t ? Atlas.ui.h("p", {class: "mech-line"}, t) : ""; },
+  /** Puerta posbiótica «condicionada» por la regla propia del atlas (en forma no viable la AMR informa pero no decide):
+      la usan la tira de formas (rótulo «criterio del atlas, no regulatorio») y el recuento de «Sobre los datos». */
+  posbCriterio(x) {
+    return !!x && x.estado === "condicionada" && (/criterio propio/.test(x.razon || x.texto || "") || (x.fuentes_ruta || x.fuentes || []).includes("criterio_propio"));
+  },
+  /** Lectura genómica de UNA cepa (rasgos[].genomica[].cepas_atlas[c]) con su anotador visible y, si el genoma se vinculó
+      a la cepa por nombre (no por accesión), «vinculada por nombre: verificar». Misma frase en la ficha y en el pivote. */
+  genCepaTxt(d) {
+    if (!d) return "";
+    return (d.texto || "sin dato") + (d.anotador ? " (" + d.anotador + ")" : "") + (d.vinculo === "nombre" ? " · vinculada por nombre: verificar" : "");
+  },
+  /** Lectura n/N de un taxón con indeterminados y lectura: usa el texto ya redactado por el generador (nunca n/N solo) */
+  taxTxt(z) {
+    if (!z) return "";
+    const L = ((Atlas.data.raw.genomica || {}).lecturas_etiqueta || {})[z.lectura] || (z.lectura ? String(z.lectura).replace(/_/g, " ") : "");
+    if (z.n == null || !z.N) return z.texto || L;
+    return z.n + "/" + z.N + (z.i ? " + " + z.i + " indet." : "") + (L ? " · " + L : "");
+  },
   claseLabel(id) { const c = (Atlas.data.clasesMecanismo() || []).find(x => x.id === id); return c ? c.etiqueta : String(id || "").replace(/_/g, " "); },
   markTab(name) { document.querySelectorAll("#tabs a").forEach(a => a.toggleAttribute("aria-current", a.dataset.tab === name)); },
   stub(el, titulo, paquete) { el.append(Atlas.ui.h("div", {class: "stub"}, `${titulo} · pendiente del paquete ${paquete}`)); },

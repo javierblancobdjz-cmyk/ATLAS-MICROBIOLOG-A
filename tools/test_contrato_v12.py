@@ -347,6 +347,34 @@ ok(not any(ev.get(f, {}).get("tipo") == "contexto" for L_ in vec.values() for n 
            for f in r.get("fuentes", []) + (r.get("fuentes_vecino") or [])), "P1-06 ningún chip de vecinos cita un registro de contexto")
 ok(not any(re.search(r"\b[a-z0-9]+_[a-z0-9_]+\b", x.get("que_falta") or "") for x in ata), "UX «Qué falta» de ataques sin códigos crudos")
 
+# ============================================================ cierre v2 · hallazgos de revisión (diseño, caso CECT 5713, QA)
+seg = list((mat.get("seguridad") or {}).values())
+ok(seg and all(c.get("mejor_nivel") for c in seg), f"D03 toda celda de Seguridad lleva nivel (el de la señal, o el de lo registrado) ({sum(1 for c in seg if not c.get('mejor_nivel'))} sin nivel)")
+ok(all(c["mejor_nivel_de"] == "senal_de_riesgo" for c in seg if c["estado"] == "senal_de_riesgo"), "D03 en una señal de riesgo el nivel mostrado es el de la señal")
+qb = {q["id"]: q for q in esp[SAL].get("que_hace_bien") or []}
+ok(not any(re.search(r"\b[a-z0-9]+-[a-z0-9]+\b", q.get("soporte_texto") or "") for s_ in esp.values() for q in s_.get("que_hace_bien") or []),
+   "H4 «Qué hace bien» de especie sin slugs crudos («1 cepa: cect-5713»)")
+ok(qb.get("qb02", {}).get("nulos") == 0 and qb.get("qb02", {}).get("nivel") == "GEN-v" and "UCC118" in qb.get("qb02", {}).get("soporte_texto", ""),
+   "H4 qb02 (UCC118 produce Abp118): nivel de su evidencia (GEN-v) y sin el nulo de CECT 5713")
+ok("CECT 5713" in (qb.get("qb04") or {}).get("soporte_texto", ""), "H4 qb04 nombra la cepa como «CECT 5713»")
+ok(not any(n["etiqueta"] == "solo parecido taxonómico" and n["desglose_por_eje"]["taxonomica"].get("nota") == "distinta familia" for n in pares),
+   "QA-05 ninguna vecina de distinta familia sale como «solo parecido taxonómico»")
+m18 = next((n for n in vec[DSMZ] if n["id"] == "streptococcus-salivarius.st-m18"), None)
+ok(m18 is None or ("exclusión del patógeno" in (m18.get("frase") or "") and "ninguna de las dos." not in (m18.get("frase") or "").split("En S. mutans")[-1]),
+   "QA-01 DSMZ 16671 → M18: la frase no niega el mecanismo de DSMZ 16671 en S. mutans salival")
+ok(not any(re.search(r"\b[a-z]{2,}\b \d{4}$", r.get("cita_corta") or "") and (r.get("autores") or [""])[0].split(" ")[0].islower()
+           and len((r.get("autores") or [""])[0].split()) > 2 and r["cita_corta"].count(" ") < 2 for r in L("refs").values()),
+   "H9 la cita corta conserva el apellido con partícula («do Carmo 2018», no «do 2018»)")
+ok(not any((r.get("cita_corta") or "").startswith("?") for r in L("refs").values()), "H9 ninguna cita corta «? AAAA»")
+verdes = [(c, x["genoma"]) for c, x in pc["cepas"].items() if any(f["estado"] == "abierta" for f in x["puerta_por_forma"].values())]
+ok(len(verdes) == 11 and all(g == "medido" for _, g in verdes), f"QA-02 exactamente 11 cepas con píldora verde y todas con genoma medido ({len(verdes)}: {[c for c, g in verdes if g != 'medido']})")
+m35 = next(m for m in cat["mecanismos"] if m["id"] == "M35")
+prosa = json.dumps([[x.get("candidato"), x.get("dato"), x.get("lo_refutaria")] for x in m35.get("candidatos") or []] + [d.get("motivo") for d in m35.get("descartadas") or []], ensure_ascii=False)
+ok(not re.search(r"\bev\d{3}[ab]?\b|\bM\d{2}\b", prosa) and "adhesión" in m35["nombre"] and "célula" in m35["nombre"],
+   "D11/H6/D12 la prosa de M35 no cita ids crudos (ev009, M41…) y su nombre lleva tildes")
+ok(not any("_" in g for e in E.values() for g in (e.get("mecanismo") or {}).get("genes") or [] if g.lower() == g),
+   "QA-08 ningún gen en minúsculas con guion bajo («amuc_1100» → «Amuc_1100», como el artículo)")
+
 # ============================================================ P1-01 · robustez del build (privacidad y fuentes)
 import os, shutil, subprocess, tempfile  # noqa: E402
 SD = RAIZ / "scripts" / "datos"

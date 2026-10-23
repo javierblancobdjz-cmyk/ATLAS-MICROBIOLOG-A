@@ -22,7 +22,8 @@ const NOVEL = {autorizado: ["ok", "autorizado"], no_novel_historia_uso: ["ok", "
 const AERO = {anaerobia_facultativa: "anaerobia facultativa", anaerobia_aerotolerante: "anaerobia aerotolerante", anaerobia_estricta: "anaerobia estricta"};
 const FORMAS = [["vivo", "Célula viva"], ["inactivado", "Célula inactivada"], ["componente", "Fracción celular"],
                 ["metabolito", "Metabolito aislado"], ["fermentado", "Fermentado"], [null, "Forma no declarada en la fuente"]];
-const PRES = {si: "lo produce", no: "no lo produce (curado)", variable_cepa: "varía entre cepas", sin_resolver: "sin resolver"};
+/* vale para cualquier rasgo (adhesión, degradar mucina, producir H2O2…): no todos son «producir» algo (D09) */
+const PRES = {si: "sí, lo hace", no: "no lo hace (dato curado)", variable_cepa: "varía entre cepas", sin_resolver: "sin resolver"};
 const BASE = {causal: "demostrado", observado: "observado", inferencia: "inferido", prediccion_genomica: "predicción genómica", contexto: "contexto"};
 const ALC = {especie: "de la especie", cepa: "de cepa", subgrupo: "de subgrupo"};
 const PUERTA_FORMAS = [["vivo", "Vivo"], ["posbiotico", "Posbiótico"], ["fermentado", "Fermentado"]];

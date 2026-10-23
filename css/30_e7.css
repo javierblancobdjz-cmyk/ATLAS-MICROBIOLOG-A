@@ -59,7 +59,12 @@
 .k6-genes{font-family:var(--mono,monospace);font-size:var(--fs-xs);overflow-wrap:anywhere}
 .gates{display:flex;flex-wrap:wrap;gap:6px}
 .gates .gate-pill{max-width:100%;overflow-wrap:anywhere}
-.fs-chip .gate-pill{margin:0;max-width:100%;flex-wrap:wrap;white-space:normal;font-size:13px;padding:1px 6px}
+.fs-chip .gate-pill{margin:0;max-width:100%;flex-wrap:wrap;white-space:normal;font-size:13px;padding:1px 6px;min-width:0;overflow-wrap:anywhere;hyphens:auto}
+/* 390 px: la píldora de puerta («condicionada», «desconocida») no cabe en 88 px a 13 px; bloque partible y algo más pequeña */
+@media (max-width:420px){
+  .fs-chip{padding:10px 8px}
+  .fs-chip .gate-pill{display:block;font-size:12px;padding:1px 4px;line-height:1.3}
+}
 
 /* E7 r2: líneas compactas de «Cómo lo hace» / «Qué produce» y «Lo demostrado» agrupado por resultado */
 .how-lines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}

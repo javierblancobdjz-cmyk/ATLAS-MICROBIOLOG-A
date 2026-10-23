@@ -1050,6 +1050,19 @@ def main_generar(a):
     que_hace_bien_cepas(cep, E, producto, nombre_cepa)
     que_hace_bien_especies(esp, E, nombre_cepa)
     cep = {k: cep[k] for k in sorted(cep)}
+    # cita corta con el apellido completo cuando lleva partícula o es compuesto («do Carmo 2018», «van der Ark 2018», «Di Pierro
+    # 2015»): antes se cortaba en la primera palabra («do 2018»). Solo cambia cuando el autor declara un apellido de varias palabras.
+    for r in refs.values():
+        a0, cc = (r.get("autores") or [None])[0], r.get("cita_corta") or ""
+        if not a0 and cc.startswith("?") and re.match(r"EFSA\b", r.get("revista") or ""):
+            r["cita_corta"] = "EFSA " + cc.split(" ", 1)[-1]  # autoría corporativa: el panel de EFSA, no «? 2023»
+            continue
+        if not a0 or " " not in cc:
+            continue
+        w = a0.split()
+        ape = w[:-1] if len(w) > 1 and re.fullmatch(r"[A-Z]{1,4}", w[-1]) else w
+        if len(ape) > 1 and cc.split(" ")[0] == ape[0]:
+            r["cita_corta"] = " ".join(ape) + " " + cc.rsplit(" ", 1)[1]
     refs = {k: refs[k] for k in sorted(refs)}
 
     # 7. meta

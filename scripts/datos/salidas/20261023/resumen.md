@@ -8,13 +8,13 @@ sobre scripts/datos/data_v1.1 (congelada), scripts/datos/curado (incluido el lot
 | paso | estado | s |
 |---|---|---|
 | 1_correcciones | OK | 0.1 |
-| 2_generador | OK | 0.3 |
+| 2_generador | OK | 0.2 |
 | 3_genomica | OK | 0.3 |
 | 4_rasgos | OK | 0.1 |
-| 5_vecinos | OK | 0.1 |
-| 6_puerta_cepa | OK | 0.3 |
-| 7_control_publico | OK | 15.1 |
-| 8_tests | OK | 0.5 |
+| 5_vecinos | OK | 0.2 |
+| 6_puerta_cepa | OK | 0.4 |
+| 7_control_publico | OK | 16.0 |
+| 8_tests | OK | 0.4 |
 
 ## Resultado global
 
@@ -22,9 +22,9 @@ sobre scripts/datos/data_v1.1 (congelada), scripts/datos/curado (incluido el lot
 - matriz: 138 celdas · veredictos: 183 · vecinos: 1308 pares.
 - genomica.json: 226 genomas con llamadas (62 Bakta, 160 PGAP); 25 de 26 especies con algún análisis; 50 de 83 cepas con perfil (16 vinculadas por nombre: verificar).
 - puerta_cepa: 11 cepas con puerta «vivo» abierta.
-- sha256 del build: de17ef455e799723fdbf4d9bc091e41e15bf639ab5f2608a77d7962abec014d2.
+- sha256 del build: d3add424b53ca3dcd1645795a0dd3ff5837b5aa9943a9a53fb88dc2de2c24ee5.
 - data/ publicado en esta ejecución: no.
-- data/ del repositorio idéntico byte a byte a este build (sha256 de cada .json): NO.
+- data/ del repositorio idéntico byte a byte a este build (sha256 de cada .json): sí.
 
 ## Limitaciones declaradas (meta.limitaciones)
 

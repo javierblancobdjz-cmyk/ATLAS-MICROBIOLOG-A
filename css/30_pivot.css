@@ -108,7 +108,7 @@ table.pv tr.hl>*{background:var(--accent-soft)}
 
 /* E8 r2 · determinante desconocido: misma familia (mismo borde), relleno más pálido y rótulo «det. ?».
    Nunca solo color: el texto va siempre. Mecanismo estudiado sin efecto en la misma unidad: texto, sin color. */
-.cell .l3{font-size:11px;font-weight:400;color:var(--ink-3);font-style:italic}
+.cell .l3{font-size:11px;font-weight:400;color:var(--ink-2);font-style:italic}
 .cell.cm.det-unk{background:color-mix(in srgb,var(--f) calc(var(--fam-mix) / 2),var(--surface))}
 .pv-nul{display:block;margin-top:4px;color:var(--ink-3)}
 .mx-empty p{margin:0 0 4px}
@@ -134,3 +134,15 @@ details.pv-foot>p{margin-top:4px}
 .atk-card .chips{display:inline-flex;flex-wrap:wrap;gap:4px;margin:4px 0}
 .atk-card .ref{white-space:nowrap}
 .atk-card .mu{margin:0}
+
+/* v2 · líneas transversales: sin columna «¿Funciona muerta?» (es el eje de producto) */
+table.pv.pv-sin-muerta thead th:nth-child(4),table.pv.pv-sin-muerta td[data-k="¿Funciona muerta?"]{display:none}
+/* v2 · Seguridad: el eje es el riesgo. Señal = rojo con texto; sin señal = gris discontinuo (no es «seguro») */
+.seg-pill{display:inline-block;border-radius:var(--r-sm);padding:2px 8px;font-size:13px;line-height:1.35}
+.seg-r{color:var(--bad);background:var(--bad-soft);font-weight:600}
+.seg-n{color:var(--ink-2);border:1.5px dashed var(--line-strong);padding:1px 7px}
+.seg-row-r{--rowc:var(--bad)} .seg-row-n{--rowc:var(--line)}
+.seg-evs{border-top:0;margin-top:0;padding-top:0}
+.seg-evs .pv-nul{color:var(--ink-2)}
+.line-chips .lc-sep{align-self:center;font-size:13px;color:var(--ink-3);white-space:nowrap;padding:0 2px 0 6px}
+.pv-via .pv-no b{color:var(--ink-2)}

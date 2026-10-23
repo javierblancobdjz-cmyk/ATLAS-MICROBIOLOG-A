@@ -26,7 +26,8 @@ const lecturaEtq = k => (G().lecturas_etiqueta || {})[k] || limpio(k);
 const genesCortos = t => [...new Set(String(t || "").split(";").map(x => x.trim()).filter(Boolean)
   .map(x => x.includes(":") ? x.split(":")[0].trim() : x.split(" ").slice(0, 3).join(" ")))].map(limpio);
 
-const GEST = {P: ["pres", "lo lleva"], A: ["aus", "no lo lleva (medido)"], I: ["warn", "indeterminado"], NM: ["nd", "no medido"]};
+/* I (indeterminado) es ignorancia, no alerta: gris discontinuo con su texto, como NM (principio «la ignorancia nunca se pinta…») */
+const GEST = {P: ["pres", "lo lleva"], A: ["aus", "no lo lleva (medido)"], I: ["nd", "indeterminado"], NM: ["nd", "no medido"]};
 const PROD = {no_medido: ["nd", "producción no medida"], no_porta: ["aus", "no porta el locus completo"], porta_sin_ensayo: ["pres", "porta · producción sin ensayar"],
               porta_y_produce: ["ok", "porta y produce"], porta_no_produce: ["warn", "porta y NO produce"]};
 const ANOT_CORTO = {"Bakta": "Bakta", "PGAP (NCBI)": "PGAP (NCBI)", "ABRicate": "ABRicate", "BAGEL4": "BAGEL4"};
@@ -140,7 +141,7 @@ function superficie(g) {
 }
 function ani(g) {
   const top = g.ani_top3 || [];
-  const head = h("p", {class: "sub"}, "ANI: parientes más cercanos ", h("span", {class: "gn-pill gn-nd"}, "Parentesco genómico, no actividad"));
+  const head = h("p", {class: "sub"}, "ANI: parientes más cercanos ", h("span", {class: "gn-pill gn-const"}, "Parentesco genómico, no actividad"));
   if (!top.length) return [head, h("p", {class: "k6-note"}, "Sin pares ANI para este genoma (no medido entre géneros; ningún par del mismo género supera el filtro de skani).")];
   return [head, h("ul", {class: "mini-list gn-ani"}, top.map(a => {
     const atl = (G().genomas[a.accession] || {}).cepa_atlas;
@@ -227,7 +228,8 @@ function celdaTaxon(t) {
   if (!t) return h("span", {class: "gn-pill gn-nd"}, "no medido");
   const nd = t.lectura === "no_evaluable" || t.lectura === "no_medido";
   if (nd) return h("span", {class: "gn-pill gn-nd", title: t.texto || ""}, lecturaEtq(t.lectura));
-  const cls = t.lectura === "variable_cepa" ? "gn-var" : t.lectura === "sin_resolver" || t.lectura === "un_genoma" ? "gn-warn" : "gn-const";
+  // «sin resolver» y «un solo genoma» son límites del dato (ignorancia): gris discontinuo, no ámbar de alerta
+  const cls = t.lectura === "variable_cepa" ? "gn-var" : t.lectura === "sin_resolver" || t.lectura === "un_genoma" ? "gn-nd" : "gn-const";
   return h("span", {class: "gn-nN", title: t.texto || ""}, h("b", {}, t.n + "/" + t.N), t.i ? h("span", {class: "small"}, " + " + t.i + " indet.") : "",
     " ", h("span", {class: "gn-pill " + cls}, lecturaEtq(t.lectura)), t.no_evaluables ? h("span", {class: "small muted"}, " · " + t.no_evaluables + " NCBI no evaluable" + (t.no_evaluables > 1 ? "s" : "")) : "");
 }

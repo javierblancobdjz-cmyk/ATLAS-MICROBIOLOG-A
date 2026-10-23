@@ -19,17 +19,17 @@
    "destino": "#/especie/streptococcus-oligofermentans",
    "que_hace_bien": {
     "pantalla": 1,
-    "y": 723
+    "y": 634
    },
    "como_lo_hace": {
     "pantalla": 2,
-    "y": 1186
+    "y": 1097
    },
    "lox": {
     "pantalla": 2,
     "href": "#/lineas?gen=lox&s=streptococcus-oligofermentans"
    },
-   "ficha_pantallas": 4.12
+   "ficha_pantallas": 4.04
   },
   "T2": {
    "clics": 3,
@@ -48,7 +48,7 @@
    "errores_consola": [],
    "enlace_pantalla": {
     "pantalla": 1,
-    "y": 652
+    "y": 691
    },
    "destino": "#/lineas/oral?res=s_mutans&s=ligilactobacillus-salivarius.st-cect-5713",
    "resaltada": "L. salivarius CECT 5713",
@@ -90,7 +90,7 @@
     "y": 399
    },
    "chips": [
-    "Vivo 7 a favor de 10 cepa: abierta",
+    "Vivo 7 a favor de 9 cepa: abierta",
     "Posbiótico 2 a favor cepa: condicionada criterio del atlas, no regulatorio",
     "Fermentado sin evidencia cepa: desconocida"
    ],
@@ -118,14 +118,14 @@
  },
  "alturas": {
   "#/cepa/ligilactobacillus-salivarius.st-cect-5713": {
-   "pantallas": 3.73,
+   "pantallas": 3.77,
    "maximo": 5,
    "details_abiertos": 0,
    "scrollW": 390,
    "clientW": 390
   },
   "#/especie/ligilactobacillus-salivarius": {
-   "pantallas": 6.93,
+   "pantallas": 6.85,
    "maximo": 8,
    "details_abiertos": 0,
    "scrollW": 390,
@@ -162,13 +162,13 @@
    "id": "altura",
    "criterio": "Ficha de CECT 5713 ≤ 5 pantallas a 390×844",
    "estado": "cumple",
-   "valor": "3.73 pantallas · ancho 390/390"
+   "valor": "3.77 pantallas · ancho 390/390"
   },
   {
    "id": "altura",
    "criterio": "Ficha de L. salivarius ≤ 8 pantallas a 390×844",
    "estado": "cumple",
-   "valor": "6.93 pantallas · ancho 390/390"
+   "valor": "6.85 pantallas · ancho 390/390"
   },
   {
    "id": "altura",

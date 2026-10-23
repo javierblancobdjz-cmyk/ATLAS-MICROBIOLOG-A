@@ -29,14 +29,14 @@ Atlas.registerView({route: "inicio", tab: "inicio", cssClass: "v-home", render(e
     Atlas.ui.readingBox("home",
       "Responder en segundos qué hace bien una bacteria, en qué se diferencian sus cepas y dónde hay hueco de producto.",
       "Todo dato lleva nivel de evidencia (pictograma + texto) y distingue cepa de especie. Nada se generaliza sin decirlo.",
-      "Empieza por el buscador o por una de las cuatro puertas. Los números son del corte indicado."));
+      "Empieza por el buscador, por un patrón o por una de las tres puertas. Los números son del corte indicado."));
 
   // Puertas rápidas
   const puertas = h("div", {class: "home-gates"},
     gate("lineas", "Quién consigue cada resultado", "Matriz bacteria × resultado coloreada por mecanismo; toca una celda para ver quién lo comparte, con qué cepa, forma y si funciona muerta.", "target"),
     gate("comparar", "Comparar", "2–4 especies, subgrupos o cepas en paralelo.", "plus"),
     gate("especies", "Explorar especies", `${t.especies} especies, ${t.n2} con dossier completo.`, "search"));
-  el.append(puertas, patrones());
+  el.append(patrones(), puertas);   // el patrón primero: es la puerta de «encontrar patrones» y a 390 px quedaba en la 2.ª pantalla
 
   // Estado de los datos
   el.append(h("div", {class: "home-stats card"},
@@ -68,11 +68,11 @@ Atlas.registerView({route: "inicio", tab: "inicio", cssClass: "v-home", render(e
 
 /* Entradas por patrón (sin pantalla nueva: todas van al pivote único #/lineas). Se derivan de data/, nada escrito a mano:
    - outputs con ≥ 2 productores curados (vocabulario_rasgos de E5), sin bacteriocinas, que no llevan enlace de convergencia;
-   - clases de mecanismo y genes nombrados en evidencias de líneas de producto, por número de evidencias que cuentan. */
+   - clases de mecanismo y genes nombrados en las evidencias. El recuento es EXACTAMENTE el que muestra el pivote al que lleva
+     (Atlas.pivot.renderQuery: toda evidencia curada, de cualquier línea), para que la cifra de la ficha y la del pivote coincidan. */
 function patrones() {
   const D = Atlas.data, cat = D.raw.catalogo, voc = (cat.vocabulario_rasgos || {}).rasgos || {};
-  const prod = new Set(D.lineas("producto").map(l => l.id));
-  const evs = Object.values(D.raw.evidencias).filter(e => e.tipo !== "contexto" && prod.has(e.linea) && e.relacion !== "asociacion" && e.alcance !== "mezcla" && e.mecanismo);
+  const evs = Object.values(D.raw.evidencias).filter(e => e.tipo === "evidencia" && e.mecanismo);
   const top = (m, n) => [...m.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))).slice(0, n);
   const outs = Object.entries(voc).filter(([, v]) => (v.productores || []).length >= 2 && v.tipo_convergencia && v.clase_mecanismo !== "bacteriocina")
     .sort((a, b) => b[1].productores.length - a[1].productores.length || a[1].etiqueta.localeCompare(b[1].etiqueta)).slice(0, 6);
@@ -89,7 +89,7 @@ function patrones() {
     h("p", {class: "small muted"}, "Un output, un mecanismo o un gen: quién lo comparte, por qué vía y si funciona con célula muerta. Cada entrada abre el pivote de Líneas."),
     row("Un output, varios productores (n.º de productores)", outs.map(([id, v]) => chip(Atlas.route.href("lineas", null, {out: id}), v.etiqueta, String(v.productores.length),
       (cat.vocabulario_rasgos.tipos_convergencia || {})[v.tipo_convergencia] || ""))),
-    row("Por mecanismo (n.º de evidencias)", top(cls, 6).map(([c, n]) => chip(Atlas.route.href("lineas", null, {mec: c}), [dot(c), Atlas.ui.claseLabel(c).split(" (")[0]], String(n), n + " evidencias de líneas de producto con esta clase de mecanismo"))),
+    row("Por mecanismo (n.º de evidencias)", top(cls, 6).map(([c, n]) => chip(Atlas.route.href("lineas", null, {mec: c}), [dot(c), Atlas.ui.claseLabel(c).split(" (")[0]], String(n), n + " evidencias curadas con esta clase de mecanismo"))),
     row("Por gen nombrado en el ensayo (n.º de evidencias)", top(genes, 6).map(([g, n]) => chip(Atlas.route.href("lineas", null, {gen: g}), h("i", {}, g), String(n), n + " evidencias nombran el gen en el ensayo (no es presencia en el genoma)"))),
     h("p", {class: "small muted pat-tip"}, "¿Otro? Escribe en el buscador un gen, una molécula o un mecanismo (atajo: tecla /)."));
 }
@@ -198,13 +198,15 @@ document.addEventListener("click", e => {
   Atlas.initData(await Atlas.loadData());
   Atlas.tray._load();
   const top = document.getElementById("topbar");
-  const input = h("input", {type: "search", placeholder: "Especie, cepa, resultado, mecanismo, gen o molécula", "aria-label": "Buscar", autocomplete: "off"});
+  const input = h("input", {type: "search", placeholder: "Gen, molécula, mecanismo, cepa…", "aria-label": "Buscar especie, cepa, resultado, mecanismo, gen o molécula", autocomplete: "off"});
   const list = h("ul", {class: "suggest", role: "listbox", hidden: true});
   top.append(
     h("a", {href: "#/", class: "brand"}, "Atlas"),
     h("div", {class: "search"}, icon("search"), input, list),
     h("button", {type: "button", class: "theme icon-btn", "aria-label": "Cambiar tema", onclick: () => {
-      const d = document.documentElement; d.dataset.theme = d.dataset.theme === "dark" ? "light" : "dark"; Atlas.prefs.set("theme", d.dataset.theme);
+      // parte del tema que SE VE (sin data-theme manda el sistema): el primer clic siempre cambia algo
+      const d = document.documentElement, oscuro = d.dataset.theme ? d.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      d.dataset.theme = oscuro ? "light" : "dark"; Atlas.prefs.set("theme", d.dataset.theme);
     }}, icon("moon")));
   const th = Atlas.prefs.get("theme", null); if (th) document.documentElement.dataset.theme = th;
   Atlas.mountSearch(input, list);

@@ -56,7 +56,11 @@ function build() {
     it.push({t: "cepa", id: c.id, label: (sp ? sp.nombre_corto + " " : "") + (c.designacion || c.nombre_corto), bnPre: sp ? sp.nombre_corto : "",
       href: H("cepa", c.id),
       sub: [otros.length ? "también " + otros.slice(0, 2).join(", ") : "", nEv ? plural(nEv, "evidencia", "evidencias") : "sin evidencia propia"].filter(Boolean).join(" · "),
-      k: [c.designacion, c.nombre_corto, ...otros, ...(c.depositos || []).map(d => d.coleccion + " " + d.numero)]});
+      // H3: también la etiqueta que se muestra («L. salivarius CECT 5713»), el nombre completo con la designación y la grafía
+      // compacta de cada depósito o designación («CECT5713», como la escriben los artículos)
+      k: [c.designacion, c.nombre_corto, ...otros, ...(c.depositos || []).map(d => d.coleccion + " " + d.numero),
+          ...(c.depositos || []).map(d => d.coleccion + d.numero), String(c.designacion || "").replace(/\s+/g, ""),
+          sp ? sp.nombre_corto + " " + (c.designacion || c.nombre_corto) : "", sp ? sp.nombre_actual + " " + (c.designacion || c.nombre_corto) : ""]});
   });
 
   /* Resultados (cobertura y cola de PMID del catálogo: 0 se dice, no se esconde) y líneas */
@@ -140,7 +144,8 @@ function build() {
 
   it.forEach(x => { x.w = [...new Set(x.k.filter(Boolean).flatMap(words))]; x.phr = x.k.filter(Boolean).map(norm); });
   IDX = it;
-  EVW = evs.map(e => ({id: e.id, w: new Set(words(e.claim_es))}));
+  // texto de la evidencia = su afirmación + los genes que nombra el ensayo (así «spxB» no sale «en ninguna evidencia» cuando el grupo Genes dice 2)
+  EVW = evs.map(e => ({id: e.id, w: new Set(words([e.claim_es, ...((e.mecanismo && e.mecanismo.genes) || [])].join(" ")))}));
   RAW = Object.values(R.especies).flatMap(s => (s.rasgos || []).map(t => ({w: new Set(words([t.etiqueta, t.via_etiqueta, t.via_candidata_etiqueta, t.detalle, t.nota_cepa_vs_especie].filter(Boolean).join(" ")))})));
 }
 
@@ -175,7 +180,7 @@ Atlas.search = function (raw) {
   const nRas = RAW.filter(e => qw.every(w => [...e.w].some(x => inflex(x, w)))).length;
   if (nTxt || nRas) out.push({t: "texto", id: raw.trim(), n: nTxt,
     label: "«" + raw.trim() + "» en " + (nTxt ? plural(nTxt, "evidencia", "evidencias") : "ninguna evidencia"),
-    sub: nRas ? "y en " + plural(nRas, "rasgo curado", "rasgos curados") : "texto de las evidencias curadas",
+    sub: nRas ? "y en " + plural(nRas, "rasgo curado", "rasgos curados") : "texto y genes de las evidencias curadas",
     href: Atlas.route.href("lineas", null, {q: raw.trim()})});
   return out;
 };

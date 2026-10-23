@@ -5,6 +5,16 @@
 const U = Atlas.ui, D = new Proxy({}, {get: (_, k) => Atlas.data[k]}), h = U.h, icon = U.icon, level = U.level, name = U.name;
 const NIVORD = ["MA", "ECA", "OBS", "ANI", "CEL", "GEN"];
 const genLabel = c => c === "GEN-v" ? "GEN" : c === "GEN-p" ? "GEN" : c;
+/** «1 producto», «2 productos»: nunca «1 productos» */
+const pl = (n, uno, varios) => n + " " + (n === 1 ? uno : varios);
+/** Tabla pequeña que en móvil se apila en tarjetas con la etiqueta de cada columna (sin columnas cortadas a 390 px) */
+function miniTable(cols, rows) {
+  const t = h("table", {class: "mini-table mini-stack"}, h("thead", {}, h("tr", {}, cols.map(c => h("th", {}, c)))));
+  const tb = h("tbody", {});
+  rows.forEach(r => tb.append(h("tr", {}, r.map((v, i) => h("td", {"data-k": cols[i]}, v)))));
+  t.append(tb);
+  return t;
+}
 
 function trayBtn(id) {
   const inTray = Atlas.tray.items.includes(id);
@@ -22,7 +32,7 @@ function trayBtn(id) {
 const EJES = [["funcional", "funcional"], ["resultado", "resultado"], ["taxonomica", "taxonomía"]];
 const PIV = (lin, res, de) => Atlas.route.href("lineas", lin, {res, s: de});
 const PIVQ = (k, v, de) => Atlas.route.href("lineas", null, {[k]: v, s: de});
-const soloTax = v => (v.etiqueta || "").startsWith("solo") || (!v.frase && !(v.rasgos_compartidos || []).length);
+const soloTax = v => !v.frase && !(v.rasgos_compartidos || []).length;
 const ordenVec = vs => [...vs].sort((a, b) => (a.orden ?? 1e9) - (b.orden ?? 1e9) || (b.score_combinado || 0) - (a.score_combinado || 0));
 function vecinosPanel(id) {
   const vs = D.vecinos(id);
@@ -34,7 +44,7 @@ function vecinosPanel(id) {
   if (!fun.length) {
     const outs = outputsDe(id).filter(o => (D.linea(o.lin) || {}).tipo === "producto");
     body.append(h("div", {class: "flag flag-warn vec-none"}, icon("no"),
-      h("span", {}, "Ninguna de estas " + vs.length + " comparte un mecanismo o un resultado con esta ficha: solo se parecen por taxonomía.",
+      h("span", {}, "Ninguna de estas " + vs.length + " comparte un mecanismo, un output o un resultado con esta ficha: no hay nada que extrapolar.",
         outs.length ? h("span", {}, " Para ver quién consigue lo mismo: ", ...outs.slice(0, 3).flatMap((o, i) => [i ? " · " : "", h("a", {href: PIV(o.lin, o.res, id)}, o.nombre + " →")])) : "")));
   } else {
     const listEl = h("div", {class: "vec-list"});
@@ -42,16 +52,22 @@ function vecinosPanel(id) {
     body.append(listEl);
   }
   if (tax.length) body.append(h("div", {class: "vec-tax"},
-    h("p", {class: "sub"}, "Solo parecido taxonómico (" + tax.length + ")"),
+    h("p", {class: "sub"}, "Sin mecanismo, output ni resultado en común (" + tax.length + ")"),
     h("ul", {class: "vec-tax-list"}, tax.map(v => h("li", {"data-vec": v.id},
       h("a", {href: Atlas.route.href(v.tipo === "cepa" ? "cepa" : "especie", v.id)}, name(v.id)),
-      h("span", {class: "chip vec-flag vec-warn"}, "solo parecido taxonómico"),
+      h("span", {class: "chip vec-flag vec-warn"}, v.etiqueta || "solo parecido taxonómico"),
       h("span", {class: "small muted"}, kEjes(v) + "/3 ejes con dato · " + ejesLinea(v)))))));
   return fold("Parecidas a esta", vs.length + " · " + fun.length + " comparten mecanismo o resultado", body);
 }
 const kEjes = v => v.ejes_con_dato != null ? v.ejes_con_dato : EJES.filter(([x]) => ((v.desglose_por_eje || {})[x] || {}).disponible).length;
-const ejesLinea = v => EJES.map(([x, l]) => { const a = (v.desglose_por_eje || {})[x] || {};
-  return l + (a.disponible ? (a.nota ? " (" + a.nota + ")" : " ✓") : " sin dato"); }).join(" · ");
+/* H5: «✓» se leía como «comparte». Cada eje dice ahora si comparte algo, si tiene dato pero nada en común, o si no tiene dato. */
+const ejesLinea = v => {
+  const rc = v.rasgos_compartidos || [];
+  const comp = {funcional: rc.some(r => r.tipo !== "resultado"), resultado: rc.some(r => r.tipo === "resultado")};
+  return EJES.map(([x, l]) => { const a = (v.desglose_por_eje || {})[x] || {};
+    if (x === "taxonomica") return l + ": " + (a.nota || "sin dato");
+    return l + ": " + (!a.disponible ? "sin dato" : comp[x] ? "comparte" : "nada en común"); }).join(" · ");
+};
 function vecCard(v) {
   const card = h("article", {class: "vec card", "data-vec": v.id});
   card.append(h("div", {class: "vec-head"},
@@ -277,12 +293,10 @@ function foldSeg(seg, s) {
   const amr = seg.amr || [];
   const adq = amr.filter(a => a.origen === "adquirida"), intr = amr.filter(a => a.origen === "intrinseca");
   if (amr.length) {
-    const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Gen / fenotipo"), h("th", {}, "Origen"), h("th", {}, "Móvil"), h("th", {}, "Fuerza"), h("th", {}, "Base"))));
-    const tb = h("tbody", {});
-    amr.forEach(a => tb.append(h("tr", {}, h("td", {}, a.gen_o_fenotipo), h("td", {}, a.origen || "—"),
-      h("td", {}, a.movil === true ? "sí" : a.movil === false ? "no" : "?"), h("td", {}, a.fuerza || "—"),
-      h("td", {class: "small"}, (a.herramienta || "") + (a.version ? " " + a.version : ""), " ", sourcesList(a.fuentes)))));
-    t.append(tb); body.append(h("p", {class: "sub"}, "Resistencia a antimicrobianos (literatura, nivel especie)"), t);
+    const t = miniTable(["Gen / fenotipo", "Origen", "Móvil", "Fuerza", "Base"], amr.map(a => [a.gen_o_fenotipo, a.origen || "—",
+      a.movil === true ? "sí" : a.movil === false ? "no" : "?", a.fuerza || "—",
+      h("span", {class: "small"}, (a.herramienta || "") + (a.version ? " " + a.version : ""), " ", sourcesList(a.fuentes))]));
+    body.append(h("p", {class: "sub"}, "Resistencia a antimicrobianos (literatura, nivel especie)"), t);
   }
   // n/N medido en genomas públicos (genomica.json de E2, agregado por scripts/build_puerta_cepa.py)
   const ag = D.agregadosSeg(s.slug);
@@ -334,28 +348,23 @@ function foldPost(s) {
   const rows = s.posbiotico || [];
   const body = h("div", {});
   if (!rows.length) return null;
-  const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Mecanismo"), h("th", {}, "Forma ensayada"), h("th", {}, "Inactivación"), h("th", {}, "¿Conserva?"), h("th", {}, "Cepa"), h("th", {}, "Fuente"))));
-  const tb = h("tbody", {});
-  rows.forEach(p => { const m = D.mecanismo(p.mecanismo); tb.append(h("tr", {},
-    h("td", {}, m ? m.nombre : p.mecanismo), h("td", {}, p.forma_ensayada || "—"), h("td", {}, p.inactivacion_metodo || "—"),
-    h("td", {}, String(p.se_conserva_inactivado || "?").replace(/_/g, " ")), h("td", {}, p.cepa ? name(p.cepa) : "—"), h("td", {}, sourcesList(p.evidence_ids)))); });
-  t.append(tb); body.append(h("div", {class: "tbl-x"}, t));
-  return fold("Posbiótico", rows.length + " entradas", body);
+  const t = miniTable(["Mecanismo", "Forma ensayada", "Inactivación", "¿Conserva?", "Cepa", "Fuente"], rows.map(p => { const m = D.mecanismo(p.mecanismo);
+    return [m ? m.nombre : (p.mecanismo ? String(p.mecanismo).replace(/_/g, " ") : "sin mecanismo del catálogo"), p.forma_ensayada || "—", p.inactivacion_metodo ? String(p.inactivacion_metodo).replace(/_/g, " ") : "—",
+      String(p.se_conserva_inactivado || "?").replace(/_/g, " "), p.cepa ? name(p.cepa) : "—", sourcesList(p.evidence_ids)]; }));
+  body.append(t);
+  return fold("Posbiótico", pl(rows.length, "entrada", "entradas"), body);
 }
 function foldMercado(mk) {
   const body = h("div", {});
   const prods = mk.productos || [];
   if (prods.length) {
-    const t = h("table", {class: "mini-table"}, h("thead", {}, h("tr", {}, h("th", {}, "Producto"), h("th", {}, "Empresa"), h("th", {}, "Cepa"), h("th", {}, "Tipo"))));
-    const tb = h("tbody", {});
-    prods.forEach(p => tb.append(h("tr", {}, h("td", {}, p.nombre), h("td", {}, p.empresa || "—"), h("td", {}, p.cepa ? name(p.cepa) : "—"), h("td", {}, String(p.tipo_producto || "—").replace(/_/g, " ")))));
-    t.append(tb); body.append(h("div", {class: "tbl-x"}, t));
+    body.append(miniTable(["Producto", "Empresa", "Cepa", "Tipo"], prods.map(p => [p.nombre, p.empresa || "—", p.cepa ? name(p.cepa) : "—", String(p.tipo_producto || "—").replace(/_/g, " ")])));
   }
   if (mk.patentes) body.append(kvbox("Patentes", (mk.patentes.densidad || "—") + (mk.patentes.consulta ? " · " + mk.patentes.consulta : "")));
   if (mk.competencia) body.append(kvbox("Competencia", mk.competencia));
   if (mk.hueco) body.append(kvbox("Hueco", mk.hueco));
   if (!prods.length && !mk.hueco && !mk.competencia) return null;
-  return fold("Mercado", (prods.length ? prods.length + " productos" : "sin productos") + (mk.patentes ? " · patentes " + mk.patentes.densidad : ""), body);
+  return fold("Mercado", (prods.length ? pl(prods.length, "producto", "productos") : "sin productos") + (mk.patentes ? " · patentes " + mk.patentes.densidad : ""), body);
 }
 function foldDentro(s) {
   const body = h("div", {});
@@ -365,7 +374,7 @@ function foldDentro(s) {
     sgs.forEach(sg => g.append(h("div", {class: "sg"},
       h("h4", {}, sg.nombre), h("p", {}, sg.rasgo_diferencial || ""),
       (sg.genes_marcadores || []).length ? h("span", {class: "gene"}, sg.genes_marcadores.join(", ")) : "",
-      " ", h("span", {class: "small muted"}, "· " + nCepasSub(s, sg.id) + " cepas"))));
+      " ", h("span", {class: "small muted"}, "· " + pl(nCepasSub(s, sg.id), "cepa", "cepas")))));
     body.append(h("p", {class: "sub"}, "Subgrupos"), g);
   }
   // matriz cepa × resultado
@@ -373,7 +382,7 @@ function foldDentro(s) {
   // anillos (placeholder)
   body.append(h("div", {class: "rings"}, icon("target"),
     h("span", {}, h("b", {}, "Anillos de cepa."), " Exterior: literatura · medio: genomas públicos · interior: tus cepas (no cargadas; confidenciales).")));
-  return fold("Dentro de la especie", (sgs.length ? sgs.length + " subgrupos · " : "") + (s.cepas || []).length + " cepas", body);
+  return fold("Dentro de la especie", (sgs.length ? pl(sgs.length, "subgrupo", "subgrupos") + " · " : "") + pl((s.cepas || []).length, "cepa", "cepas"), body);
 }
 function nCepasSub(s, sgId) { return (s.cepas || []).map(D.strain).filter(c => c && c.subgrupo === sgId).length; }
 function strainMatrix(s) {
@@ -423,7 +432,7 @@ function foldNoDemostrado(s) {
   evs.forEach(e => ul.append(h("li", {}, h("p", {class: "txt"}, e.claim_es),
     h("div", {class: "meta"}, level(e.nivel), U.direction(e.direccion), U.scope(e), U.sources([e.id])))));
   body.append(ul);
-  return fold("Lo que no se demostró", evs.length + " resultados nulos o en contra", body);
+  return fold("Lo que no se demostró", pl(evs.length, "resultado nulo o en contra", "resultados nulos o en contra"), body);
 }
 
 function evidenceTable(s, q) {
@@ -579,8 +588,10 @@ function comoLoHace(subj, sp) {
   } else {
     const g = new Map(); let desc = 0;
     evs.forEach(e => {
-      const cl = ((e.mecanismo || {}).clases || []).filter(c => c !== "no_aplica" && c !== "desconocido");
-      if (!cl.length) { desc++; return; }
+      const cl0 = (e.mecanismo || {}).clases || [];
+      if (cl0.includes("no_aplica")) return;   // nicho, taxonomía, seguridad: no hay mecanismo que describir
+      const cl = cl0.filter(c => c !== "desconocido");
+      if (!cl.length) { if (e.direccion === "+") desc++; return; }   // «a favor» = «+» (un resultado mixto no lo es)
       cl.forEach(c => {
         if (!g.has(c)) g.set(c, {c, evs: [], genes: new Set(), cepas: new Set()});
         const x = g.get(c); x.evs.push(e); (e.mecanismo.genes || []).forEach(z => x.genes.add(z));
@@ -672,8 +683,9 @@ function queProduce(subj, sp, esCepa) {
     const no = t.presente === "no" || (esCepa && propias.length && !propias.some(e => FAV(e.direccion)));
     const via = t.via !== "desconocida" ? t.via_etiqueta + (t.via_en_fuente === "si" ? "" : " (la fuente no la nombra)")
       : "vía no identificada" + (t.via_candidata_etiqueta ? " (candidata: " + t.via_candidata_etiqueta + ")" : "");
-    const gen = (t.genomica || []).map(x => esCepa ? (x.cepas_atlas && x.cepas_atlas[subj] ? x.marcador + ": " + x.cepas_atlas[subj].texto : null)
-      : x.marcador + " " + x.taxones.map(z => (z.n != null && z.N ? z.n + "/" + z.N : z.texto)).join(" · ")).filter(Boolean);
+    // anotador y vínculo visibles por cepa; en la especie, n/N con los indeterminados y su lectura (nunca un 0/8 que oculte 8 indet.)
+    const gen = (t.genomica || []).map(x => esCepa ? (x.cepas_atlas && x.cepas_atlas[subj] ? x.marcador + ": " + U.genCepaTxt(x.cepas_atlas[subj]) : null)
+      : x.marcador + " " + x.taxones.map(z => (x.taxones.length > 1 && z.taxon ? z.taxon.replace(/^.* subsp\. /, "subsp. ") + ": " : "") + U.taxTxt(z)).join(" · ")).filter(Boolean);
     const np = ((VR[t.rasgo] || {}).productores || []).length;
     const enc = (t.cepas_en_contra || []);
     ul.append(h("li", {class: no ? "how-no" : ""},
@@ -699,13 +711,19 @@ function queProduce(subj, sp, esCepa) {
    de E6 («en forma no viable la AMR informa pero no decide») se rotula «criterio del atlas, no regulatorio».
    Al tocar un chip: razón + regla, ruta de la especie como contexto sin color y veredicto por línea o el motivo de que no lo haya. */
 const FORMAS = ["vivo", "posbiotico", "fermentado"];
-const esCriterio = x => !!x && (/criterio propio/.test(x.razon || x.texto || "") || (x.fuentes_ruta || x.fuentes || []).includes("criterio_propio"));
+/* El rótulo y su nota («el atlas la deja condicionada…») solo cuando la puerta ES condicionada por esa regla: con «desconocida»
+   la nota se contradecía. Misma función que el recuento de «Sobre los datos» (Atlas.ui.posbCriterio). */
+const esCriterio = x => U.posbCriterio(x);
 const CRIT_TXT = "criterio del atlas, no regulatorio";
 const REGLA_TXT = {"R-especie": "hereda la ruta de la especie y comprueba el genoma de la cepa", "R-nomedido": "la condición QPS es de cepa y su genoma no está medido",
+                   "R-noqps": "especie sin QPS: una autorización de otra cepa o forma no se hereda y el genoma de esta cepa no está medido",
                    "R-cerrada": "ruta de la especie cerrada", "R-calif": "calificación QPS sin verificar"};
 function formaStrip(subj, sp) {
   const esCepa = D.resolve(subj).tipo === "cepa";
-  const evs = D.evidenceOf(subj).filter(e => e.tipo !== "contexto");
+  const evs0 = D.evidenceOf(subj).filter(e => e.tipo !== "contexto");
+  // una mezcla de cepas no cuenta para la cepa y una asociación no es efecto: fuera también del denominador («7 a favor de 10»)
+  const aparte = evs0.filter(e => esAsoc(e) || (esCepa && esMezcla(e)));
+  const evs = evs0.filter(e => !aparte.includes(e));
   const cuentaFav = e => e.direccion === "+" && !esAsoc(e) && !(esCepa && esMezcla(e));
   const rpf = (sp && sp.regulatorio && sp.regulatorio.ruta_por_forma) || {};
   const pc = esCepa ? D.puertaCepa(subj) : null;   // en ficha de cepa manda el estado de la cepa (incluye «no medido»)
@@ -730,8 +748,11 @@ function formaStrip(subj, sp) {
   });
   wrap.append(row);
   const nNull = evs.filter(e => !e.forma).length, nMet = evs.filter(e => e.forma && !U.formaProducto(e.forma)).length;
-  if (nNull || nMet) wrap.append(h("p", {class: "small muted fs-otras"}, [nNull ? nNull + " evidencia" + (nNull > 1 ? "s" : "") + " con forma no declarada" : null,
-    nMet ? nMet + " con " + [...new Set(evs.filter(e => e.forma && !U.formaProducto(e.forma)).map(e => formaTxt(e.forma)))].join(", ") : null].filter(Boolean).join(" · ") + ": no cuentan en ninguna de las tres."));
+  const nMz = aparte.filter(esMezcla).length, nAs = aparte.filter(e => !esMezcla(e)).length;
+  if (nNull || nMet || nMz || nAs) wrap.append(h("p", {class: "small muted fs-otras"}, [nNull ? pl(nNull, "evidencia", "evidencias") + " con forma no declarada" : null,
+    nMet ? nMet + " con " + [...new Set(evs.filter(e => e.forma && !U.formaProducto(e.forma)).map(e => formaTxt(e.forma)))].join(", ") : null,
+    nMz ? nMz + " en mezcla de cepas" : null, nAs ? pl(nAs, "asociación", "asociaciones") : null].filter(Boolean).join(" · ") +
+    (nNull + nMet + nMz + nAs === 1 ? ": no cuenta" : ": no cuentan") + " en ninguna de las tres."));
   wrap.append(detail);
   return wrap;
 }

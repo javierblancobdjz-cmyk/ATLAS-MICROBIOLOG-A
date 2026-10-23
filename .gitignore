@@ -1,0 +1,6 @@
+# Datos crudos y capturas locales: nunca al repo público
+_crudo/
+_privado/
+*.duckdb
+node_modules/
+.DS_Store

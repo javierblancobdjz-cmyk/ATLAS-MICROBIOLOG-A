@@ -1,0 +1,2 @@
+$ scripts/datos/aplicar_correcciones_curadas.py --tsv scripts/datos/curado/correcciones_seguridad_regulatorio_20261023.tsv --data scripts/datos/salidas/20261023/trabajo/entrada --salida-dir scripts/datos/salidas/20261023 --fecha 2026-10-23 --publicar
+ok /home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/especies_corregido_20261023.json · OK=10, YA_APLICADA=0, FAIL=0

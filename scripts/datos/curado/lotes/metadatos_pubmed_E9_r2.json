@@ -1,0 +1,73 @@
+{
+ "_que_es": "Metadatos PubMed (MCP get_article_metadata, 2026-10-23) de los PMID del lote E9_r2. NO guarda abstracts: solo lo necesario para validar tipo de estudio, DOI y acceso a texto completo. La comprobacion literal de fragmentos queda en verificacion_E9_r2.tsv.",
+ "20042742": {
+  "doi": "10.1177/0022034509356246",
+  "article_types": [
+   "Journal Article",
+   "Research Support, Non-U.S. Gov't"
+  ],
+  "pmc": null,
+  "nombra_cepa": false,
+  "taxon_declarado": "6 cepas, L. paracasei o L. rhamnosus, sin nombrar"
+ },
+ "20519491": {
+  "doi": "10.1177/0022034510369460",
+  "article_types": [
+   "Journal Article",
+   "Research Support, Non-U.S. Gov't"
+  ],
+  "pmc": null,
+  "nombra_cepa": true
+ },
+ "24273614": {
+  "doi": "10.1007/s12602-013-9148-9",
+  "article_types": [
+   "Journal Article"
+  ],
+  "pmc": "PMC3825618",
+  "nombra_cepa": true,
+  "nota": "PubMed no lo tipa como RCT; el diseno aleatorizado, doble ciego y con placebo consta en el abstract"
+ },
+ "23503788": {
+  "doi": "10.1007/s00284-013-0352-3",
+  "article_types": [
+   "Journal Article",
+   "Research Support, Non-U.S. Gov't"
+  ],
+  "pmc": null,
+  "nombra_cepa": true,
+  "texto_completo": "no accesible: sin PMC y Springer devuelve vista previa de suscripcion (comprobado 2026-10-23); la forma (viva/inactivada) no consta en el abstract"
+ },
+ "18539795": {
+  "doi": "10.1128/AEM.02599-07",
+  "article_types": [
+   "Journal Article",
+   "Randomized Controlled Trial",
+   "Research Support, Non-U.S. Gov't"
+  ],
+  "pmc": "PMC2519365",
+  "nombra_cepa": true,
+  "nota": "control = excipiente; intervencion = CECT5713 + L. gasseri CECT5714"
+ },
+ "20455694": {
+  "doi": "10.1086/652763",
+  "article_types": [
+   "Journal Article",
+   "Randomized Controlled Trial",
+   "Research Support, Non-U.S. Gov't"
+  ],
+  "pmc": null,
+  "nombra_cepa": true,
+  "nota": "comparador = antibiotico; brazo B monocepa CECT5713 n=127"
+ },
+ "40507130": {
+  "doi": "10.3390/nu17111860",
+  "article_types": [
+   "Journal Article",
+   "Randomized Controlled Trial"
+  ],
+  "pmc": "PMC12158033",
+  "nombra_cepa": true,
+  "nota": "70 parejas aleatorizadas, 57 completaron; chi-cuadrado unilateral; los autores lo llaman 'preliminary findings'"
+ }
+}

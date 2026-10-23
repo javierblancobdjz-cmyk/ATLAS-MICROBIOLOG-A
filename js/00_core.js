@@ -9,14 +9,10 @@ Atlas.loadData = async function () {
   if (tag) return JSON.parse(tag.textContent);
   const base = window.ATLAS_DATA_URL || "data/";
   const keys = ["meta", "catalogo", "especies", "subgrupos", "cepas", "evidencias", "refs", "web",
-                "celdas", "matriz", "ataques", "veredictos", "vecinos"];   // E7 r2: busqueda.json retirado (el índice se deriva al arrancar)
+                "celdas", "matriz", "ataques", "veredictos", "veredictos_estado", "vecinos", "genomica", "puerta_cepa"];   // v2: todo data/ lo genera scripts/datos/construir_datos.py; sin fichero de búsqueda: el índice se deriva al arrancar (10_search.js)
   const parts = await Promise.all(keys.map(k => fetch(base + k + ".json").then(r => r.json())));
   const out = Object.fromEntries(keys.map((k, i) => [k, parts[i]]));
-  // v1.2 (E1): estado de veredicto por forma; opcional para no romper con datos v1.1
-  out.veredictos_estado = await fetch(base + "veredictos_estado.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
-  // K6 (E6) y capa genómica (E2): opcionales; si faltan, la ficha dice «no medido», nunca «ausente»
-  const opt = f => fetch(base + f).then(r => r.ok ? r.json() : null).catch(() => null);
-  [out.genomica, out.puerta_cepa, out.perfil_cepa] = await Promise.all([opt("genomica.json"), opt("puerta_cepa.json"), opt("perfil_cepa.json")]);   // E4: perfil de cepa (opcional)
+  // v2: veredictos_estado, genomica y puerta_cepa ya van en keys (el orquestador los genera siempre); perfil_cepa.json retirado (su contenido es catalogo M35)
   return out;
 };
 
@@ -55,8 +51,6 @@ Atlas.initData = function (D) {
     genome: acc => (acc && D.genomica && D.genomica.genomas[acc]) || null,
     /** E6 · K6: reglas derivadas por cepa x forma (no repite llamadas) */
     puertaCepa: id => (D.puerta_cepa && D.puerta_cepa.cepas[id]) || null,
-    /** E4: sección «perfil de cepa a buscar» (solo donde hay forma no viva + arquitectura medida) */
-    perfilCepa: id => (D.perfil_cepa && D.perfil_cepa.secciones && D.perfil_cepa.secciones[id]) || null,
     segEspecie: slug => (D.puerta_cepa && D.puerta_cepa.seguridad_especie[slug]) || null,
     agregadosSeg: slug => D.puerta_cepa ? Object.entries(D.puerta_cepa.agregados_taxon).filter(([, v]) => v.slug_atlas === slug).map(([k, v]) => ({taxon: k, ...v})) : [],
     /** Resuelve cualquier id (especie, cepa, subgrupo) a {tipo, obj, especie} */
@@ -109,7 +103,7 @@ Atlas.render = function () {
   Atlas.bus.dispatchEvent(new CustomEvent("route:change", {detail: r}));
 };
 /* Los filtros «al tocar» usan Atlas.route.patch(), que cambia la query sin hashchange.
-   Re-renderizamos la vista actual para que la selección surta efecto (Pregunta, Especies, Comparador). */
+   Re-renderizamos la vista actual para que la selección surta efecto (Especies, Comparador, pivote). */
 Atlas.bus.addEventListener("route:query", () => Atlas.render());
 
 /* ---------- bandeja de comparar (persistente entre vistas) ---------- */
@@ -142,12 +136,13 @@ const VEREDICTO = {solida: "Sólida", prometedora: "Prometedora", especulativa: 
    y «si» = sin bloqueo también (4 del estratega: GG, L. rhamnosus y 299v intestinal, sg-nisina; todos sólida/prometedora).
    Lo desconocido, no medido o no aplicable va en gris con borde discontinuo: nunca en verde. */
 const GATE = {
-  seguridad: {sin_bloqueo: ["ok", "sin bloqueo"], no: ["ok", "sin bloqueo"], si: ["ok", "sin bloqueo"],
+  seguridad: {sin_bloqueo: ["ok", "sin bloqueo registrado"], no: ["ok", "sin bloqueo registrado"], si: ["ok", "sin bloqueo registrado"],
               a_revisar: ["warn", "a revisar"], bloqueo: ["bad", "bloqueo"], no_medido: ["nd", "no medido"], desconocida: ["nd", "desconocida"]},
   regulatorio: {abierta: ["ok", "abierta"], condicionada: ["warn", "condicionada"], cerrada: ["bad", "cerrada"],
                 bloqueada_qps: ["bad", "fuera de QPS (AMR adquirida)"], no_medido: ["nd", "no medido"], desconocida: ["nd", "desconocida"]},
   tecnologia: {demostrada: ["ok", "demostrada"], plausible: ["warn", "plausible"], problematica: ["bad", "problemática"], desconocida: ["nd", "desconocida"]},
-  genoma: {P: ["bad", "presente"], A: ["ok", "sin hits"], NM: ["nd", "no medido"], no_aplica: ["nd", "no aplica"]},
+  genoma: {P: ["bad", "presente"], A: ["ok", "sin hits"], NM: ["nd", "no medido"], no_aplica: ["nd", "no aplica"],
+           no_evaluable: ["nd", "no evaluable con la anotación de NCBI"], vinculo_sin_verificar: ["warn", "vinculada por nombre: verificar"]},
 };
 Atlas.ui = {
   /** gatePill("regulatorio", "Vivo", "no_medido") -> píldora con color por semántica de la puerta, no por la palabra */
@@ -176,8 +171,10 @@ Atlas.ui = {
   },
   scope(e) {
     const s = e.alcance, name = e.cepa ? (Atlas.data.strain(e.cepa)?.nombre_corto || "") : "";
-    const txt = s === "cepa" ? "Cepa " + name : s === "especie" ? "Especie" : s === "extrapolada" ? "Extrapolada de " + (e.extrapolada_desde || "") : "General";
-    return Atlas.ui.h("span", {class: "scope scope-" + s}, ({cepa: "●", especie: "○", extrapolada: "◌", general: "·"})[s] + " " + txt);
+    /* v2: alcance «mezcla» (la mezcla de cepas no cuenta para ninguna de ellas) lleva la etiqueta del lote */
+    const txt = s === "cepa" ? "Cepa " + name : s === "especie" ? "Especie" : s === "extrapolada" ? "Extrapolada de " + (e.extrapolada_desde || "")
+      : s === "mezcla" ? (e.etiqueta_mezcla || "Mezcla de cepas") : "General";
+    return Atlas.ui.h("span", {class: "scope scope-" + (s || "general")}, (({cepa: "●", especie: "○", extrapolada: "◌", mezcla: "◐", general: "·"})[s] || "·") + " " + txt);
   },
   direction(d) {
     const m = {"+": ["+", "a favor"], "0": ["0", "nulo"], nc: ["?", "no concluyente"], "-": ["−", "en contra"], mixto: ["±", "mixto"]}[d] || ["", ""];
@@ -209,7 +206,7 @@ Atlas.ui = {
       mecanismo: mec ? mec.nombre : (r.mecanismo || ""),
       viabilidad: mec ? mec.requiere_viabilidad : "", forma: v?.forma || "",
       otra_forma: r.otra_forma || "", ruta: r.ruta || v?.ruta_regulatoria || "",
-      k: r.k || r.n_cepas || "", direccion: e0 ? ({"+": "a favor", "-": "en contra", "0": "nulo", nc: "no concluyente"}[e0.direccion] || e0.direccion) : "",
+      k: r.k || r.n_cepas || "", direccion: e0 ? ({"+": "a favor", "-": "en contra", "0": "nulo", mixto: "resultado mixto", nc: "no concluyente"}[e0.direccion] || e0.direccion) : "",
     };
     return tpl.replace(/\{(\w+)\}/g, (_, k) => vals[k] != null ? vals[k] : "");
   },
@@ -239,9 +236,27 @@ Atlas.ui = {
     const route = r?.tipo === "cepa" ? "cepa" : "especie";
     return Atlas.ui.h("a", {href: Atlas.route.href(route, r?.tipo === "subgrupo" ? r.especie : id)}, child || Atlas.ui.name(id));
   },
-  /** E7: forma de la evidencia → forma de producto (inactivado y componente cuentan como posbiótico, regla v1.2) */
-  formaProducto: f => f === "inactivado" || f === "componente" || f === "posbiotico" ? "posbiotico" : f === "fermentado" ? "fermentado" : f === "vivo" ? "vivo" : null,
-  formaLabel: f => ({vivo: "Vivo", posbiotico: "Posbiótico", fermentado: "Fermentado", inactivado: "inactivado", componente: "componente"})[f] || f || "—",
+  /** Forma de la evidencia → forma de producto. Misma tabla que generar_v12.FORMA_PRODUCTO: inactivado, componente y
+      metabolito aislado cuentan como posbiótico. Forma null (no declarada) no cuenta en ninguna. */
+  formaProducto: f => f === "inactivado" || f === "componente" || f === "metabolito" || f === "posbiotico" ? "posbiotico" : f === "fermentado" ? "fermentado" : f === "vivo" ? "vivo" : null,
+  formaLabel: f => ({vivo: "Vivo", posbiotico: "Posbiótico", fermentado: "Fermentado", inactivado: "inactivado", componente: "componente", metabolito: "metabolito aislado"})[f] || (f ? String(f).replace(/_/g, " ") : "forma no declarada"),
+  /** P1-02 · línea legible del mecanismo de una evidencia, la misma en el panel de cita y en la ficha:
+      «Exclusión del patógeno · fenómeno observado · determinante desconocido · funciona inactivada». Devuelve "" si no hay mecanismo. */
+  mechText(e) {
+    const m = e && e.mecanismo; if (!m) return "";
+    const BASE = {causal: "fenómeno demostrado (mutante o bloqueo)", observado: "fenómeno observado", inferencia: "inferido por los autores", prediccion_genomica: "predicción genómica"};
+    const cl = (m.clases || []).filter(c => c !== "no_aplica" && c !== "desconocido");
+    const p = [cl.length ? cl.map(c => Atlas.ui.claseLabel(c).split(" (")[0]).join(" + ") : "mecanismo no descrito"];
+    if (cl.length && BASE[m.base]) p.push(BASE[m.base]);
+    if (cl.length && m.determinante === "desconocido") p.push("determinante desconocido");
+    if (cl.length && m.determinante === "identificado") p.push("determinante identificado" + ((m.genes || []).length ? " (" + m.genes.join(", ") + ")" : ""));
+    if (e.direccion === "+" && e.forma === "inactivado") p.push("funciona inactivada");
+    else if (e.direccion === "+" && (e.forma === "componente" || e.forma === "metabolito")) p.push("funciona con fracción, no célula entera");
+    else if (m.requiere_viabilidad === "si") p.push("necesita célula viva");
+    else if (m.requiere_viabilidad === "no") p.push("no necesita célula viva");
+    return p.join(" · ");
+  },
+  mechLine(e) { const t = Atlas.ui.mechText(e); return t ? Atlas.ui.h("p", {class: "mech-line"}, t) : ""; },
   claseLabel(id) { const c = (Atlas.data.clasesMecanismo() || []).find(x => x.id === id); return c ? c.etiqueta : String(id || "").replace(/_/g, " "); },
   markTab(name) { document.querySelectorAll("#tabs a").forEach(a => a.toggleAttribute("aria-current", a.dataset.tab === name)); },
   stub(el, titulo, paquete) { el.append(Atlas.ui.h("div", {class: "stub"}, `${titulo} · pendiente del paquete ${paquete}`)); },

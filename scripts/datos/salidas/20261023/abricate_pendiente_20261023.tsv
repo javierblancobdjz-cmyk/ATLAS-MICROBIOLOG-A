@@ -1,0 +1,39 @@
+prioridad	cepa	accesion	categoria	qps_especie	mejor_nivel	n_evidencias	motivo
+1	lacticaseibacillus-rhamnosus.st-gg	GCF_000011045.1	comercial	qps	MA	9	genoma NCBI (PGAP): ABRicate no corrido
+1	limosilactobacillus-reuteri.st-dsm-17938	GCF_041888805.1	comercial	qps	MA	3	genoma GCF_041888805.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+1	bifidobacterium-animalis.st-hn019	GCF_000172535.2	comercial	qps	MA	2	genoma GCF_000172535.2 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+1	bifidobacterium-longum.st-35624	GCF_001719085.1	comercial	qps	MA	2	genoma NCBI (PGAP): ABRicate no corrido
+1	lactiplantibacillus-plantarum.st-299v	GCF_001888735.1	comercial	qps	MA	2	genoma NCBI (PGAP): ABRicate no corrido
+1	bifidobacterium-animalis.st-bb-12	GCF_000025245.2	comercial	qps	MA	1	genoma GCF_000025245.2 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+1	lacticaseibacillus-rhamnosus.st-hn001	GCF_000173255.5	comercial	qps	ECA	6	genoma NCBI (PGAP): ABRicate no corrido
+1	bifidobacterium-longum.st-bb536	GCF_055383495.1	comercial	qps	ECA	4	genoma NCBI (PGAP): ABRicate no corrido
+1	limosilactobacillus-reuteri.st-atcc-pta-6475	GCF_054729215.1	ensayo	qps	ECA	2	genoma GCF_054729215.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+1	lacticaseibacillus-rhamnosus.st-gr-1	GCF_024665595.1	comercial	qps	ECA	1	genoma NCBI (PGAP): ABRicate no corrido
+1	lacticaseibacillus-rhamnosus.st-r0011	GCF_000235785.1	ensayo	qps	ECA	1	genoma GCF_000235785.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+2	streptococcus-salivarius.st-m18	GCF_000225385.1	comercial	no_seguridad	ECA	5	genoma GCF_000225385.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+2	akkermansia-muciniphila.st-muct	GCF_000020225.1	tipo	no_seguridad	ECA	4	genoma NCBI (PGAP): ABRicate no corrido
+2	streptococcus-dentisani.st-7746	GCF_000382805.1	comercial	no_evaluada	ECA	3	genoma GCF_000382805.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+2	streptococcus-salivarius.st-k12	GCF_000286295.1	comercial	no_seguridad	ECA	2	genoma GCF_000286295.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+2	streptococcus-australis.st-a12	GCF_001587175.1	ensayo	no_evaluada	ANI	5	genoma GCF_001587175.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+2	faecalibacterium-duncaniae.st-a2-165	GCF_061129375.1	tipo	no_evaluada	CEL	3	genoma NCBI (PGAP): ABRicate no corrido
+2	faecalibacterium-prausnitzii.st-m21-2	GCF_000154385.1	referencia	no_evaluada	CEL	1	genoma NCBI (PGAP): ABRicate no corrido
+2	clostridium-butyricum.st-miyairi-588	GCF_030758275.1	comercial	excluida	GEN-v	1	genoma GCF_030758275.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+3	propionibacterium-freudenreichii.st-cirm-bia-129	GCF_000723545.1	referencia	qps	ANI	2	genoma GCF_000723545.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+3	bifidobacterium-longum.st-atcc-15697	GCF_000020425.1	tipo	qps	GEN-v	1	genoma NCBI (PGAP): ABRicate no corrido
+3	lactiplantibacillus-plantarum.st-wcfs1	GCF_000203855.3	referencia	qps	GEN-p	1	genoma NCBI (PGAP): ABRicate no corrido
+3	akkermansia-muciniphila.st-139	GCF_004319565.1	referencia	no_seguridad	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	akkermansia-muciniphila.st-gp01	GCF_002885265.1	referencia	no_seguridad	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	bifidobacterium-longum.st-jcm-1217	GCF_000196555.1	tipo	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	christensenella-minuta.st-dsm-22607	GCF_003628755.1	tipo	no_evaluada	-	0	genoma GCF_003628755.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+3	faecalibacterium-prausnitzii.st-atcc-27768	GCF_058248305.1	tipo	no_evaluada	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	faecalibacterium-prausnitzii.st-sl3-3	GCF_000209855.1	referencia	no_evaluada	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	lacticaseibacillus-rhamnosus.st-atcc-7469	GCF_900636965.1	tipo	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	lacticaseibacillus-rhamnosus.st-lc705	GCF_000026525.1	referencia	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	lactiplantibacillus-plantarum.st-atcc-14917	GCF_000143745.1	tipo	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	lactobacillus-crispatus.st-atcc33820	GCF_018987235.1	tipo	qps	-	0	genoma GCF_018987235.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+3	lactococcus-lactis.st-atcc-11454	GCF_009885055.1	referencia	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	lactococcus-lactis.st-atcc-19435	GCF_029023865.1	tipo	qps	-	0	genoma público sin ABRicate
+3	ligilactobacillus-salivarius.st-dsm-20555	GCF_001435955.1	tipo	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido
+3	propionibacterium-freudenreichii.st-dsm-20271	GCF_000940845.1	tipo	qps	-	0	genoma GCF_000940845.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+3	streptococcus-dentisani.st-7747	GCF_000382825.1	tipo	no_evaluada	-	0	genoma GCF_000382825.1 vinculado por nombre, depósito o cepa tipo (verificar); genoma NCBI (PGAP): ABRicate no corrido
+4	bifidobacterium-adolescentis.st-hd17t2h	GCF_014524935.1	ensayo	qps	-	0	genoma NCBI (PGAP): ABRicate no corrido

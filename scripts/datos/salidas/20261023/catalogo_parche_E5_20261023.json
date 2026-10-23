@@ -1,0 +1,42 @@
+{
+ "mecanismos_v12.tsv": [
+  {
+   "id": "M20",
+   "nombre_antes": "Produccion de butirato (via butiril-CoA:acetato CoA-transferasa)",
+   "nombre": "Produccion de butirato",
+   "motivo": "La unica fuente enlazada (clostridium-butyricum.ev001, PMID 35203691) dice 'produccion de butirato' sin ruta; en C. butyricum la ruta descrita es ptb-buk. La ruta pasa a campo por especie (rasgos[].via / via_candidata), no al titulo.",
+   "vias_candidatas": [
+    {
+     "via": "ptb_buk",
+     "especies": [
+      "clostridium-butyricum"
+     ],
+     "estado": "a_curar (E9)",
+     "fuente_candidata": "PMID 39892707 (CBM588)"
+    },
+    {
+     "via": "coa_transferasa_butirato",
+     "especies": [
+      "faecalibacterium-prausnitzii",
+      "faecalibacterium-duncaniae"
+     ],
+     "estado": "a_curar (E9)",
+     "fuente_candidata": "PMID 15028695; PMID 33729711"
+    }
+   ]
+  },
+  {
+   "id": "M42",
+   "propuesto": true,
+   "nombre": "Desconjugacion de sales biliares (BSH)",
+   "clase": "enzima",
+   "genes": "bsh",
+   "nota": "M41 ya es la coagregacion; BSH no tiene mecanismo en el catalogo. requiere_viabilidad: desconocido (lo decide E1)"
+  }
+ ],
+ "especies_por_rasgo_butirato": [
+  "clostridium-butyricum",
+  "faecalibacterium-duncaniae",
+  "faecalibacterium-prausnitzii"
+ ]
+}

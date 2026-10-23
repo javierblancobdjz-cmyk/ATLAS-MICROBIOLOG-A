@@ -1,0 +1,31 @@
+id	nombre	clase	subclase	molecula_o_componente	genes	patron_claim	especies	nota	contexto
+M01	Producción de GABA por glutamato descarboxilasa	metabolito		GABA	gad			Enlaces curados en v1.1 (campo mecanismos de la evidencia); sin patrón para no confundir con receptores GABA del hospedador
+M02	Biosíntesis de folato	metabolito		folato (H4folato y 5-CH3-H4folato)				
+M03	Proteína de membrana externa reconocida por TLR2	inmunomodulacion		Amuc_1100	Amuc_1100	Amuc_1100	akkermansia-muciniphila	
+M05	Componente de pared celular con efecto sobre longevidad	desconocido		pared celular (no caracterizada molecularmente)				Sin evidencia enlazada en v1.1; se conserva por no ser una forma
+M06	Activación de la vía TIR-1 / JNK-1 / DAF-16	senalizacion_hospedador		n/a (respuesta del hospedador)				
+M07	Activación de p38 y daf-2 dependiente de skn-1	senalizacion_hospedador		n/a (respuesta del hospedador)				
+M09	Proteína soluble que transactiva EGFR	senalizacion_hospedador		p40	p40	\\bp40\\b	lacticaseibacillus-rhamnosus	
+M14	Urolitinas de elagitaninos	metabolito		urolitina A				Sin evidencia enlazada en v1.1
+M15	Catalasa del hospedador inducida por la bacteria	senalizacion_hospedador		catalasa (CAT / ctl-2)				
+M20	Producción de butirato	metabolito		butirato (AGCC)				E5: ruta fuera del titulo; via por especie en especies.rasgos (ptb-buk C. butyricum, CoA-transferasa Faecalibacterium: candidatas a curar por E9)
+M21	Proteína antiinflamatoria microbiana (MAM) que inhibe NF-kB	inmunomodulacion		MAM / microbial anti-inflammatory molecule	mam	\\bMAM\\b	faecalibacterium-prausnitzii,faecalibacterium-duncaniae	
+M23	Nisina (lantibiótico, bacteriocina de clase I)	bacteriocina	I (lantibiótico)	nisina A / Z	nisA,nis (operón)	nisin	lactococcus-lactis	Producirla es rasgo de cepa (operón completo), no de especie
+M24	Abp118 / salivaricina (bacteriocina de clase IIb)	bacteriocina	IIb (dos péptidos)	Abp118 alfa/beta	abp118,abpK	Abp118|abpK|cluster de bacteriocina	ligilactobacillus-salivarius	Portar el clúster no implica producirla (CECT 5713: deleción en abpK)
+M25	Plantaricinas (plnEF y afines)	bacteriocina	IIb (dos péptidos)	plantaricina EF	plnEF	plantaricin	lactiplantibacillus-plantarum	
+M26	Salivaricinas / BLIS de S. salivarius	bacteriocina	I (lantibióticos salivaricina A2 y B); BLIS sin clasificar	salivaricina A2, salivaricina B, BLIS		salivaricin|\\bBLIS\\b	streptococcus-salivarius	
+M27	H2O2 por piruvato oxidasa	acido_h2o2		peróxido de hidrógeno	spxB	piruvato oxidasa|\\bpox\\b|spxB		
+M28	H2O2 por lactato oxidasa a partir del lactato del patógeno	acido_h2o2		peróxido de hidrógeno	lox	lactato oxidasa|\\blox\\b|[aá]cido l[aá]ctico como sustrato		
+M29	L-aminoácido oxidasa (SO-LAAO)	enzima		L-aminoácido oxidasa	aaoSo	aaoSo|SO-LAAO		El fragmento verificado no dice que el producto sea H2O2: por eso clase enzima y no acido_h2o2
+M30	Sistema arginina deiminasa (ADS), alcalinizante	alcalinizacion_ads_ureasa		amonio (arginina deiminasa)	arcA	arginina-deiminasa|arginina deiminasa|\\bADS\\b		
+M31	Ureasa (alcalinización)	alcalinizacion_ads_ureasa		ureasa		ureasa		
+M32	Dextranasa contra la matriz de placa	enzima		dextranasa		dextranasa		
+M33	Proteasa tipo challisina (Sgc) que degrada la señal CSP	interferencia_quorum		proteasa Sgc	sgc	\\bSgc\\b|challisina		Antes clase enzima: la proteasa importa por lo que apaga (la señal CSP), no por ser enzima
+M34	Pilus SpaCBA de unión a moco	adhesion_hospedador		pilina SpaCBA + sortasa	spaCBA	SpaCBA	lacticaseibacillus-rhamnosus	
+M35	Bloqueo de la adhesión de S. mutans a hidroxiapatita con célula inactivada (determinante desconocido)	exclusion_patogeno		desconocido		hidroxiapatita	ligilactobacillus-salivarius	Se sabe QUÉ hace (impide la adhesión) y que no necesita célula viva; no se sabe CON QUÉ molécula
+M36	Proteína de capa S SlpB (y vesículas que la portan)	inmunomodulacion		SlpB	slpB	SlpB|capa S	propionibacterium-freudenreichii	
+M37	Síntesis de vitamina B12 activa	metabolito		cobalamina		vitamina B12|B12 activa	propionibacterium-freudenreichii	
+M38	DHNA y menaquinona (vitamina K2)	metabolito		DHNA, menaquinona		menaquinona|DHNA	propionibacterium-freudenreichii	
+M39	Utilización de oligosacáridos de la leche humana (HMO)	uso_glicanos		HMO		oligosac[aá]rido de la leche|\\bHMO\\b	bifidobacterium-longum	
+M40	Uso de mucina y glicanos del hospedador como nutriente	uso_glicanos		mucina		mucina como [uú]nica|glicanos del hospedador|candidatos a mucinasa		
+M41	Coagregación específica con mutans streptococci, también con célula inactivada por calor (L. paracasei DSMZ 16671)	exclusion_patogeno		desconocido		coagreg	lacticaseibacillus-paracasei	Lo atribuible a DSMZ16671 sale de ev009: coagrega mutans streptococci tambien tras inactivacion por calor y conserva la actividad en saliva. La resistencia a autoclave y proteasa y la dependencia de calcio son de 6 cepas NO nombradas de un cribado de 624 lactobacilos (PMID 20042742, contexto ev007): no se heredan a DSMZ16671, ni a la especie, ni al genero. Es el comparador natural de M35	lacticaseibacillus-paracasei.ev007

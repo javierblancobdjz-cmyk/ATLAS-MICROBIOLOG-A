@@ -31,8 +31,20 @@ const FORMA_ETQ = {vivo: "viva", inactivado: "inactivada", componente: "fracció
 const BASE_ETQ = {causal: "demostrado (mutante o bloqueo)", observado: "observado en el ensayo", inferencia: "inferido por los autores",
                   prediccion_genomica: "predicción genómica"};
 const MUERTA = ["inactivado"], FRACCION = ["componente", "metabolito"];
+/* v2 (P1-01 d/e): una asociación no es un efecto (no suma dirección) y una mezcla de cepas no cuenta para ninguna.
+   Misma regla que generar_v12.py (cuenta_direccion + en_solitario): las dos van a secciones aparte, rotuladas. */
+const esAsociacion = e => e.relacion === "asociacion";
+const esMezcla = e => e.alcance === "mezcla";
+const cuenta = e => !esAsociacion(e) && !esMezcla(e);
+/** Etiqueta legible de un código: del mapa, o del vocabulario del catálogo, y si no, sin guiones bajos. Nunca el código crudo. */
+const etq = (map, k) => (k == null || k === "") ? "" : (map[k] || String(k).replace(/_/g, " "));
+const DIR_ETQ = {"+": "a favor", "0": "sin efecto", "-": "en contra", mixto: "resultado mixto"};
+const formaEtq = f => f ? (FORMA_ETQ[f] || etq({}, f)) : "forma no declarada";
 
-/** ¿Funciona muerta? Derivado solo de `forma` + `direccion` de las evidencias de ESA fila. «No probada» ≠ «no funciona». */
+/** ¿Funciona muerta? Derivado solo de `forma` + `direccion` de las evidencias de ESA fila. «No probada» ≠ «no funciona».
+    Paridad exacta con generar_v12.funciona_inactivada (k y texto; lo vigila tools/humo_pivote.cjs). Forma null (no declarada)
+    no entra en ninguna lista: cae en «No probada». Dirección «mixto» cuenta como a favor igual que en Python; la tabla lo
+    rotula aparte («resultado mixto») en muertaCell y en la línea de otros ensayos. Recibe solo evidencias que cuentan. */
 function muerta(evs) {
   const fav = evs.filter(e => A_FAVOR.includes(e.direccion));
   const inact = fav.filter(e => MUERTA.includes(e.forma));
@@ -60,9 +72,16 @@ function rowsFor(linea, res) {
   return rowsFromEvs(Object.values(D.raw.evidencias).filter(e => e.tipo === "evidencia" && e.linea === linea && e.resultado === res), linea, res);
 }
 function rowsFromEvs(evs, linea, res) {
+  const rows = buildRows(evs.filter(cuenta), linea, res, "efecto");
+  rows.mezcla = buildRows(evs.filter(e => esMezcla(e) && !esAsociacion(e)), linea, res, "mezcla");
+  rows.asociacion = buildRows(evs.filter(esAsociacion), linea, res, "asociacion");
+  return rows;
+}
+function buildRows(evs, linea, res, grupo) {
   const by = new Map();
   evs.forEach(e => {
-    const k = e.cepa || ("sp:" + e.especie + ":" + e.alcance);
+    const k = grupo === "mezcla" ? "mz:" + e.id : grupo === "asociacion" ? "as:" + (e.cepa || e.especie)
+      : e.cepa || ("sp:" + e.especie + ":" + e.alcance);
     if (!by.has(k)) by.set(k, []);
     by.get(k).push(e);
   });
@@ -86,7 +105,7 @@ function rowsFromEvs(evs, linea, res) {
       nivel: nulEv.reduce((a, e) => nn(e.nivel) < nn(a.nivel) ? e : a).nivel, ev: nulEv.map(e => e.id)} : null;
     // mecanismo que la celda hereda de una línea de ataque (inferencia), solo si la fila no tiene uno propio
     const celda = mat[E[0].especie + "|" + res];
-    const propuesto = !clases.length && celda && celda.mecanismo && /ataque/.test(celda.mecanismo.origen || "") && fav.length
+    const propuesto = grupo === "efecto" && !clases.length && celda && celda.mecanismo && /ataque/.test(celda.mecanismo.origen || "") && fav.length
       ? {clases: clasesReales(celda.mecanismo.clases), texto: (ataques.find(a => a.especie === E[0].especie) || {}).mecanismo_texto || ""} : null;
     const dirs = {};
     E.forEach(e => { dirs[e.direccion] = (dirs[e.direccion] || 0) + 1; });
@@ -94,16 +113,18 @@ function rowsFromEvs(evs, linea, res) {
     const vias = ((D.species(E[0].especie) || {}).rasgos || []).filter(t => t.via && (t.fuentes || []).some(f => ids.has(f)));
     return {
       vias,
-      key: k, especie: E[0].especie, cepa: E[0].cepa || null, alcance: E[0].alcance, evs: E, n: E.length,
-      aFavor: fav.length > 0, nivel: best.nivel, dirs,
-      formas: [...new Set(E.map(e => e.forma))],
+      key: k, grupo, especie: E[0].especie, cepa: E[0].cepa || null, alcance: E[0].alcance, evs: E, n: E.length,
+      etiquetaMezcla: grupo === "mezcla" ? (E[0].etiqueta_mezcla || "en mezcla con otras cepas") : null,
+      aFavor: grupo === "efecto" && fav.length > 0, nivel: best.nivel, dirs,
+      formas: [...new Set(E.map(e => e.forma || null))],
+      otros: fav.some(e => e.direccion === "+") || grupo !== "efecto" ? E.filter(e => e.direccion !== "+") : E.filter(e => e.direccion === "mixto"),
       muerta: muerta(E),
       clases, genes, det, mecNivel, estudiadoNulo, base: bases.sort((a, b) => Object.keys(BASE_ETQ).indexOf(a) - Object.keys(BASE_ETQ).indexOf(b))[0] || null,
       propuesto, curado,
       familias: [...new Set((clases.length ? clases : (propuesto ? propuesto.clases : [])).map(famOf))],
     };
   });
-  rows.sort((a, b) => (b.aFavor - a.aFavor) || (nn(a.nivel) - nn(b.nivel)) || (b.clases.length - a.clases.length) || (b.n - a.n));
+  rows.sort((a, b) => (b.aFavor - a.aFavor) || (nn(a.nivel) - nn(b.nivel)) || (b.clases.length - a.clases.length) || (b.n - a.n) || a.key.localeCompare(b.key));
   return rows;
 }
 
@@ -126,69 +147,92 @@ function famDot(f, txt) {
   return h("span", {class: "fam fam-" + f}, h("i", {"aria-hidden": "true"}), txt != null ? txt : FAM[f].corto);
 }
 function quien(r) {
-  if (r.cepa) {
-    const st = D.strain(r.cepa), sp = D.species(r.especie);
-    return h("span", {class: "pv-who"}, h("a", {href: Atlas.route.href("cepa", r.cepa)}, h("i", {class: "bn"}, sp ? sp.nombre_corto : ""), " ", st ? (st.designacion || st.nombre_corto) : r.cepa),
-      h("span", {class: "pv-scope"}, "● cepa"));
-  }
-  return h("span", {class: "pv-who"}, h("a", {href: Atlas.route.href("especie", r.especie)}, U.name(r.especie)),
-    h("span", {class: "pv-scope"}, r.alcance === "extrapolada" ? "◌ extrapolada" : "○ especie, sin cepa declarada"));
+  const sp = D.species(r.especie), st = r.cepa ? D.strain(r.cepa) : null;
+  const scope = r.grupo === "mezcla" ? may(r.etiquetaMezcla) + " · no cuenta para ninguna cepa"
+    : r.cepa ? "● cepa" : r.alcance === "extrapolada" ? "◌ extrapolada" : "○ especie, sin cepa declarada";
+  const enlace = r.cepa
+    ? h("a", {href: Atlas.route.href("cepa", r.cepa)}, h("i", {class: "bn"}, sp ? sp.nombre_corto : ""), " ", st ? (st.designacion || st.nombre_corto) : r.cepa)
+    : h("a", {href: Atlas.route.href("especie", r.especie)}, U.name(r.especie));
+  return h("span", {class: "pv-who"}, enlace, h("span", {class: "pv-scope" + (r.grupo === "mezcla" ? " pv-mz" : "")}, scope));
 }
 function dirTxt(d) {
-  const m = {"+": "a favor", "0": "nulo", nc: "no concluyente", "-": "en contra", mixto: "mixto"};
-  return Object.entries(d).map(([k, v]) => v + " " + (m[k] || k)).join(" · ");
+  return Object.entries(d).map(([k, v]) => v + " " + etq(DIR_ETQ, k)).join(" · ");
 }
-/* E5 · vía (output × enzima) bajo el mecanismo, y enlace al pivote por output. Sale de especies.json rasgos v1.2. */
+const may = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+/* E8 r2 + v2: la vía de E5 agrupada por output, con un único enlace «¿quién más?» (modo ?out=). Las bacteriocinas no llevan
+   enlace de convergencia (su clase es de E3) y los rasgos de criterio propio no se muestran aquí. */
 const VR = () => (D.raw.catalogo.vocabulario_rasgos || {rasgos: {}, vias: {}, tipos_convergencia: {}});
 function viaTxt(t) {
-  if (t.via !== "desconocida") return t.via_etiqueta + (t.via_en_fuente === "si" ? "" : " · la fuente no la nombra");
+  if (t.via !== "desconocida") return (t.via_etiqueta || etq({}, t.via)) + (t.via_en_fuente === "si" ? "" : " · la fuente no la nombra");
   return "vía no identificada en la fuente" + (t.via_candidata_etiqueta ? " (candidata: " + t.via_candidata_etiqueta + ")" : "");
 }
 function viaLines(r) {
   if (!r.vias || !r.vias.length) return "";
-  const vs = r.vias.filter(t => t.rasgo !== "bacteriocina" && t.alcance !== "criterio_propio");  // la clase de bacteriocina es de E3
+  const vs = r.vias.filter(t => t.rasgo !== "bacteriocina" && t.alcance !== "criterio_propio");
   if (!vs.length) return "";
-  // E8 r2: una línea por OUTPUT (no por vía): las vías del mismo output se juntan y el enlace «¿quién más?» sale una vez
   const by = new Map(); vs.forEach(t => { if (!by.has(t.rasgo)) by.set(t.rasgo, []); by.get(t.rasgo).push(t); });
   return h("div", {class: "pv-via"}, [...by.values()].map(ts => {
     const t = ts[0], v = VR().rasgos[t.rasgo] || {}, np = (v.productores || []).length;
-    return h("small", {}, h("b", {}, t.etiqueta), " · ", [...new Set(ts.map(viaTxt))].join("; "),
+    return h("small", {}, h("b", {}, t.etiqueta || v.etiqueta || etq({}, t.rasgo)), " · ", [...new Set(ts.map(viaTxt))].join("; "),
       np > 1 ? " · " : "", np > 1 ? h("a", {href: Atlas.route.href("lineas", null, {out: t.rasgo})}, "¿quién más? (" + np + " especies)") : "");
   }));
 }
-function mecCell(r) { const c = mecCell0(r), v = viaLines(r); return v ? h("div", {}, c, v) : c; }
+function mecCell(r) {
+  const c = mecCell0(r), v = viaLines(r), o = otrosTxt(r);
+  return v || o ? h("div", {class: "pv-mecw"}, c, v, o) : c;
+}
 function mecCell0(r) {
+  // mezcla y asociación: el mecanismo se nombra, pero sin color (no es efecto atribuible a esta unidad)
+  if (r.grupo !== "efecto") return h("span", {class: "pv-unk"}, r.clases.length ? r.clases.map(claseEtq).join(" + ") + " (sin color: no cuenta)" : "Desconocido");
   if (r.clases.length) return h("div", {class: "pv-mec"},
     h("div", {class: "fams"}, r.familias.map(f => famDot(f, FAM[f].corto + (r.det === "desconocido" ? " (" + DET_TXT + ")" : "")))),
     h("span", {}, r.clases.map(claseEtq).join(" + ")),
-    h("small", {class: "muted"}, [BASE_ETQ[r.base] || "", r.mecNivel ? "visto en " + r.mecNivel : "",
-      r.det === "desconocido" ? "se sabe qué hace, no con qué molécula o gen" : ""].filter(Boolean).join(" · ")),
-    nuloTxt(r));
+    h("small", {class: "muted"}, [BASE_ETQ[r.base] || etq({}, r.base), r.mecNivel ? "visto en " + r.mecNivel : "",
+      r.det === "desconocido" ? "se sabe qué hace, no con qué molécula o gen" : ""].filter(Boolean).join(" · ")));
   if (r.propuesto) return h("div", {class: "pv-mec"},
-    h("div", {class: "fams"}, r.familias.map(f => famDot(f, ""))),
+    h("div", {class: "fams"}, r.familias.map(f => famDot(f, FAM[f].corto + " (" + DET_TXT + ")"))),
     h("span", {}, r.propuesto.clases.map(claseEtq).join(" + ")),
-    h("small", {class: "muted"}, "propuesto en línea de ataque · sin evidencia de mecanismo en este resultado"));
+    h("small", {class: "muted"}, "propuesto en línea de ataque (inferencia) · sin evidencia de mecanismo en este resultado"));
   if (!r.curado) return h("span", {class: "muted"}, "sin curar");
-  if (r.estudiadoNulo) return h("div", {class: "pv-mec"}, h("span", {class: "pv-unk"}, r.aFavor ? "Desconocido en el ensayo a favor" : "—"), nuloTxt(r));
+  if (r.estudiadoNulo && !r.aFavor) return h("div", {class: "pv-mec"}, h("span", {class: "pv-unk"}, "—"), nuloTxt(r));
   return h("span", {class: "pv-unk"}, r.aFavor ? "Desconocido" : "—");
 }
-/** «Estudiado sin efecto»: el mecanismo se midió en esta misma unidad y salió nulo o en contra. No se colorea. */
+/** Fila sin efecto o en contra: el mecanismo se estudió en esta misma unidad y salió nulo. Texto con fuente, sin color. */
 function nuloTxt(r) {
   const z = r.estudiadoNulo;
-  if (!z || (r.clases.length && z.clases.every(c => r.clases.includes(c)) && r.aFavor)) return "";
-  return h("small", {class: "pv-nul"}, "Estudiado en esta unidad sin efecto claro: ", z.clases.map(claseEtq).join(" + "), " (", z.nivel, ") ", U.sources(z.ev));
+  if (!z) return "";
+  return h("small", {class: "pv-nul"}, "Mecanismo estudiado sin efecto claro: ", z.clases.map(claseEtq).join(" + "), " (", z.nivel, ") ", U.sources(z.ev));
 }
-function muertaCell(m) {
-  return h("span", {class: "mu mu-" + m.k}, m.k === "si" || m.k === "frac" ? icon("ok") : "", m.txt, m.nivel ? [" ", level(m.nivel)] : "");
+/** Otros ensayos de la misma unidad que no son «a favor» (nulo, en contra o resultado mixto): texto con su fuente, sin color.
+    El color de la fila solo sale de evidencias con dirección «+». */
+function otrosTxt(r) {
+  if (!r.otros || !r.otros.length) return "";
+  return h("div", {class: "pv-otros"}, r.otros.map(e => h("small", {class: "pv-nul"},
+    h("b", {}, may(etq(DIR_ETQ, e.direccion))), " · ", e.nivel, " · ", formaEtq(e.forma),
+    e.mecanismo && clasesReales(e.mecanismo.clases).length ? " · estudiado: " + clasesReales(e.mecanismo.clases).map(c => claseEtq(c).replace(/\s*\(.*\)$/, "")).join(" + ") : "",
+    " ", U.sourceChip(e.id))));
 }
+/** «¿Funciona muerta?» como píldora de estado: verde (sí), rojo suave (probada sin efecto), gris discontinuo (no probada,
+    solo fermentado). Nunca «No». Si alguna evidencia de ese valor es «resultado mixto», se dice. */
+function muertaCell(m, r) {
+  // acepta el objeto de muerta() (txt, ev) y el de generar_v12 en celdas y ataques (texto, evidencias)
+  m = {k: m.k, txt: m.txt || m.texto || "", nivel: m.nivel, ev: m.ev || m.evidencias || []};
+  const mix = m.ev.some(id => (D.raw.evidencias[id] || {}).direccion === "mixto");
+  const nd = m.k === "np" && r && r.formas.includes(null);
+  return h("span", {class: "mu mu-" + m.k}, m.k === "si" || m.k === "frac" ? icon("ok") : "", h("span", {}, m.txt,
+    mix ? " · resultado mixto" : "", nd ? " · forma no declarada en la fuente" : ""), m.nivel ? level(m.nivel) : "");
+}
+const funciona = r => r.muerta.k === "si" || r.muerta.k === "frac";
 
-/** Pinta el pivote. highlight = slug de especie a resaltar (viene de tocar una celda). */
+/** Pinta el pivote. highlight = slug de especie o cepa a resaltar (viene de tocar una celda). */
 function render(el, linea, res, highlight, soloMuerta) {
   const L = D.linea(linea), R = D.resultado(linea, res);
   const rows = rowsFor(linea, res);
-  const pos0 = rows.filter(r => r.aFavor), neg = rows.filter(r => !r.aFavor);
-  // E7: filtro «funciona con célula muerta» (observado: forma inactivada/fracción con efecto a favor; nunca inferido)
-  const pos = soloMuerta ? pos0.filter(r => r.muerta.k === "si" || r.muerta.k === "frac") : pos0;
+  const pos0 = rows.filter(r => r.aFavor), neg0 = rows.filter(r => !r.aFavor);
+  // E7: filtro «funciona con célula muerta» (observado: forma inactivada/fracción con efecto a favor; nunca inferido).
+  // Con el filtro, la tabla de sin efecto solo conserva lo probado muerto sin efecto (es la respuesta «no funcionó»).
+  const pos = soloMuerta ? pos0.filter(funciona) : pos0;
+  const neg = soloMuerta ? neg0.filter(r => r.muerta.k === "nulo") : neg0;
 
   el.append(h("nav", {class: "crumbs small"},
     h("a", {href: Atlas.route.href("lineas", linea)}, "← Matriz de " + (L ? L.nombre : linea))));
@@ -201,37 +245,61 @@ function render(el, linea, res, highlight, soloMuerta) {
   el.append(h("div", {class: "line-chips scroller pv-res"}, resWith.map(x =>
     h("a", {class: "chip", "aria-pressed": String(x.id === res), href: Atlas.route.href("lineas", linea, {res: x.id})}, x.nombre_corto || x.nombre))));
 
-  if (!rows.length) { el.append(h("p", {class: "muted"}, "Ninguna evidencia curada para este resultado. No significa que nadie lo consiga: no está curado.")); return; }
+  const nAparte = rows.mezcla.length + rows.asociacion.length;
+  if (!rows.length && !nAparte) { el.append(h("p", {class: "muted"}, "Ninguna evidencia curada para este resultado. No significa que nadie lo consiga: es un hueco de curación.")); return; }
 
-  // resumen en una línea, solo con recuentos
-  const nEsp = new Set(pos.map(r => r.especie)).size, nCepa = pos.filter(r => r.cepa).length;
-  const conMec = pos.filter(r => r.clases.length).length, muertas = pos.filter(r => r.muerta.k === "si" || r.muerta.k === "frac").length;
+  // frase de recuento (siempre sobre todo el resultado, con o sin filtro)
+  const nEsp = new Set(pos0.map(r => r.especie)).size, nCepa = pos0.filter(r => r.cepa).length;
+  const conMec = pos0.filter(r => r.clases.length).length;
+  const nSi = pos0.filter(r => r.muerta.k === "si").length, nFrac = pos0.filter(r => r.muerta.k === "frac").length;
+  const nNulo = rows.filter(r => r.muerta.k === "nulo").length;
+  const aparte = [rows.mezcla.length ? rows.mezcla.length + " en mezcla de cepas" : "", rows.asociacion.length ? rows.asociacion.length + (rows.asociacion.length === 1 ? " asociación" : " asociaciones") : ""].filter(Boolean);
   el.append(h("p", {class: "pv-lede"},
-    h("b", {}, pos.length + (pos.length === 1 ? " microorganismo" : " microorganismos")), " con resultado a favor (",
-    nCepa + " a nivel de cepa, " + (pos.length - nCepa) + " solo de especie; " + nEsp + (nEsp === 1 ? " especie" : " especies") + "). ",
-    rows.some(r => r.curado) ? ["Mecanismo con evidencia en ", h("b", {}, String(conMec)), ". "] : "Mecanismo: sin curar en estos datos. ", "Probado con célula muerta o fracción en ", h("b", {}, String(muertas)), ".",
-    neg.length ? " " + neg.length + " sin efecto o en contra." : ""));
+    h("b", {}, pos0.length + (pos0.length === 1 ? " microorganismo" : " microorganismos")), " con resultado a favor (",
+    [nCepa + " a nivel de cepa", pos0.length - nCepa ? (pos0.length - nCepa) + " solo de especie" : ""].filter(Boolean).join(", ") + "; " + nEsp + (nEsp === 1 ? " especie" : " especies") + "). ",
+    rows.some(r => r.curado) ? ["Mecanismo con evidencia en ", h("b", {}, String(conMec)), ". "] : "Mecanismo: sin curar en estos datos. ",
+    nSi + nFrac ? ["Funciona con célula muerta: ", h("b", {}, String(nSi)), " con célula inactivada"].concat(nFrac ? [" y ", h("b", {}, String(nFrac)), " con fracción"] : [])
+      : "Ninguno probado con célula muerta y a favor",
+    nNulo ? "; " + nNulo + " probada" + (nNulo === 1 ? "" : "s") + " muerta" + (nNulo === 1 ? "" : "s") + " sin efecto" : "", ".",
+    neg0.length ? " " + neg0.length + " sin efecto o en contra." : "",
+    aparte.length ? " No cuentan: " + aparte.join(" y ") + "." : ""));
 
-  // leyenda de familias con recuento (solo las presentes + desconocido)
-  const cnt = {}; pos.forEach(r => r.familias.forEach(f => { cnt[f] = (cnt[f] || 0) + 1; }));
-  const unk = pos.filter(r => !r.familias.length).length;
+  // leyenda de familias con recuento (solo las presentes + desconocido); «det. ?» entre paréntesis
+  const cnt = {}, cntU = {};
+  pos0.forEach(r => r.familias.forEach(f => { cnt[f] = (cnt[f] || 0) + 1; if (r.det === "desconocido" || r.propuesto) cntU[f] = (cntU[f] || 0) + 1; }));
+  const unk = pos0.filter(r => !r.familias.length).length;
   el.append(h("div", {class: "pv-legend"},
-    FAM_ORDEN.filter(f => cnt[f]).map(f => h("span", {title: FAM[f].que}, famDot(f, FAM[f].etq + " · " + cnt[f]))),
-    unk ? h("span", {class: "fam fam-unk"}, h("i", {"aria-hidden": "true"}), "Mecanismo desconocido · " + unk) : ""));
+    FAM_ORDEN.filter(f => cnt[f]).map(f => h("span", {title: FAM[f].que}, famDot(f, FAM[f].etq + " · " + cnt[f] + (cntU[f] ? " (" + cntU[f] + " det. ?)" : "")))),
+    unk ? h("span", {class: "fam fam-unk"}, h("i", {"aria-hidden": "true"}), "Mecanismo ? · " + unk) : ""));
 
-  const nMu = pos0.filter(r => r.muerta.k === "si" || r.muerta.k === "frac").length;
+  const nMu = pos0.filter(funciona).length;
   el.append(h("div", {class: "filters bar"}, h("a", {class: "switch", role: "switch", "aria-checked": String(!!soloMuerta),
     href: Atlas.route.href("lineas", linea, {res, s: highlight, muerta: soloMuerta ? null : "1"})}, h("i", {}),
     "Solo lo que funciona con célula muerta (" + nMu + ")")));
   if (pos.length) el.append(table(pos, highlight, "A favor"));
-  else el.append(h("p", {class: "muted"}, soloMuerta ? "Nadie con célula inactivada o fracción y resultado a favor en este resultado: no se ha probado o no funcionó (ver abajo)." : "Ningún resultado a favor curado."));
-  if (neg.length) el.append(h("h3", {class: "pv-h3"}, "Probado sin efecto o en contra"), table(neg, highlight, "Sin efecto"));
+  else el.append(h("p", {class: "pv-vacio"}, soloMuerta
+    ? "Ninguna fila con célula inactivada o fracción y resultado a favor: no se ha probado o no funcionó."
+    : "Ningún resultado a favor curado."));
+  if (neg.length) el.append(h("h3", {class: "pv-h3"}, soloMuerta ? "Probado con célula muerta, sin efecto" : "Probado sin efecto o en contra"), table(neg, highlight, "Sin efecto"));
+  if (soloMuerta) {
+    const ocultas = pos0.length - pos.length + neg0.length - neg.length + nAparte;
+    if (ocultas) el.append(h("p", {class: "small muted pv-oculto"}, "El filtro oculta " + ocultas + (ocultas === 1 ? " fila" : " filas") +
+      ": no se han probado con célula muerta (o la fuente no declara la forma), o no cuentan como efecto. No quiere decir que no funcionen."));
+  } else extraTables(el, rows, highlight);
 
-  el.append(h("p", {class: "pv-foot small muted"},
-    "Cada fila es la unidad que se ensayó: si el artículo no declara cepa, la fila es la especie y no se atribuye a ninguna cepa. ",
-    "«¿Funciona muerta?» sale del campo forma de las evidencias de esa fila: «No probada» quiere decir que nadie la ensayó inactivada, no que no funcione. ",
+  el.append(h("details", {class: "pv-foot small muted"}, h("summary", {}, "Cómo se lee esta tabla"),
+    h("p", {}, "Cada fila es la unidad que se ensayó: si el artículo no declara cepa, la fila es la especie y no se atribuye a ninguna cepa. ",
+    "«¿Funciona muerta?» sale de la forma y la dirección de las evidencias de esa fila: «No probada» quiere decir que nadie la ensayó inactivada, no que no funcione; una forma no declarada en la fuente cuenta como no probada. ",
     "El color dice la familia de mecanismo, no que esté resuelto: «determinante desconocido» = se ha visto cómo actúa (p. ej. impide la adhesión) pero no qué molécula o gen lo hace; «visto en CEL» = nivel del ensayo que muestra el mecanismo, que puede ser más bajo que el mejor nivel del efecto. ",
-    "Orden: primero el mejor nivel a favor. Genes: solo los nombrados en la evidencia, no los del genoma. Ausencia aquí = no curado en el atlas (corte " + (D.meta.fecha_corte || "?") + "), no incapacidad demostrada."));
+    "Un ensayo nulo, en contra o con resultado mixto de la misma unidad se cita en texto, sin color. Una mezcla de cepas no cuenta para ninguna de ellas, y una asociación (se observa, no se interviene) no cuenta como efecto: van aparte. ",
+    "Orden: primero el mejor nivel a favor. Genes: solo los nombrados en la evidencia, no los del genoma. Ausencia aquí = no curado en el atlas (corte " + (D.meta.fecha_corte || "?") + "), no incapacidad demostrada.")));
+}
+/** Secciones aparte, sin color y fuera de los recuentos: mezcla de cepas y solo asociación. Mismas columnas. */
+function extraTables(el, rows, highlight) {
+  if ((rows.mezcla || []).length) el.append(h("h3", {class: "pv-h3"}, "En mezcla de cepas", h("span", {class: "muted small"}, " · no cuenta para ninguna de ellas")),
+    table(rows.mezcla, highlight, "En mezcla"));
+  if ((rows.asociacion || []).length) el.append(h("h3", {class: "pv-h3"}, "Solo asociación", h("span", {class: "muted small"}, " · se observa, no se interviene: no cuenta como efecto")),
+    table(rows.asociacion, highlight, "Asociación"));
 }
 
 const isHl = (r, hl) => !!hl && (r.especie === hl || r.cepa === hl || r.key === hl);
@@ -241,14 +309,14 @@ function table(rows, highlight, cap) {
     h("thead", {}, h("tr", {}, ["Quién", "Mejor nivel", "Formas probadas", "¿Funciona muerta?", "Mecanismo", "Genes", "Fuentes"].map(x => h("th", {scope: "col"}, x)))));
   const tb = h("tbody", {});
   rows.forEach(r => {
-    const fam = r.familias[0] || "unk";
-    tb.append(h("tr", {class: "pv-row fam-row-" + fam + (isHl(r, highlight) ? " hl" : ""), id: "pv-" + r.key.replace(/[^\w-]/g, "_")},
+    const fam = r.grupo === "efecto" && r.aFavor ? (r.familias[0] || "unk") : "unk";
+    tb.append(h("tr", {class: "pv-row fam-row-" + fam + " pv-g-" + r.grupo + (isHl(r, highlight) ? " hl" : ""), id: "pv-" + r.key.replace(/[^\w-]/g, "-")},
       h("th", {scope: "row", "data-k": "Quién"}, quien(r)),
-      h("td", {"data-k": "Mejor nivel"}, h("div", {class: "pv-lv"}, level(r.nivel), h("small", {class: "muted"}, dirTxt(r.dirs)))),
-      h("td", {"data-k": "Formas probadas"}, r.formas.map(f => FORMA_ETQ[f] || f).join(", ")),
-      h("td", {"data-k": "¿Funciona muerta?"}, muertaCell(r.muerta)),
+      h("td", {"data-k": "Mejor nivel"}, h("div", {class: "pv-lv"}, level(r.nivel), h("small", {class: "muted"}, (r.grupo === "asociacion" ? "observado sin intervenir: " : "") + dirTxt(r.dirs)))),
+      h("td", {"data-k": "Formas probadas"}, r.formas.map(formaEtq).join(", ")),
+      h("td", {"data-k": "¿Funciona muerta?"}, r.grupo === "asociacion" ? h("span", {class: "muted"}, "no aplica: asociación, sin intervención") : muertaCell(r.muerta, r)),
       h("td", {"data-k": "Mecanismo"}, mecCell(r)),
-      h("td", {"data-k": "Genes"}, r.genes.length ? h("span", {class: "genes"}, r.genes.map(g => h("i", {}, g))) : h("span", {class: "muted"}, "—")),
+      h("td", {"data-k": "Genes", class: r.genes.length ? "" : "pv-vac"}, r.genes.length ? h("span", {class: "genes"}, r.genes.map(g => h("i", {}, g))) : h("span", {class: "muted", title: "ningún gen nombrado en la evidencia"}, "—")),
       h("td", {"data-k": "Fuentes"}, fuentes(r.evs))));
   });
   t.append(tb); wrap.append(t);
@@ -261,6 +329,13 @@ function fuentes(evs) {
   evs.forEach(e => { const k = e.ref || e.id; if (!by.has(k)) by.set(k, []); by.get(k).push(e.id); });
   return h("span", {class: "chips"}, [...by.values()].map(ids =>
     h("span", {class: "pv-src"}, U.sourceChip(ids[0]), ids.length > 1 ? h("small", {class: "muted", title: ids.length + " afirmaciones del mismo artículo"}, "×" + ids.length) : "")));
+}
+
+/** Lo mismo desde una lista de ids (líneas de ataque): agrupa por artículo; un id que no es evidencia va como chip suelto. */
+function fuentesIds(ids) {
+  const evs = (ids || []).map(id => D.raw.evidencias[id]).filter(Boolean);
+  const sueltos = (ids || []).filter(id => !D.raw.evidencias[id]);
+  return h("span", {class: "chips pv-fuentes"}, evs.length ? fuentes(evs) : "", sueltos.map(U.sourceChip));
 }
 
 /** Recuento de OTROS sujetos con resultado a favor para el mismo resultado (para el enlace «¿quién más?») */
@@ -295,7 +370,8 @@ function renderOutput(el, out, highlight) {
   el.append(h("div", {class: "line-chips scroller pv-res"}, [[out, v]].concat(otros).map(([k, x]) =>
     h("a", {class: "chip", "aria-pressed": String(k === out), href: Atlas.route.href("lineas", null, {out: k})}, x.etiqueta))));
   const vias = [...new Set(filas.filter(f => f.t.via !== "desconocida").map(f => f.t.via_etiqueta))];
-  el.append(h("p", {class: "pv-lede"}, h("b", {}, V.tipos_convergencia[v && v.tipo_convergencia] || ""), ". ",
+  const tc = V.tipos_convergencia[v && v.tipo_convergencia];
+  el.append(h("p", {class: "pv-lede"}, tc ? [h("b", {}, tc), ". "] : "",
     filas.length + " filas en " + new Set(filas.map(f => f.sp.slug)).size + " especies; vías identificadas: " + (vias.length ? vias.join(", ") : "ninguna") + ". ",
     "Misma molécula ≠ mismo efecto: el resultado (p. ej. frente a S. mutans) está en la matriz."));
   filas.sort((a, b) => (a.t.presente === "no") - (b.t.presente === "no") || (a.t.via === "desconocida") - (b.t.via === "desconocida") || a.sp.slug.localeCompare(b.sp.slug));
@@ -305,13 +381,13 @@ function renderOutput(el, out, highlight) {
     const evs = (t.fuentes || []).map(id => D.raw.evidencias[id]).filter(Boolean);
     const who = h("span", {class: "pv-who"}, h("a", {href: Atlas.route.href("especie", sp.slug)}, U.name(sp.slug)),
       t.cepas.length ? h("span", {}, ...t.cepas.flatMap((c, i) => [i ? ", " : "", h("a", {href: Atlas.route.href("cepa", c)}, (D.strain(c) || {}).nombre_corto || c)])) : "",
-      h("span", {class: "pv-scope"}, (ALC[t.alcance] || t.alcance) + " · " + (PRES[t.presente] || t.presente)));
+      h("span", {class: "pv-scope"}, etq(ALC, t.alcance) + " · " + etq(PRES, t.presente)));
     tb.append(h("tr", {class: "pv-row" + (highlight && sp.slug === highlight ? " hl" : "")},
       h("th", {scope: "row", "data-k": "Quién"}, who),
-      h("td", {"data-k": "Vía"}, h("div", {class: "pv-mec"}, h("span", {}, viaTxt(t)), h("small", {class: "muted"}, BASE2[t.base] || t.base))),
-      h("td", {"data-k": "Genes"}, t.genes.length ? h("span", {class: "genes"}, t.genes.map(g => h("i", {title: RESP[g.respaldo] || g.respaldo}, g.gen))) : h("span", {class: "muted"}, "—")),
+      h("td", {"data-k": "Vía"}, h("div", {class: "pv-mec"}, h("span", {}, viaTxt(t)), h("small", {class: "muted"}, etq(BASE2, t.base)))),
+      h("td", {"data-k": "Genes"}, t.genes.length ? h("span", {class: "genes"}, t.genes.map(g => h("i", {title: etq(RESP, g.respaldo)}, g.gen))) : h("span", {class: "muted"}, "—")),
       h("td", {"data-k": "Genoma público"}, genomaCell(t)),
-      h("td", {"data-k": "¿Funciona muerta?"}, evs.length ? muertaCell(muerta(evs)) : h("span", {class: "muted"}, "sin evidencia")),
+      h("td", {"data-k": "¿Funciona muerta?"}, evs.filter(cuenta).length ? muertaCell(muerta(evs.filter(cuenta))) : h("span", {class: "muted"}, evs.length ? "sin efecto propio (asociación o mezcla)" : "sin evidencia")),
       h("td", {"data-k": "Fuentes"}, evs.length ? fuentes(evs) : h("span", {class: "muted"}, t.alcance === "criterio_propio" ? "criterio propio" : "—"))));
   });
   wrap.append(h("table", {class: "pv"}, h("thead", {}, h("tr", {}, ["Quién", "Vía", "Genes", "Genoma público", "¿Funciona muerta?", "Fuentes"].map(x => h("th", {scope: "col"}, x)))), tb));
@@ -364,9 +440,10 @@ function renderQuery(el, q, highlight) {
     const rows = rowsFromEvs(E, lin, res);
     el.append(h("h3", {class: "pv-h3"}, (R ? R.nombre : res), h("span", {class: "muted small"}, " · " + (L ? L.nombre : lin) + " · "),
       h("a", {class: "small", href: Atlas.route.href("lineas", lin, {res, s: highlight})}, "todos los que lo consiguen →")));
-    el.append(table(rows, highlight, R ? R.nombre : res));
+    if (rows.length) el.append(table(rows, highlight, R ? R.nombre : res));
+    extraTables(el, rows, highlight);
   });
 }
 
-Atlas.pivot = {FAM, FAM_ORDEN, famOf, cellFamilies, cellMec, DET_TXT, rowsFor, rowsFromEvs, muerta, render, renderQuery, famDot, othersCount, renderOutput};
+Atlas.pivot = {FAM, FAM_ORDEN, famOf, cellFamilies, cellMec, DET_TXT, rowsFor, rowsFromEvs, muerta, muertaCell, cuenta, fuentesIds, render, renderQuery, famDot, othersCount, renderOutput};
 })();

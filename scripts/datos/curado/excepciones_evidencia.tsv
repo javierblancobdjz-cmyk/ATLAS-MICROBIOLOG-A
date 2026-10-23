@@ -1,0 +1,9 @@
+evidencia	campo	valor	justificacion
+akkermansia-muciniphila.ev021	clases	["uso_glicanos"]	El claim dice que CARECE de dominios de unión a moco: la coincidencia «unión a moco» es una negación, no adhesión
+lacticaseibacillus-rhamnosus.ev015	clases	["senalizacion_hospedador"]	«receptores GABA» son del hospedador (ratón), no producción bacteriana de GABA
+streptococcus-australis.ev003	clases	["interferencia_quorum"]	«bacteriocinas» se refiere a las de S. mutans (la diana), no a una bacteriocina de A12: lo que hace Sgc es apagar la señal CSP-ComDE
+streptococcus-australis.ev004	clases	["interferencia_quorum"]	Bloquea la vía de señalización XIP de S. mutans: el fenómeno (interferencia con la señal) está observado; el determinante no, porque el claim lo declara independiente de Sgc
+streptococcus-australis.ev004	ids	[]	La mención de Sgc es una exclusión («independiente de Sgc»): no es M33
+streptococcus-australis.ev004	genes	[]	Ídem: sgc aparece solo para excluirlo
+streptococcus-dentisani.ev001	clases	["desconocido"]	«bucoadhesivo» describe el vehículo (gel), no una adhesión de la bacteria
+streptococcus-dentisani.ev001	base	"sin_dato"	Ídem

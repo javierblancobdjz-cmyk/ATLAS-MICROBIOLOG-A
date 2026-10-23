@@ -14,6 +14,7 @@
   --ok:#2F7D62; --ok-soft:#E3F1EB;
   --warn:#94600F; --warn-mark:#B7791F; --warn-soft:#FBF1DF;     /* warn = texto; warn-mark = bordes/diana */
   --bad:#B4505E; --bad-soft:#F8E7EA;
+  --nd:#5F6E71; --nd-soft:#EEF2F1; --nd-line:#8A9799;                 /* no medido / desconocido / no probada: gris + borde discontinuo */
   --hatch-fg:#B4AEDC; --hatch-bg:#FFFFFF;
   /* tipografía */
   --serif:"Source Serif 4",Charter,"Bitstream Charter",Georgia,serif;
@@ -38,6 +39,7 @@
   --l1:#CEC8FF; --l2:#B4ABF4; --l3:#9F96E8; --l4:#8C83D6; --l5:#665EA6; --l6:#524C86;
   --l1-ink:#141B1E; --l2-ink:#141B1E; --l3-ink:#141B1E; --l4-ink:#141B1E; --l5-ink:#FFFFFF; --l6-ink:#FFFFFF;
   --ok:#6CC3A0; --ok-soft:#1D3830; --warn:#E2A84E; --warn-mark:#E2A84E; --warn-soft:#3A2F1C; --bad:#E58C98; --bad-soft:#3D2329;
+  --nd:#A3B0B0; --nd-soft:#212B2F; --nd-line:#6E7E83;
   --hatch-fg:#524C86; --hatch-bg:#1C2529;
   --sh-1:none; --sh-panel:-12px 0 32px rgba(0,0,0,.45); --sh-sheet:0 -12px 32px rgba(0,0,0,.5);}}
 :root[data-theme="dark"]{
@@ -47,6 +49,7 @@
   --l1:#CEC8FF; --l2:#B4ABF4; --l3:#9F96E8; --l4:#8C83D6; --l5:#665EA6; --l6:#524C86;
   --l1-ink:#141B1E; --l2-ink:#141B1E; --l3-ink:#141B1E; --l4-ink:#141B1E; --l5-ink:#FFFFFF; --l6-ink:#FFFFFF;
   --ok:#6CC3A0; --ok-soft:#1D3830; --warn:#E2A84E; --warn-mark:#E2A84E; --warn-soft:#3A2F1C; --bad:#E58C98; --bad-soft:#3D2329;
+  --nd:#A3B0B0; --nd-soft:#212B2F; --nd-line:#6E7E83;
   --hatch-fg:#524C86; --hatch-bg:#1C2529;
   --sh-1:none; --sh-panel:-12px 0 32px rgba(0,0,0,.45); --sh-sheet:0 -12px 32px rgba(0,0,0,.5);}
 

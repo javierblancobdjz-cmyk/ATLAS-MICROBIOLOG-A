@@ -1,0 +1,7 @@
+mecanismo	clase_descartada	veredicto	base	fuentes	motivo
+M35	bacteriocina	descartada	observado	ligilactobacillus-salivarius.ev011	CECT 5713 porta el clúster de Abp118 pero no se observó biosíntesis (deleción de 4 pb en abpK): no hay bacteriocina que explique el efecto
+M35	acido_h2o2	descartada	inferencia	ligilactobacillus-salivarius.ev013a,ligilactobacillus-salivarius.ev009	El efecto se da con célula inactivada por calor; el H2O2 y el ácido que CECT 5713 produce viva exigen metabolismo activo. Puede sumar en el producto vivo, no explica el inactivado
+M35	alcalinizacion_ads_ureasa	descartada	inferencia	ligilactobacillus-salivarius.ev013a	Ídem: ADS y ureasa son actividades metabólicas de célula viva
+M35	inmunomodulacion	descartada	inferencia	ligilactobacillus-salivarius.ev013a	La propiedad de M35 se mide en discos de hidroxiapatita con S. mutans, sin células del hospedador (modelo bioquímico): ningún receptor inmunitario puede mediarla. Se descarta para esta propiedad, no para el efecto en boca del piloto en voluntarios
+M35	senalizacion_hospedador	descartada	inferencia	ligilactobacillus-salivarius.ev013a	Ídem: sin células del hospedador en el ensayo con hidroxiapatita no hay vía del hospedador que intervenga. Se descarta para esta propiedad, no para el efecto en boca
+M35	interferencia_quorum	sin_dato	sin_dato		Nadie lo ha ensayado en CECT 5713: ni se descarta ni se apoya

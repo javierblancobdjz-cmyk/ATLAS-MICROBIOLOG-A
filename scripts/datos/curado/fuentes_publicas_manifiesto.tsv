@@ -1,0 +1,28 @@
+fichero	uso
+drive/INVENTARIO.md	inventario de la carpeta (procedencia y columnas): no lo lee ningún paso
+drive/abricate_hits_referencias.csv	leído por derivar_genomica.py
+drive/adolescentis_adhesion_conteos.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/adolescentis_metadatos_biosample.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/ani_matriz_referencias.csv	leído por derivar_genomica.py (universo de la ejecución skani de drive/: qué pares se cruzaron)
+drive/ani_pares_referencias.csv	leído por derivar_genomica.py
+drive/atlas_marcadores_definicion.csv	leído por derivar_genomica.py
+drive/atlas_marcadores_llamadas_referencias.csv	leído por derivar_genomica.py
+drive/bagel4_genes_cluster_referencias.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/bagel4_referencias_bacteriocinas.csv	leído por derivar_genomica.py
+drive/bagel4_referencias_clusters.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/bagel4_referencias_ncbi.csv	leído por derivar_genomica.py
+drive/checkm2_referencias.csv	leído por derivar_genomica.py
+drive/genomas_publicos.json	leído por derivar_genomica.py
+drive/inmunidad_proteinas_referencia_uniprot.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/referencias_material_tipo_ncbi.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/salivarius_bakta_hits_funcionales_referencias.csv	leído por derivar_genomica.py
+drive/salivarius_bakta_inventario_referencias.csv	leído por derivar_genomica.py
+drive/salivarius_bakta_matriz_presencia_referencias.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/salivarius_bakta_prevalencia_referencias.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/salivarius_diccionario_funcional_nivel1.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+drive/salivarius_genomas_priorizados.csv	referencia pública versionada: no la lee ningún paso del build; su ausencia también da FAIL (el repositorio queda incompleto)
+ncbi/INVENTARIO.md	inventario de la carpeta (procedencia y columnas): no lo lee ningún paso
+ncbi/ncbi_ani_pares.csv	leído por derivar_genomica.py
+ncbi/ncbi_genomas.csv	leído por derivar_genomica.py
+ncbi/ncbi_marcadores_llamadas.csv	leído por derivar_genomica.py
+ncbi/ncbi_validacion_pgap_vs_bakta.csv	leído por derivar_genomica.py

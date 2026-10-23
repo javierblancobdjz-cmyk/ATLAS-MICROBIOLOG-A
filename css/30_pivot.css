@@ -19,7 +19,11 @@
 .cell.c0{background:transparent;border:0;min-height:44px;cursor:default;position:relative}
 .cell.c0::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--line-strong)}
 .cell.cu,.cell.cm{flex-direction:column;gap:1px;text-decoration:none;color:var(--ink);line-height:1.15;min-height:44px}
-.cell.cu{background:var(--surface);border:1.5px solid var(--line-strong)}
+/* estado 2 · evidencia a favor, mecanismo sin identificar: gris discontinuo (token de «no medido»), nunca color */
+.cell.cu{background:var(--surface);border:1.5px dashed var(--line-strong)}
+/* no cuenta como efecto (solo asociación / solo mezcla): gris discontinuo sobre surface-2, texto apagado */
+.cell.cx{flex-direction:column;gap:1px;text-decoration:none;color:var(--ink-3);line-height:1.15;min-height:44px;background:var(--surface-2);border:1.5px dashed var(--line-strong);font-weight:400}
+.cell.cx .l2{font-weight:400;font-style:italic}
 .cell.cu .l2{color:var(--ink-3);font-weight:400}
 .cell.cm{border:0;border-left:5px solid var(--f);background:color-mix(in srgb,var(--f) var(--fam-mix),var(--surface))}
 .cell .l1{display:inline-flex;align-items:center;gap:4px}
@@ -28,15 +32,16 @@
 .fam-bg-exclusion{--f:var(--fam-exclusion)} .fam-bg-antagonismo{--f:var(--fam-antagonismo)}
 .fam-bg-hospedador{--f:var(--fam-hospedador)} .fam-bg-otro{--f:var(--fam-otro)}
 a.cell.neg{text-decoration:none}
-.mx-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:4px 0 10px;color:var(--ink-2)}
-.mx-legend>span{display:inline-flex;align-items:center;gap:6px}
+.mx-legend{display:flex;flex-direction:column;gap:6px;margin:4px 0 10px;color:var(--ink-2)}
+.mx-leg-row{display:flex;flex-wrap:wrap;gap:6px 16px}
+.mx-leg-row>span{display:inline-flex;align-items:center;gap:6px}
 .sw{display:inline-block;width:18px;height:14px;border-radius:3px;flex:none}
 .sw-none{background:transparent;border:1px dotted var(--line-strong)}
-.sw-unk{background:var(--surface);border:1.5px solid var(--line-strong)}
-.sw-exclusion{background:color-mix(in srgb,var(--fam-exclusion) var(--fam-mix),var(--surface));border-left:5px solid var(--fam-exclusion)}
-.sw-antagonismo{background:color-mix(in srgb,var(--fam-antagonismo) var(--fam-mix),var(--surface));border-left:5px solid var(--fam-antagonismo)}
-.sw-hospedador{background:color-mix(in srgb,var(--fam-hospedador) var(--fam-mix),var(--surface));border-left:5px solid var(--fam-hospedador)}
+.sw-unk{background:var(--surface);border:1.5px dashed var(--line-strong)}
+.sw-fam{background:color-mix(in srgb,var(--f) var(--fam-mix),var(--surface));border-left:5px solid var(--f)}
+.sw-fam.det-unk{background:color-mix(in srgb,var(--f) calc(var(--fam-mix) / 2),var(--surface))}
 .sw-neg{background:var(--bad-soft)}
+.sw-aso{background:var(--surface-2);border:1.5px dashed var(--line-strong)}
 .mx-empty{margin-top:8px}
 
 /* ---------- pivote ---------- */
@@ -49,7 +54,7 @@ a.cell.neg{text-decoration:none}
 .fam i{width:12px;height:12px;border-radius:3px;background:var(--fc);flex:none}
 .fam-exclusion{--fc:var(--fam-exclusion)} .fam-antagonismo{--fc:var(--fam-antagonismo)}
 .fam-hospedador{--fc:var(--fam-hospedador)} .fam-otro{--fc:var(--fam-otro)}
-.fam-unk i{background:transparent;border:1.5px solid var(--line-strong)}
+.fam-unk i{background:transparent;border:1.5px dashed var(--line-strong)}
 .pv-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
 table.pv{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
 table.pv thead th{text-align:left;font-weight:600;color:var(--ink-3);font-size:13px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
@@ -68,11 +73,13 @@ table.pv tr.hl>*{background:var(--accent-soft)}
 .pv-unk{color:var(--ink-3)}
 .pv-lv{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .pv-src{display:inline-flex;align-items:center;gap:3px}
-.mu{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+/* «¿Funciona muerta?» con tokens de estado: verde = sí (observado), rojo suave = probada sin efecto,
+   gris discontinuo = no probada / solo fermentado (ignorancia, nunca «No») */
+.mu{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;border-radius:var(--r-sm);padding:2px 8px;line-height:1.35;max-width:100%}
 .mu .ic{width:16px;height:16px}
-.mu-si,.mu-frac{color:var(--ok);font-weight:600}
-.mu-nulo{color:var(--bad)}
-.mu-np,.mu-ferm{color:var(--ink-3)}
+.mu-si,.mu-frac{color:var(--ok);background:var(--ok-soft);font-weight:600}
+.mu-nulo{color:var(--bad);background:var(--bad-soft)}
+.mu-np,.mu-ferm{color:var(--ink-3);border:1.5px dashed var(--line-strong);padding:1px 7px}
 .genes{display:flex;flex-wrap:wrap;gap:4px}
 .genes i{background:var(--surface-2);border-radius:4px;padding:0 6px}
 .pv .chips{display:flex;flex-wrap:wrap;gap:4px}
@@ -93,6 +100,7 @@ table.pv tr.hl>*{background:var(--accent-soft)}
   table.pv tbody th{grid-template-columns:1fr}
   table.pv tbody th::before{display:none}
   .cell .l2{font-size:12px}
+  table.pv td.pv-vac{display:none}   /* en tarjeta, la fila «Genes: —» no aporta: se omite (en escritorio la columna dice «—») */
 }
 /* E5: vía bajo el mecanismo y genoma público en el pivote por output */
 .pv-via{display:flex;flex-direction:column;gap:2px;margin-top:4px}
@@ -108,3 +116,21 @@ table.pv tr.hl>*{background:var(--accent-soft)}
 .mx-cola summary{cursor:pointer;color:var(--ink-2)}
 .mx-cola code{font-size:12px;overflow-wrap:anywhere}
 .mx-cola p{margin:4px 0;overflow-wrap:anywhere}
+
+/* v2 · otros ensayos de la misma unidad (nulo, en contra, resultado mixto): texto con fuente, sin color */
+.pv-mecw{display:flex;flex-direction:column;gap:2px}
+.pv-otros{display:flex;flex-direction:column;gap:4px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.pv-otros .pv-nul{margin:0;display:block;line-height:1.5}
+.pv-otros .pv-nul .ref{vertical-align:middle;margin-left:2px}
+.pv-otros .ref{min-height:28px}
+/* mezcla y asociación: fuera de los recuentos y sin color de familia */
+.pv-mz{color:var(--warn)}
+table.pv tr.pv-g-asociacion>*,table.pv tr.pv-g-mezcla>*{background:color-mix(in srgb,var(--surface-2) 55%,var(--surface))}
+.pv-vacio{padding:12px 14px;border:1.5px dashed var(--line-strong);border-radius:var(--r-md);color:var(--ink-2)}
+.pv-oculto{margin-top:8px}
+details.pv-foot>summary{cursor:pointer;color:var(--ink-2);padding:10px 0}
+details.pv-foot>p{margin-top:4px}
+/* líneas de ataque: tarjetas más anchas (las fuentes y el catálogo no caben en 300 px de columna) */
+.atk-card .chips{display:inline-flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.atk-card .ref{white-space:nowrap}
+.atk-card .mu{margin:0}

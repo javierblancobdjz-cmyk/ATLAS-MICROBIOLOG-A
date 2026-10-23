@@ -1,0 +1,62 @@
+$ scripts/datos/build_puerta_cepa.py --data scripts/datos/salidas/20261023/trabajo/data --salida-dir scripts/datos/salidas/20261023 --fecha 2026-10-23
+cepas: {'gcf_sin_abricate': 38, 'sin_accesion': 32, 'medido': 11, 'vinculo_sin_verificar': 1, 'no_aplica': 1} | celdas: {'cerrada': 24, 'no_medido': 110, 'abierta': 14, 'condicionada': 81, 'desconocida': 20} | vivo: {'cerrada': 12, 'abierta': 11, 'no_medido': 53, 'condicionada': 7} | seguridad especie: {'a_revisar': 11, 'sin_bloqueo': 15} | pendientes ABRicate: 38
+$ scripts/datos/generar_v12.py --cierre scripts/datos/salidas/20261023/trabajo/data
+cierre: puertas de cepa en 95 veredictos · 3 limitaciones
+$ scripts/datos/diferencias_v11_v12.py scripts/datos/data_v1.1 scripts/datos/salidas/20261023/trabajo/data scripts/datos/salidas/20261023/diferencias_v11_v12.tsv scripts/datos/salidas/20261023/resumen_diferencias_v11_v12.tsv
+/home/user/atlas-microbiolog-a/scripts/datos/salidas/20261023/diferencias_v11_v12.tsv 3815 filas
+tipo	fichero_o_cifra	regla_o_v11	n_o_v12
+filas	ataques.json	A-forma	33
+filas	ataques.json	A-mec	59
+filas	ataques.json	A-muerta	9
+filas	ataques.json	A-new	10
+filas	ataques.json	A-qa	4
+filas	catalogo.json	K-cls	7
+filas	catalogo.json	K-m35	1
+filas	catalogo.json	K-new	21
+filas	catalogo.json	K-ret	9
+filas	celdas.json	C-celda	7
+filas	celdas.json	C-recalc	808
+filas	cepas.json	S-cepa	1
+filas	especies.json	S-lista	3
+filas	especies.json	S-ret	3
+filas	evidencias.json	E-ajuste	4
+filas	evidencias.json	E-dir	8
+filas	evidencias.json	E-lote	6
+filas	evidencias.json	E-lote-contexto	1
+filas	evidencias.json	E-mec	204
+filas	evidencias.json	E-mezcla	1
+filas	evidencias.json	E-part	7
+filas	evidencias.json	E-rel	27
+filas	evidencias.json	E-ret	7
+filas	matriz.json	M-celda	3
+filas	matriz.json	M-estado	75
+filas	matriz.json	M-forma	351
+filas	matriz.json	M-mec	42
+filas	matriz.json	M-muerta	25
+filas	matriz.json	M-nuevo	1
+filas	matriz.json	M-recalc	78
+filas	meta.json	meta	1
+filas	refs.json	S-ref	7
+filas	vecinos.json	N-frase	719
+filas	vecinos.json	N-par	906
+filas	vecinos.json	N-res	160
+filas	veredictos.json	V-AF2	19
+filas	veredictos.json	V-puerta	162
+filas	veredictos.json	V12-C1	15
+filas	veredictos.json	V12-R2b	2
+filas	veredictos.json	V12-R2c	2
+filas	veredictos.json	V12-R3o	1
+filas	veredictos.json	V12-R3o·C1	1
+filas	veredictos_estado.json	V-est	5
+cifra	evidencias: registros con relacion null	233	0
+cifra	evidencias: direcciones fuera de {+,0,-,mixto} (tipo evidencia)	8	0
+cifra	matriz: celdas con las 3 formas iguales	130	12
+cifra	matriz: celdas «hueco_sin_mecanismo» con n>0	50	0
+cifra	veredictos: veredictos de especie/subgrupo sólida o prometedora con una sola cepa (C1)	15	0
+cifra	veredictos: valores de puertas.seguridad fuera de {sin_bloqueo,a_revisar,bloqueo,no_medido}	162	0
+cifra	vecinos: pares con eje resultado > 0 solo por líneas transversales (ecologia/tecnologia/seguridad)	139	0
+cifra	vecinos: frases «pero esta actúa» (sujeto invertido)	44	0
+cifra	vecinos: pares con eje genómico en la puntuación	1036	0
+cifra	vecinos: pares con frase impresa sin nada funcional compartido	754	0
+
+sha256_build de17ef455e799723fdbf4d9bc091e41e15bf639ab5f2608a77d7962abec014d2

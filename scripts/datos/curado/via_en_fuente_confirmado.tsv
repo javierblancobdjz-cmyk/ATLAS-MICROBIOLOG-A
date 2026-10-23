@@ -1,0 +1,16 @@
+especie	rasgo	via	confirmado	cita_literal_claim_es	nota
+akkermansia-muciniphila	degradacion_mucina	glicosidasas_mucina	si	genes candidatos a mucinasa	nombra la clase de enzima, como predicción genómica (GEN-p): base prediccion_genomica
+bifidobacterium-adolescentis	gaba	glutamato_descarboxilasa	no		mide GABA en el 80 % de 15 cepas; no nombra gad ni la enzima. La vía la sostiene el genoma (GAD de E2), no la fuente
+bifidobacterium-bifidum	degradacion_mucina	glicosidasas_mucina	no		«dirigida a glicanos del hospedador como los de la mucina» nombra el SUSTRATO, no la enzima. En la ronda 1 la regex gl[ui]canos.*mucina lo daba como sí: falso positivo retirado
+bifidobacterium-dentium	gaba	glutamato_descarboxilasa	si	Los genes gad	
+bifidobacterium-longum	uso_hmo	cluster_hmo	si	Las regiones de utilización de HMO	ev016; ev015 añade «repertorio de glicosidasas y transportadores»
+lactiplantibacillus-plantarum	gaba	glutamato_descarboxilasa	si	Los genes gad	
+ligilactobacillus-salivarius	bsh	hidrolasa_sales_biliares	si	una hidrolasa de sales biliares	genoma de UCC118 (pMP118): porta, no mide actividad
+streptococcus-australis	alcalinizacion	arginina_deiminasa	si	sistema arginina-deiminasa (ADS)	
+streptococcus-australis	h2o2	piruvato_oxidasa	si	mediante la enzima piruvato oxidasa	
+streptococcus-australis	interferencia_quorum	proteasa_challisina	si	proteasa tipo challisina (Sgc)	
+streptococcus-oligofermentans	h2o2	lactato_oxidasa	si	el mutante lox pierde esa inhibición	causal (mutante)
+streptococcus-oligofermentans	h2o2	piruvato_oxidasa	si	el mutante de piruvato oxidasa (pox)	causal (mutante)
+streptococcus-oligofermentans	h2o2	aminoacido_oxidasa	si	el mutante aaoSo	causal (mutante)
+streptococcus-salivarius	degradacion_glucanos_placa	dextranasa	si	las enzimas dextranasa y ureasa	ev008
+streptococcus-salivarius	alcalinizacion	ureasa	si	las enzimas dextranasa y ureasa	ev008

@@ -1,0 +1,186 @@
+{
+ "fecha": "2026-10-23",
+ "base": "http://localhost:8765/",
+ "viewport": "390x844",
+ "herramienta": "tools/medir_tareas.cjs",
+ "tareas": {
+  "T1": {
+   "clics": 1,
+   "tecleos": 1,
+   "vistas": [
+    "#/",
+    "#/especie"
+   ],
+   "log": [
+    "teclea «oligofermentans»",
+    "clic 1: sugerencia S. oligofermentans → #/especie/streptococcus-oligofermentans"
+   ],
+   "errores_consola": [],
+   "destino": "#/especie/streptococcus-oligofermentans",
+   "que_hace_bien": {
+    "pantalla": 1,
+    "y": 723
+   },
+   "como_lo_hace": {
+    "pantalla": 2,
+    "y": 1186
+   },
+   "lox": {
+    "pantalla": 2,
+    "href": "#/lineas?gen=lox&s=streptococcus-oligofermentans"
+   },
+   "ficha_pantallas": 4.12
+  },
+  "T2": {
+   "clics": 3,
+   "tecleos": 1,
+   "vistas": [
+    "#/",
+    "#/cepa",
+    "#/lineas"
+   ],
+   "log": [
+    "teclea «5713»",
+    "clic 1: sugerencia CECT 5713 → #/cepa/ligilactobacillus-salivarius.st-cect-5713",
+    "clic 2: «Quién más consigue lo mismo: S. mutans» → #/lineas/oral?res=s_mutans&s=ligilactobacillus-salivarius.st-cect-5713",
+    "clic 3: interruptor «Solo lo que funciona con célula muerta» → #/lineas/oral?res=s_mutans&s=ligilactobacillus-salivarius.st-cect-5713&muerta=1"
+   ],
+   "errores_consola": [],
+   "enlace_pantalla": {
+    "pantalla": 1,
+    "y": 652
+   },
+   "destino": "#/lineas/oral?res=s_mutans&s=ligilactobacillus-salivarius.st-cect-5713",
+   "resaltada": "L. salivarius CECT 5713",
+   "filas_pivote": [
+    "L. paracasei DSMZ 16671",
+    "S. salivarius M18",
+    "L. salivarius CECT 5713",
+    "S. australis A12",
+    "Streptococcus oligofermentans",
+    "Streptococcus dentisani",
+    "S. dentisani 7746"
+   ],
+   "clics_sin_filtro": 2,
+   "con_filtro_muerta": {
+    "destino": "#/lineas/oral?res=s_mutans&s=ligilactobacillus-salivarius.st-cect-5713&muerta=1",
+    "filas": [
+     "L. paracasei DSMZ 16671 · Sí, célula inactivada (calor) ECA",
+     "L. salivarius CECT 5713 · Sí, célula inactivada (calor) OBS",
+     "Streptococcus dentisani · Sí, con fracción celular (no célula entera) CEL"
+    ],
+    "pantallas": 2.92
+   }
+  },
+  "T3": {
+   "clics": 2,
+   "tecleos": 1,
+   "vistas": [
+    "#/",
+    "#/cepa"
+   ],
+   "log": [
+    "teclea «5713»",
+    "clic 1: sugerencia CECT 5713 → #/cepa/ligilactobacillus-salivarius.st-cect-5713",
+    "clic 2: chip Posbiótico → #/cepa/ligilactobacillus-salivarius.st-cect-5713"
+   ],
+   "errores_consola": [],
+   "tira_pantalla": {
+    "pantalla": 1,
+    "y": 399
+   },
+   "chips": [
+    "Vivo 7 a favor de 10 cepa: abierta",
+    "Posbiótico 2 a favor cepa: condicionada criterio del atlas, no regulatorio",
+    "Fermentado sin evidencia cepa: desconocida"
+   ],
+   "chip_posbiotico": "Posbiótico 2 a favor cepa: condicionada criterio del atlas, no regulatorio",
+   "detalle": "Esta cepa:\ncondicionada especie: condicionada; en forma no viable la AMR informa pero no decide (criterio propio). Regla R-especie: hereda la ruta de la especie y comprueba el genoma de la cepa.\n\nCriterio del atlas, no regulatorio. Ninguna norma dice todavía cómo se evalúa una cepa inactivada: el atlas la deja «condicionada» porque en forma no viable la AMR informa pero no decide. Es una regla propia, no una evaluación de EFSA ni de la Comisión.\n\nRuta de la especie (contexto): condicionada. El QPS no abre automáticamente la célula inactivada. Sí hay un estudio con célula inactivada por calor en una cepa (CECT 5713: anti-adhesión de S. mutans a hidroxiapatita in vitro y piloto abierto sin gru",
+   "pestanas_visibles_390": [
+    [
+     "Inicio",
+     true
+    ],
+    [
+     "Especies",
+     true
+    ],
+    [
+     "Comparar",
+     true
+    ],
+    [
+     "Líneas",
+     true
+    ]
+   ]
+  }
+ },
+ "alturas": {
+  "#/cepa/ligilactobacillus-salivarius.st-cect-5713": {
+   "pantallas": 3.73,
+   "maximo": 5,
+   "details_abiertos": 0,
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "#/especie/ligilactobacillus-salivarius": {
+   "pantallas": 6.93,
+   "maximo": 8,
+   "details_abiertos": 0,
+   "scrollW": 390,
+   "clientW": 390
+  },
+  "#/lineas/oral?res=s_mutans&muerta=1": {
+   "pantallas": 2.86,
+   "maximo": 3,
+   "details_abiertos": 0,
+   "scrollW": 390,
+   "clientW": 390
+  }
+ },
+ "criterios": [
+  {
+   "id": "T1",
+   "criterio": "S. oligofermentans: qué hace bien y cómo, con lox visible, ≤ 2 clics",
+   "estado": "cumple",
+   "valor": "1 clics"
+  },
+  {
+   "id": "T2",
+   "criterio": "Desde CECT 5713, quién más actúa sobre S. mutans: ≤ 2 clics (+1 filtro de célula muerta)",
+   "estado": "cumple",
+   "valor": "2 + 1 clics"
+  },
+  {
+   "id": "T3",
+   "criterio": "De buscar «5713» a «Posbiótico: cepa condicionada · Salud oral: Prometedora · ruta condicionada», ≤ 2 clics",
+   "estado": "cumple",
+   "valor": "2 clics"
+  },
+  {
+   "id": "altura",
+   "criterio": "Ficha de CECT 5713 ≤ 5 pantallas a 390×844",
+   "estado": "cumple",
+   "valor": "3.73 pantallas · ancho 390/390"
+  },
+  {
+   "id": "altura",
+   "criterio": "Ficha de L. salivarius ≤ 8 pantallas a 390×844",
+   "estado": "cumple",
+   "valor": "6.93 pantallas · ancho 390/390"
+  },
+  {
+   "id": "altura",
+   "criterio": "Pivote de S. mutans con muerta=1 ≤ 3 pantallas a 390×844",
+   "estado": "cumple",
+   "valor": "2.86 pantallas · ancho 390/390"
+  },
+  {
+   "id": "consola",
+   "criterio": "0 errores de consola durante las medidas",
+   "estado": "cumple",
+   "valor": "0 errores"
+  }
+ ]
+}

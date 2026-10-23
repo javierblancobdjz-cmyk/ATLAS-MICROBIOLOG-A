@@ -1,0 +1,124 @@
+$ tools/test_contrato_v12.py scripts/datos/salidas/20261023/trabajo/data
+OK     P1-01 evidencias.json: 204 evidencias y 37 de contexto (hay 204 y 37)
+OK     P1-01 se integra E9_r2 y el lote sustituido E9_r1 no se lee
+OK     P1-01 paracasei.ev007 es contexto, sin línea ni resultado
+OK     P1-01 ev007 no aparece en ninguna celda, veredicto, ataque ni fuente de mecanismo
+OK     P1-01 paracasei.ev010: forma null y dirección mixto
+OK     P1-01 salivarius.ev015: alcance mezcla
+OK     P1-01 dentisani.ev005: forma componente
+OK     P1-01 0 registros con relacion null
+OK     P1-01 relacion de las evidencias en {intervencion, asociacion, in_vitro, prediccion}
+OK     P1-01 prausnitzii.ev004 = asociación y la celda prausnitzii|ein no la cuenta en direcciones (matriz y celdas)
+OK     P1-01 e: ninguna asociación ni mezcla suma dirección en ninguna celda (matriz y celdas, todas las líneas)
+OK     P1-01 todo estado de celda tiene etiqueta en catalogo.estado_celda_valores (nada crudo)
+OK     P1-01 una celda solo con asociaciones lleva su nivel de diseño, nunca un cero (matriz y celdas)
+OK     P1-01 L. iners en salud femenina: solo_asociacion con nivel OBS (no «0»)
+OK     P1-01 0 evidencias con dirección fuera de {+, 0, -, mixto}
+OK     P1-01 los 8 «nc» de v1.1 pasan a mixto con direccion_v11 = nc (8)
+OK     P1-01 matriz oral paracasei|s_mutans: mecanismo.evidencias = [ev009]
+OK     P1-01 paracasei|s_mutans: funciona_inactivada si, nivel ECA
+OK     P1-01 M41.fuentes contiene ev009; ev007 solo como contexto (M41.contexto)
+OK     P1-01/P1-02 ancla anti-herencia: el catálogo no atribuye a DSMZ16671 la resistencia a proteasa/autoclave ni el calcio de ev007
+OK     P1-01 «Qué hace bien» de CECT 5713 en mastitis cuenta ev016 como logro de la cepa y no ev015
+OK     P1-01 ev015 se muestra con la etiqueta «en mezcla con L. gasseri CECT 5714»
+OK     P1-01 la mezcla no cuenta en n_cepas_a_favor (celda CECT 5713 × mastitis)
+OK     P1-01 d: la mezcla ev015 no suma n, n_eca ni dirección ni a CECT 5713 ni a la especie (celdas.json)
+OK     P1-01 candidiasis_oral: cobertura sin_curar y cola_curacion con 8 PMID no verificada
+OK     P1-01 cobertura en todos los resultados del catálogo
+OK     P1-01 meta.limitaciones con 3 entradas redactadas
+OK     P1-01 la limitación genómica usa las cifras de genomica.json, no el «6-9»
+OK     P1-01 no existen busqueda.json ni perfil_cepa.json
+OK     P1-01 forma null: formas_ensayadas la excluye y la cuenta n_forma_no_declarada
+OK     P1-02 oral|salivarius|s_mutans: funciona_inactivada.texto = «Sí, célula inactivada (calor)»
+OK     P1-02 oral|salivarius|s_mutans: mecanismo.requiere_viabilidad = no
+OK     P1-02 0 celdas con mecanismo.funciona_inactivada
+OK     P1-02 0 celdas con estado hueco_sin_mecanismo
+OK     P1-02 0 celdas con las tres formas iguales cuando las evidencias tienen formas distintas
+OK     R1 estado_por_forma no copia el estado a formas no ensayadas
+OK     P1-02 funciona_inactivada.k solo en {si, frac, nulo, ferm, np}
+OK     P1-02 ninguna evidencia mixta en forma no viva (la paridad muerta() JS/Python no depende de cómo se lea «mixto»)
+OK     P1-02 las 33 líneas de ataque (+10 automáticas) llevan mecanismo_id, requiere_viabilidad y funciona_inactivada
+OK     P1-02 catálogo: 30 mecanismos, sin los 9 que eran formas
+OK     P1-02 M20 «Producción de butirato»; BSH fuera del catálogo
+OK     P1-02 exclusion_patogeno separada de adhesion_hospedador; interferencia_quorum como clase
+OK     P1-02 catálogo con clases, bases, determinantes y valores de ¿funciona muerta?
+OK     P1-02 toda línea de candidatos con base hipótesis tiene lo_refutaria
+OK     P1-02 M35 tiene 5 descartadas, cada una descartada de verdad, con base observado o inferencia, fuente y motivo
+OK     P1-02 ninguna descartada de M35 es a la vez su hipótesis rival (componente no proteico) ni su propia clase
+OK     P1-02 M35 con 2 candidatos rivales: proteína ADH01 grande y componente no proteico
+OK     P1-02 sin recuentos escritos a mano («1 de 197») en el catálogo
+OK     E1·3 ev013a: exclusión del patógeno · fenómeno observado · determinante desconocido
+OK     E1·3 el mecanismo de la celda CECT 5713 × S. mutans cuelga de ev013a
+OK     E1·2 todas las clases de evidencia están en el vocabulario
+OK     E1·6 toda evidencia de bacteriocina lleva subclase (o sin_clasificar)
+OK     P1-02/P1-06 0 «mecanismo identificado» con determinante desconocido (vecinos y catálogo)
+OK     P1-04 especies.json: CECT 5713 no figura en rasgos[bacteriocina].cepas de L. salivarius
+OK     P1-04 CECT 5713 está en cepas_en_contra con ev011
+OK     P1-04 toda cepa de rasgo.cepas tiene al menos una evidencia «+» de ese rasgo
+OK     P1-04 rasgos: el genoma nunca sube ni sustituye el fenotipo curado (porta ≠ produce); GABA de L. plantarum y B. dentium sigue «variable_cepa» ([])
+OK     P1-04 exactamente 11 cepas con puerta «vivo» abierta, todas con genoma medido (11)
+OK     P1-04 P. freudenreichii ×3 y S. cerevisiae CNCM I-745: no medido (calificación QPS sin verificar)
+OK     P1-04 DSMZ 16671: puerta de genoma sin_accesion
+OK     P1-04 puertas.regulatorio de los 95 veredictos de cepa = puerta_cepa (normalizado en el generador, no en la UI)
+OK     P1-04 veredicto CECT 5713 · oral · posbiótico = prometedora (sobre ev013a)
+OK     P1-04 CECT 5713 posbiótico: puerta de cepa condicionada
+OK     P1-04 veredicto de la especie L. salivarius oral posbiótico: especulativa · una sola cepa
+OK     R1 veredictos_estado con vocabulario cerrado
+OK     E1·7 puertas.seguridad normalizada
+OK     E1·4 C1: ningún veredicto de especie/subgrupo sólido o prometedor con una sola cepa (0)
+OK     P1-05 CECT 5713: BSH = I, SIALIDASA = I, ABP118 = P, LOX = A
+OK     P1-05 CECT 5713: produccion.ABP118 = porta_no_produce con ev011
+OK     P1-05 CECT 5713: refutado_en_ensayo.SIALIDASA.pmid = 16843562
+OK     P1-05 L. salivarius BSH {n: 15, i: 2, N: 17, sin_resolver}
+OK     P1-05 L. salivarius ABP118 10/17 variable_cepa
+OK     P1-05 NISINA en L. lactis subsp. lactis 3/10
+OK     P1-05 caso E3: UCC118 porta_y_produce
+OK     P1-05 caso E3: KF147 no_porta con restos_locus que contiene nisI
+OK     P1-05 caso E3: AR809 porta_sin_ensayo
+OK     P1-05 superficie de CECT 5713: mucbp_grande_pb 8187, eps_glicosiltransferasas_n 7, eps_polisacarido_n 4, dlt_n 4
+OK     P1-05 descartes_declarados {lspA_falso_positivo: 17}
+OK     P1-05 superficie de genomica.json = K4 r2 de E4 recalculado: 0 diferencias en 17 filas
+OK     P1-05 15 marcadores, ninguno VIT, IMM o BGL
+OK     P1-05 0 llamadas «parcial» contadas como P (0)
+OK     P1-05 DSMZ 16671 y PS2 sin genoma vinculado: el bloque dice «no medido», nunca «ausente»
+OK     P1-05 NCBI: las llamadas PGAP solo entran en marcadores fiables sobre PGAP
+OK     P1-05 NCBI: «no evaluable con la anotación de NCBI» (640 llamadas) solo en marcadores poco fiables, publicado NM + no_evaluable (nunca ausente ni código crudo)
+OK     P1-05 producción: estados con etiqueta en estados_produccion; no evaluable = no_medido con motivo
+OK     P1-05 anotador real: AMR_ADQ y PLASMIDO = ABRicate, nunca «Bakta»
+OK     P1-05 genomas[acc].anotacion = anotación real de los marcadores génicos (B. dentium sin «Bakta»)
+OK     P1-05 ANI difiere_en: nunca sobre un indeterminado (I)
+OK     P1-05 L. lactis ATCC 19435 = DSM 20481 (NCBI sin subespecie) se compara con subsp. lactis, con nota
+OK     P1-05 n/N: NE y NM fuera del denominador
+OK     P1-05 NCBI: 16 cepas vinculadas por nombre/depósito/cepa tipo con «vinculada por nombre: verificar» (16)
+OK     P1-04/P1-05 una fuente por dato: las 16 cepas vinculadas por nombre llevan el mismo GCF_ en puerta_cepa y en genomica (no «sin accesión»)
+OK     P1-05 ANI NCBI (pyskani) en ani_top3, con la nota «parentesco genómico, no actividad»
+OK     P1-05 tabla de cobertura recalculada sobre este build
+OK     P1-06 0 frases «pero esta actúa»
+OK     P1-06 0 pares con frase sin nada funcional compartido
+OK     P1-06 0 pares con eje genómico (3 ejes)
+OK     P1-06 0 etiquetas «mismo rasgo» (lactato/acetato de criterio propio fuera)
+OK     P1-06 ningún rasgo compartido de criterio propio
+OK     P1-06 vecinos de CECT 5713: DSM 20555, Ls-33 y UCC118 sin frase, «solo parecido taxonómico»
+OK     P1-06 PS2 queda por delante de DSM 20555
+OK     P1-06 «mismo mecanismo» solo si comparten clase para el mismo resultado
+OK     E1·5 denominador = suma de todos los pesos (0,85)
+OK     UX sin guion bajo en las frases de vecinos
+OK     P1-05 ANI: todo par de la misma especie sin valor está declarado como no cruzado (0 sin declarar)
+OK     P1-05 ANI: la nota dice si hay pares sin cruzar
+OK     P1-05 BAGEL4 visible en herramientas de todo genoma con BAGEL4
+OK     P1-05 ningún genoma con resultados sale sin anotación visible
+OK     P1-05 cobertura.no_medido_en_publicos suma 226 genomas con llamadas en cada fila
+OK     P1-05 toda lectura de taxón tiene etiqueta legible en lecturas_etiqueta
+OK     P1-04 una cepa vinculada por nombre nunca cuenta su genoma como medido
+OK     P1-04 el motivo de toda cepa vinculada por nombre nombra su GCF_
+OK     P1-02 seguridad: toda celda con señal de riesgo la lleva en alguna forma (estado_por_forma coherente)
+OK     P1-06 eje funcional: rasgos compartidos solo con base causal u observado en los dos lados (0)
+OK     P1-06 ningún chip de vecinos cita un registro de contexto
+OK     UX «Qué falta» de ataques sin códigos crudos
+OK     P1-01 control_publico revisa TODO el repositorio (también salidas/ versionadas) y nunca imprime el código
+OK     P1-01 si falta cualquier CSV de fuentes_publicas (aunque ningún paso lo lea), genómica da FAIL y no escribe nada
+
+0 fallos
+$ tools/test_via_en_fuente.py --data scripts/datos/salidas/20261023/trabajo/data --curado scripts/datos/curado
+filas de rasgo: 40 | vía identificada: 15 (sí confirmadas: 13, no: 2) | vía desconocida: 25
+OK

@@ -1,0 +1,27 @@
+accion	id	detalle
+lote_evidencia	lacticaseibacillus-paracasei.ev008	E9_r2_20261023
+lote_evidencia	lacticaseibacillus-paracasei.ev009	E9_r2_20261023
+lote_evidencia	lacticaseibacillus-paracasei.ev010	E9_r2_20261023
+lote_evidencia	ligilactobacillus-salivarius.ev015	E9_r2_20261023
+lote_evidencia	ligilactobacillus-salivarius.ev016	E9_r2_20261023
+lote_evidencia	ligilactobacillus-salivarius.ev017	E9_r2_20261023
+lote_contexto	lacticaseibacillus-paracasei.ev007	E9_r2_20261023
+lote_cepa	lacticaseibacillus-paracasei.st-dsmz16671	E9_r2_20261023
+particion	ligilactobacillus-salivarius.ev013	"[""ligilactobacillus-salivarius.ev013a"", ""ligilactobacillus-salivarius.ev013b""]"
+ajuste	ligilactobacillus-salivarius.ev008	linea
+ajuste	ligilactobacillus-salivarius.ev008	resultado
+ajuste_ya_en_fuente	lacticaseibacillus-paracasei.ev007	inactivacion_metodo
+ajuste_ya_en_fuente	lacticaseibacillus-paracasei.ev008	inactivacion_metodo
+ajuste_ya_en_fuente	lacticaseibacillus-paracasei.ev009	inactivacion_metodo
+ajuste	streptococcus-dentisani.ev005	forma
+ajuste	ligilactobacillus-salivarius.ev015	etiqueta_mezcla
+direccion_nc_a_mixto	bifidobacterium-adolescentis.ev010	nc -> mixto
+direccion_nc_a_mixto	bifidobacterium-adolescentis.ev014	nc -> mixto
+direccion_nc_a_mixto	bifidobacterium-breve.ev002	nc -> mixto
+direccion_nc_a_mixto	bifidobacterium-longum.ev006	nc -> mixto
+direccion_nc_a_mixto	lactobacillus-crispatus.ev002	nc -> mixto
+direccion_nc_a_mixto	lactobacillus-iners.ev004	nc -> mixto
+direccion_nc_a_mixto	ligilactobacillus-salivarius.ev014	nc -> mixto
+direccion_nc_a_mixto	streptococcus-salivarius.ev004	nc -> mixto
+cola	oral|candidiasis_oral	E9_r2_20261023: 8 PMID
+cola_huerfana	mastitis_animal_si_se_crea_el_resultado	E9_r2_20261023: la clave no es un id de resultado del catálogo

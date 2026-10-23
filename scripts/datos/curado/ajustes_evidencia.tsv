@@ -1,0 +1,8 @@
+evidencia	campo	valor_nuevo	autor	justificacion
+ligilactobacillus-salivarius.ev008	linea	"ecologia"	E9	Adhesión a Caco-2/HT-29, sin aminas biógenas y sin degradar mucina (PMID 16843562): describe un rasgo funcional de la cepa, no un resultado de barrera intestinal. En v1.1 hacía aparecer a CECT 5713 con «Barrera intestinal» a favor y la emparejaba con GG en vecinos por ese resultado.
+ligilactobacillus-salivarius.ev008	resultado	"rasgo_funcional"	E9	Ídem: resultado transversal (ecologia/rasgo_funcional), que no cuenta como línea de producto.
+lacticaseibacillus-paracasei.ev007	inactivacion_metodo	"calor"	E1	El abstract (PMID 20042742) caracteriza la coagregación como resistente al tratamiento térmico (autoclave): es lo que permite leer la fila como «funciona muerta»
+lacticaseibacillus-paracasei.ev008	inactivacion_metodo	"calor"	E1	El abstract (PMID 20519491) dice «heat-killed DSMZ16671»
+lacticaseibacillus-paracasei.ev009	inactivacion_metodo	"calor"	E1	El abstract (PMID 24273614) dice «heat-killed DSMZ16671 (pro-t-action)»
+streptococcus-dentisani.ev005	forma	"componente"	E9	El claim (PMID 30918216) mide el SOBRENADANTE de S. dentisani, no la celula viva: es una fraccion libre de celulas, forma=componente (posbiotico), no vivo. Reportado por E8; cae en mi terreno de curacion de forma. Con esto el pivote de s_mutans no cuenta a dentisani como 'funciona viva' por un ensayo que era de sobrenadante.
+ligilactobacillus-salivarius.ev015	etiqueta_mezcla	"en mezcla con L. gasseri CECT 5714"	E9	La intervención del ECA (PMID 18539795) es CECT 5713 + L. gasseri CECT 5714 a partes iguales (limite_declarado del lote E9_r2): el efecto no es atribuible a CECT 5713 en solitario. Etiqueta que acompaña a la evidencia donde se muestre.

@@ -1,20 +1,18 @@
 ;(function(){
 /* 90_boot.js · P1 núcleo. Monta barra superior, pestañas, Inicio, panel de cita (hoja/lateral) y bandeja; arranca el router. */
 const {h, icon, level, sources, link, name, esc} = Atlas.ui;
-/* E7: cuatro pestañas caben a 390 px; Biblioteca y Sobre los datos bajan al pie; la pestaña Pregunta se funde en la ficha. */
+/* Cuatro pestañas caben a 390 px; Biblioteca y Sobre los datos bajan al pie. v2: no hay pestaña Pregunta (la tira de formas de la ficha la sustituye). */
 const TABS = [["inicio", "Inicio"], ["especies", "Especies"], ["comparar", "Comparar"], ["lineas", "Líneas"]];
 const FOOT = [["biblioteca", "Biblioteca"], ["datos", "Sobre los datos"]];
 
-/* Enlaces antiguos #/pregunta?b=…&f=… → ficha de la especie o cepa (la tira de formas responde lo mismo) */
+/* v2 · «Qué se elimina»: el modo pregunta (50_question.js) ya no existe. Los enlaces antiguos #/pregunta?b=…&f=… van a la
+   ficha de la especie o cepa, cuya tira «¿En qué forma?» responde lo mismo; sin sujeto, a la lista de especies. Sin pantalla propia. */
 Atlas.registerView({route: "pregunta", tab: "especies", render(el, r) {
-  const b = r.query.b, res = b && Atlas.data.resolve(b);
-  if (res) { location.replace(Atlas.route.href(res.tipo === "cepa" ? "cepa" : "especie", res.tipo === "subgrupo" ? res.especie : b)); return; }
-  el.append(h("h1", {}, "La pregunta de producto vive ahora en cada ficha"),
-    h("p", {}, "Abre una especie o cepa: bajo «Qué hace bien» verás la tira Vivo · Posbiótico · Fermentado con el veredicto de cada forma."),
-    h("a", {class: "btn pri", href: Atlas.route.href("especies")}, "Ir a especies"));
+  const b = r.query.b || r.param, res = b && Atlas.data.resolve(b);
+  location.replace(res ? Atlas.route.href(res.tipo === "cepa" ? "cepa" : "especie", res.tipo === "subgrupo" ? res.especie : b) : Atlas.route.href("especies"));
 }});
 
-/* E7 r2: el pivote es uno (Atlas.pivot de E8, ruta #/lineas). Los enlaces #/quien de la ronda 1 redirigen. */
+/* v2: el pivote es uno (Atlas.pivot, ruta #/lineas). #/quien (45_quien.js retirado) redirige a #/lineas con sus parámetros. */
 Atlas.registerView({route: "quien", tab: "lineas", render(el, r) {
   const q = Object.assign({}, r.query); delete q.de; if (r.query.de) q.s = r.query.de;
   let lin = null; if (r.param && r.param.includes("|")) { const [l, res] = r.param.split("|"); lin = l; q.res = res; }
@@ -35,10 +33,10 @@ Atlas.registerView({route: "inicio", tab: "inicio", cssClass: "v-home", render(e
 
   // Puertas rápidas
   const puertas = h("div", {class: "home-gates"},
-    gate("lineas", "Quién consigue cada resultado", "Matriz bacteria × resultado coloreada por mecanismo; toca un resultado para ver quién, con qué cepa, forma y si funciona muerta.", "target"),
+    gate("lineas", "Quién consigue cada resultado", "Matriz bacteria × resultado coloreada por mecanismo; toca una celda para ver quién lo comparte, con qué cepa, forma y si funciona muerta.", "target"),
     gate("comparar", "Comparar", "2–4 especies, subgrupos o cepas en paralelo.", "plus"),
     gate("especies", "Explorar especies", `${t.especies} especies, ${t.n2} con dossier completo.`, "search"));
-  el.append(puertas);
+  el.append(puertas, patrones());
 
   // Estado de los datos
   el.append(h("div", {class: "home-stats card"},
@@ -67,6 +65,34 @@ Atlas.registerView({route: "inicio", tab: "inicio", cssClass: "v-home", render(e
     h("h2", {}, "Especies con dossier"),
     h("div", {class: "dossiers"}, n2.map(s => dossierCard(s)))));
 }});
+
+/* Entradas por patrón (sin pantalla nueva: todas van al pivote único #/lineas). Se derivan de data/, nada escrito a mano:
+   - outputs con ≥ 2 productores curados (vocabulario_rasgos de E5), sin bacteriocinas, que no llevan enlace de convergencia;
+   - clases de mecanismo y genes nombrados en evidencias de líneas de producto, por número de evidencias que cuentan. */
+function patrones() {
+  const D = Atlas.data, cat = D.raw.catalogo, voc = (cat.vocabulario_rasgos || {}).rasgos || {};
+  const prod = new Set(D.lineas("producto").map(l => l.id));
+  const evs = Object.values(D.raw.evidencias).filter(e => e.tipo !== "contexto" && prod.has(e.linea) && e.relacion !== "asociacion" && e.alcance !== "mezcla" && e.mecanismo);
+  const top = (m, n) => [...m.entries()].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))).slice(0, n);
+  const outs = Object.entries(voc).filter(([, v]) => (v.productores || []).length >= 2 && v.tipo_convergencia && v.clase_mecanismo !== "bacteriocina")
+    .sort((a, b) => b[1].productores.length - a[1].productores.length || a[1].etiqueta.localeCompare(b[1].etiqueta)).slice(0, 6);
+  const cls = new Map(), genes = new Map();
+  evs.forEach(e => {
+    (e.mecanismo.clases || []).filter(c => c !== "no_aplica" && c !== "desconocido").forEach(c => cls.set(c, (cls.get(c) || 0) + 1));
+    (e.mecanismo.genes || []).forEach(g => genes.set(g, (genes.get(g) || 0) + 1));
+  });
+  const chip = (href, label, n, title) => h("a", {class: "chip pat-chip", href, title}, label, n != null ? h("small", {class: "pat-n"}, n) : "");
+  const row = (titulo, kids) => kids.length ? h("div", {class: "pat-row"}, h("b", {class: "pat-h"}, titulo), h("span", {class: "chips"}, kids)) : "";
+  const P = Atlas.pivot, dot = c => { const f = P && P.famOf && P.famOf(c); return f ? P.famDot(f, "") : ""; };
+  return h("section", {class: "home-pat card"},
+    h("h2", {}, "Bucea por patrón"),
+    h("p", {class: "small muted"}, "Un output, un mecanismo o un gen: quién lo comparte, por qué vía y si funciona con célula muerta. Cada entrada abre el pivote de Líneas."),
+    row("Un output, varios productores (n.º de productores)", outs.map(([id, v]) => chip(Atlas.route.href("lineas", null, {out: id}), v.etiqueta, String(v.productores.length),
+      (cat.vocabulario_rasgos.tipos_convergencia || {})[v.tipo_convergencia] || ""))),
+    row("Por mecanismo (n.º de evidencias)", top(cls, 6).map(([c, n]) => chip(Atlas.route.href("lineas", null, {mec: c}), [dot(c), Atlas.ui.claseLabel(c).split(" (")[0]], String(n), n + " evidencias de líneas de producto con esta clase de mecanismo"))),
+    row("Por gen nombrado en el ensayo (n.º de evidencias)", top(genes, 6).map(([g, n]) => chip(Atlas.route.href("lineas", null, {gen: g}), h("i", {}, g), String(n), n + " evidencias nombran el gen en el ensayo (no es presencia en el genoma)"))),
+    h("p", {class: "small muted pat-tip"}, "¿Otro? Escribe en el buscador un gen, una molécula o un mecanismo (atajo: tecla /)."));
+}
 
 function gate(route, title, desc, ic) {
   return h("a", {class: "gate", href: Atlas.route.href(route)},
@@ -109,11 +135,18 @@ Atlas.bus.addEventListener("citation:open", ev => {
   lastFocus = document.activeElement;
   p.innerHTML = "";
   const v = e.verificacion || {};
+  const ctx = e.tipo === "contexto";
+  const REL = Object.fromEntries(((Atlas.data.raw.catalogo.relacion_valores) || []).map(x => [x.k || x.id, x.etiqueta || x.texto]));
+  const rel = e.relacion && e.relacion !== "no_aplica" ? (REL[e.relacion] || String(e.relacion).replace(/_/g, " ")) : null;
+  const forma = Atlas.ui.formaLabel(e.forma).toLowerCase() + (e.inactivacion_metodo ? " (" + String(e.inactivacion_metodo).replace(/_/g, " ") + ")" : "");
   const dl = h("dl", {},
-    dt("Nivel"), dd(level(e.nivel)),
-    dt("Alcance"), dd(Atlas.ui.scope(e)),
-    dt("Dirección"), dd(Atlas.ui.direction(e.direccion)),
-    dt("Modelo"), dd([e.modelo, e.poblacion, e.n && "n=" + e.n, e.dosis, e.duracion, e.via].filter(Boolean).join(" · ") || "—"),
+    dt("Nivel"), dd(ctx ? h("span", {class: "tag"}, "contexto") : level(e.nivel)),
+    dt("Alcance"), dd(Atlas.ui.scope(e), e.alcance === "mezcla" ? h("span", {class: "small muted"}, " · no cuenta para ninguna de las cepas") : ""),
+    ...(ctx ? [dt("Tipo"), dd("Contexto (revisión o cribado): no cuenta como evidencia de efecto")]
+            : [dt("Dirección"), dd(Atlas.ui.direction(e.direccion)),
+               dt("Forma"), dd(e.forma ? forma : h("span", {class: "nd-txt"}, "forma no declarada")),
+               rel ? dt("Relación") : "", rel ? dd(rel) : ""]),
+    dt("Modelo"), dd([lbl(MODELO, e.modelo), lbl(POB, e.poblacion), e.n && "n=" + e.n, e.dosis, e.duracion, lbl(VIA, e.via)].filter(Boolean).join(" · ") || "—"),
     dt("Verificación"), dd(h("span", {class: "mark " + (v.estado === "verificada" ? "ok" : "pend")},
       icon(v.estado === "verificada" ? "ok" : "pend"), v.estado === "verificada" ? "Verificada" : (v.estado || "pendiente")),
       v.coincidencia != null ? " · coincidencia " + v.coincidencia : "", e.auditada ? " · auditada" : ""));
@@ -125,6 +158,7 @@ Atlas.bus.addEventListener("citation:open", ev => {
   p.append(
     h("button", {type: "button", class: "btn cite-close", onclick: closeCite}, icon("x"), "Cerrar"),
     h("p", {class: "claim"}, e.claim_es),
+    Atlas.ui.mechLine(e),
     dl, biblio,
     h("div", {class: "acts"},
       frag ? h("a", {class: "btn pri", href: e.fragmento.url, target: "_blank", rel: "noopener"}, icon("ext"), "Ver la frase en PubMed")
@@ -137,6 +171,13 @@ Atlas.bus.addEventListener("citation:open", ev => {
   p.setAttribute("role", "dialog"); p.setAttribute("aria-modal", "true");
   const c = p.querySelector(".cite-close"); c && c.focus();
 });
+/* Vocabularios del panel: ningún código crudo en pantalla («no_aplica» no se pinta) */
+const MODELO = {humano: "humanos", in_silico: "in silico", bioquimico: "ensayo bioquímico", fermentacion_in_vitro: "fermentación in vitro",
+                raton: "ratón", rata: "rata", celulas: "células", c_elegans: "C. elegans", animal_produccion: "animal de producción"};
+const POB = {enferma_adulta: "adultos con enfermedad", sana_adulta: "adultos sanos", mayores: "mayores", ninos: "niños", mixta: "población mixta",
+             lactantes: "lactantes", embarazo_lactancia: "embarazo o lactancia", prematuros: "prematuros", uci_critica: "pacientes críticos (UCI)"};
+const VIA = {oral: "vía oral", vaginal: "vía vaginal", bucal: "vía bucal"};
+function lbl(map, k) { return !k || k === "no_aplica" ? null : (map[k] || String(k).replace(/_/g, " ")); }
 function dt(t) { return h("dt", {}, t); }
 function dd(...k) { return h("dd", {}, ...k); }
 function closeCite() {
@@ -157,7 +198,7 @@ document.addEventListener("click", e => {
   Atlas.initData(await Atlas.loadData());
   Atlas.tray._load();
   const top = document.getElementById("topbar");
-  const input = h("input", {type: "search", placeholder: "Especie, cepa, resultado, mecanismo o gen", "aria-label": "Buscar", autocomplete: "off"});
+  const input = h("input", {type: "search", placeholder: "Especie, cepa, resultado, mecanismo, gen o molécula", "aria-label": "Buscar", autocomplete: "off"});
   const list = h("ul", {class: "suggest", role: "listbox", hidden: true});
   top.append(
     h("a", {href: "#/", class: "brand"}, "Atlas"),

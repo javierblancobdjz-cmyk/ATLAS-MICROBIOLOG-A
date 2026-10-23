@@ -4,3 +4,6 @@ _privado/
 *.duckdb
 node_modules/
 .DS_Store
+__pycache__/
+*.pyc
+scripts/datos/salidas/*/trabajo/

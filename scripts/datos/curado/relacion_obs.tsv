@@ -1,0 +1,28 @@
+evidencia	relacion	justificacion
+akkermansia-muciniphila.ev001	asociacion	Prevalencia por FISH: observacion de abundancia, no intervencion
+bifidobacterium-adolescentis.ev001	asociacion	Menor abundancia en mayores en cohorte: asociacion edad
+bifidobacterium-adolescentis.ev014	asociacion	Abundancia en centenarios de Bama: asociacion
+bifidobacterium-adolescentis.ev015	asociacion	Predominio tras el destete en 441 japoneses: asociacion de edad
+bifidobacterium-breve.ev007	asociacion	Serie de casos de bacteriemia (evento adverso observado), no ensayo
+bifidobacterium-dentium.ev001	asociacion	Mas deteccion en mayores: asociacion de edad
+bifidobacterium-dentium.ev002	asociacion	Centenarios de Bama: asociacion
+bifidobacterium-longum.ev002	asociacion	Tasa de deteccion por edad: asociacion
+faecalibacterium-prausnitzii.ev004	asociacion	El filogrupo I baja en Crohn/CU/CCR: la bacteria ESCASEA en el enfermo, es asociacion, no un efecto +
+faecalibacterium-prausnitzii.ev006	asociacion	Asociacion con el indice de fragilidad reproducida en dos poblaciones
+faecalibacterium-prausnitzii.ev007	intervencion	EXL01 primer estudio en humanos, abierto de un brazo: intervencion open-label
+faecalibacterium-prausnitzii.ev008	intervencion	EXL01 tolerado, prueba de concepto: intervencion open-label
+faecalibacterium-prausnitzii.ev009	intervencion	Formulacion simbiotica tolerada en humanos: intervencion open-label
+lacticaseibacillus-rhamnosus.ev013	intervencion	Estudio pre-post con HN001 administrado: intervencion sin brazo control
+lacticaseibacillus-rhamnosus.ev021	asociacion	Vigilancia de bacteriemia en 5034 ninos: observacion de seguridad
+lactobacillus-crispatus.ev003	asociacion	Propiedades protectoras y estabilidad temporal: asociacion ecologica
+lactobacillus-crispatus.ev004	asociacion	Prevalencia de CST I: asociacion
+lactobacillus-iners.ev001	asociacion	Especie prevalente del microbioma vaginal: asociacion
+lactobacillus-iners.ev002	asociacion	Presente en vagina sana y en vaginosis: asociacion
+lactobacillus-iners.ev003	asociacion	Especie de transicion que aboca a BV: asociacion
+lactobacillus-iners.ev004	asociacion	Panel qPCR para predecir disbiosis: asociacion
+lactococcus-lactis.ev008	asociacion	Abundancia en 9445 metagenomas: asociacion
+saccharomyces-cerevisiae.ev002	asociacion	Serie de 108 fungemias (evento adverso observado), no ensayo
+saccharomyces-cerevisiae.ev003	asociacion	Serie de 10 fungemias: observacion de seguridad
+streptococcus-dentisani.ev004	asociacion	qPCR: mayor proporcion en ninos sin caries que con caries: asociacion
+ligilactobacillus-salivarius.ev013b	intervencion	Piloto abierto autocontrolado con enjuague: intervencion open-label sin grupo control
+ligilactobacillus-salivarius.ev014	intervencion	Administracion oral open-label sin control: intervencion open-label (no concluyente)

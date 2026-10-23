@@ -1,0 +1,41 @@
+especie	idx	rasgo_v11	nivel_v11	presente_v11	genes_v11	rasgo_v12	via	via_en_fuente	alcance_v12	presente_v12	presente_origen	cepas	genes_v12(respaldo)	genes_retirados	base	justificacion
+akkermansia-muciniphila	0	mucina	especie	si		degradacion_mucina	glicosidasas_mucina	si	especie	si	curado_v11				prediccion_genomica	ev021 (GEN-p) habla de genes candidatos a mucinasa: vía predicha, no medida
+akkermansia-muciniphila	1	propionato	subgrupo	variable_cepa		propionato	desconocida		subgrupo	variable_cepa	curado_v11				prediccion_genomica	ev020 solo dice que los filogrupos difieren; no nombra ruta
+bifidobacterium-adolescentis	0	gaba	especie	variable_cepa	gadB|gadC	gaba	glutamato_descarboxilasa	no	especie	variable_cepa	curado_v11		gadB(genoma_E2)	gadC	observado	ev008 mide GABA; gadB/gadC con respaldo genómico ACI01
+bifidobacterium-adolescentis	1	folato	especie	si		folato	desconocida		especie	si	curado_v11				observado	ev008 mide folato; no nombra genes. VIT02 no se usa (ver nota VIT)
+bifidobacterium-bifidum	0	mucina	especie	si		degradacion_mucina	glicosidasas_mucina	no	cepa	si	curado_v11	prl2010			prediccion_genomica	ev003 es GEN-p sobre PRL2010 (una cepa): el alcance se rebaja a cepa; HMO02 da n/N en especie
+bifidobacterium-dentium	0	gaba	especie	variable_cepa	gad	gaba	glutamato_descarboxilasa	si	especie	variable_cepa	curado_v11		gad(fuente)		observado	ev003 nombra genes gad en B. dentium
+bifidobacterium-longum	0	hmo	subgrupo	variable_cepa	clusters HMO|ureasa	uso_hmo	cluster_hmo	si	subgrupo	variable_cepa	curado_v11			clusters HMO|ureasa	prediccion_genomica	ev015/ev016 no mencionan ureasa: se retira «ureasa» de genes (crearía una falsa convergencia con S. salivarius M18)
+christensenella-minuta	0	otro	especie	si		lps_atipico	desconocida		especie	si	curado_v11				observado	componente estructural; sale de «otro»
+clostridium-butyricum	0	butirato	especie	si		butirato	desconocida		especie	si	curado_v11				prediccion_genomica	ev001 (revisión) dice «producción de butirato» sin ruta; M20 no puede afirmar la CoA-transferasa
+faecalibacterium-duncaniae	0	butirato	especie	si	but|buk	butirato	desconocida		especie	si	curado_v11			but|buk	contexto	ev005 (cribado in silico) no nombra genes; but/buk retirados de genes hasta curar
+faecalibacterium-prausnitzii	0	butirato	especie	si	but|buk	butirato	desconocida		especie	si	curado_v11			but|buk	contexto	ev013 (cribado in silico) no nombra genes; but/buk retirados de genes hasta curar
+lacticaseibacillus-rhamnosus	0	lactato	especie	si		lactato	desconocida		criterio_propio	si	curado_v11				criterio_propio	criterio propio (tipo fermentativo)
+lactiplantibacillus-plantarum	0	bacteriocina	subgrupo	variable_cepa	plnEF	bacteriocina	desconocida		subgrupo	variable_cepa	curado_v11		plnEF(pendiente_E3)		prediccion_genomica	clase y gen: E3 (plnEF en ev003)
+lactiplantibacillus-plantarum	1	gaba	especie	variable_cepa	gad	gaba	glutamato_descarboxilasa	si	especie	variable_cepa	curado_v11		gad(fuente)		prediccion_genomica	ev011 nombra genes gad
+lactiplantibacillus-plantarum	2	lactato	especie	si		lactato	desconocida		criterio_propio	si	curado_v11				criterio_propio	criterio propio
+lactobacillus-crispatus	0	lactato	especie	si		lactato	desconocida		criterio_propio	si	curado_v11				criterio_propio	criterio propio
+lactococcus-lactis	0	bacteriocina	cepa	variable_cepa	nisA	bacteriocina	desconocida		especie	variable_cepa	curado_v11		nisA(pendiente_E3)		prediccion_genomica	clase y gen: E3 (nisA en ev005)
+lactococcus-lactis	1	lactato	especie	si		lactato	desconocida		criterio_propio	si	curado_v11				criterio_propio	criterio propio
+ligilactobacillus-salivarius	0	bacteriocina	cepa	variable_cepa	abp118	bacteriocina	desconocida		cepa	variable_cepa	curado_v11	ucc118	abp118(pendiente_E3)		observado	clase y gen: E3 (Abp118)
+ligilactobacillus-salivarius	1	bsh	cepa	variable_cepa		bsh	hidrolasa_sales_biliares	si	cepa	variable_cepa	curado_v11	ucc118			prediccion_genomica	ev001 nombra «hidrolasa de sales biliares» en pMP118 de UCC118; SAL01 17/17 obliga a reescribir «variable_cepa»
+ligilactobacillus-salivarius	2	lactato	especie	si		lactato	desconocida		criterio_propio	si	curado_v11				criterio_propio	criterio propio
+ligilactobacillus-salivarius	3	acetato	cepa	si		acetato	desconocida		cepa	si	curado_v11	cect-5713			observado	ev009: se separa el H2O2 que estaba escondido en «acetato»
+ligilactobacillus-salivarius	3	acetato	cepa	si		h2o2	desconocida		cepa	si	curado_v11	cect-5713			observado	ev009 mide H2O2 en CECT 5713 y no nombra enzima; spxB está en 17/17 genomas, así que no explica por qué esta cepa
+ligilactobacillus-salivarius	4	mucina	cepa	no		degradacion_mucina	desconocida		cepa	no	curado_v11	cect-5713			observado	ev008: CECT 5713 NO degrada mucina (presente=no es dato)
+ligilactobacillus-salivarius	5	otro	cepa	si		adhesion_epitelio	desconocida		cepa	si	curado_v11	cect-5713			observado	ev008: adhesión a Caco-2/HT-29; determinante desconocido (E4)
+limosilactobacillus-reuteri	0	bacteriocina	especie	variable_cepa		reuterina	desconocida		criterio_propio	variable_cepa	curado_v11				criterio_propio	la reuterina no es bacteriocina; fuente = criterio propio
+propionibacterium-freudenreichii	0	vitamina_b12	especie	si		vitamina_b12	desconocida		especie	si	curado_v11				observado	ev004 mide B12 activa; no nombra genes
+propionibacterium-freudenreichii	1	vitamina_k2	cepa	variable_cepa		vitamina_k2	desconocida		cepa	variable_cepa	curado_v11	et-3			observado	ev005 mide menaquinona en ET-3
+propionibacterium-freudenreichii	2	propionato	especie	si		propionato	desconocida		cepa	si	curado_v11	et-3			observado	ev005 no menciona la vía del metilmalonil-CoA: esa frase es criterio propio
+streptococcus-australis	0	otro	cepa	si	arcA|arcB|arcC	alcalinizacion	arginina_deiminasa	si	cepa	si	curado_v11	a12	arcA(enzima_en_fuente)|arcB(enzima_en_fuente)|arcC(enzima_en_fuente)		observado	ev001 nombra ADS en A12
+streptococcus-australis	1	otro	cepa	si	spxB	h2o2	piruvato_oxidasa	si	cepa	si	curado_v11	a12	spxB(enzima_en_fuente)		observado	ev002 nombra piruvato oxidasa en A12
+streptococcus-australis	2	otro	cepa	si	sgc	interferencia_quorum	proteasa_challisina	si	cepa	si	curado_v11	a12	sgc(fuente)		observado	ev003 nombra Sgc
+streptococcus-dentisani	0	otro	especie	si	arcA|arcB|arcC	alcalinizacion	desconocida		especie	si	curado_v11		arcA(genoma_E2)|arcB(genoma_E2)|arcC(genoma_E2)		contexto	ev006 (revisión sistemática) solo dice «mayor alcalinidad salival»: el output está, la vía no
+streptococcus-dentisani	1	bacteriocina	cepa	si		bacteriocina	desconocida		cepa	si	curado_v11	7746			observado	clase y gen: E3
+streptococcus-oligofermentans	0	otro	especie	si	lox	h2o2	lactato_oxidasa	si	especie	si	curado_v11		lox(fuente)		causal	ev001: el mutante lox pierde la inhibición (causal)
+streptococcus-oligofermentans	1	otro	especie	si	spxB	h2o2	piruvato_oxidasa	si	especie	si	curado_v11		spxB(enzima_en_fuente)		causal	ev002: el mutante pox no inhibe (causal)
+streptococcus-oligofermentans	2	otro	especie	si	aaoSo	h2o2	aminoacido_oxidasa	si	especie	si	curado_v11		aaoSo(fuente)		causal	ev004: el mutante aaoSo inhibe mucho menos (causal sobre la inhibición; el H2O2 es química de la enzima)
+streptococcus-salivarius	0	bacteriocina	cepa	variable_cepa	salA2|sboB	bacteriocina	desconocida		cepa	variable_cepa	curado_v11	k12,m18	salA2(pendiente_E3)|sboB(pendiente_E3)		prediccion_genomica	clase y gen: E3
+streptococcus-salivarius	1	otro	cepa	variable_cepa	dexB	degradacion_glucanos_placa	dextranasa	si	cepa	variable_cepa	curado_v11	m18		dexB	observado	ev008 nombra dextranasa en M18; «dexB» no está en la fuente
+streptococcus-salivarius	2	otro	cepa	variable_cepa	ure	alcalinizacion	ureasa	si	cepa	variable_cepa	curado_v11	m18	ure(enzima_en_fuente)		observado	ev008 nombra ureasa en M18; «ure» no está en la fuente

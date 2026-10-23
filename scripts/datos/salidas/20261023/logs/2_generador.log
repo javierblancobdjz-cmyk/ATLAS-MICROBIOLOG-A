@@ -1,0 +1,5 @@
+$ scripts/datos/generar_v12.py --entrada scripts/datos/salidas/20261023/trabajo/entrada --salida scripts/datos/salidas/20261023/trabajo/data --hoy 2026-10-23 --trazas scripts/datos/salidas/20261023
+evidencias: 204 · contexto: 37 · con mecanismo: 60
+celdas matriz: 138 {'solo_asociacion': 12, 'linea_de_ataque': 30, 'preclinica_sin_mecanismo': 18, 'con_evidencia': 41, 'via_cerrada_o_replantear': 16, 'sin_resultado_a_favor': 2, 'sin_senal_de_riesgo': 9, 'senal_de_riesgo': 10}
+veredictos: 183 {'calculado': 177, 'sin_evidencia_en_forma': 207, 'no_calculado': 29, 'sin_resultado_a_favor': 5, 'calculado_v1.2': 6} · C1 aplicada a 15
+lotes: ['E9_r2_20261023'] · sustituidos: ['E9_r1_20261023']

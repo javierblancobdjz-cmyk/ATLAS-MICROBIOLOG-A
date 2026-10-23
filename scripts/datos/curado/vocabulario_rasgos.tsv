@@ -1,0 +1,34 @@
+tipo	id	etiqueta	grupo	output_de	genes_tipicos	mecanismo_id	que_mide	nota	clase_mecanismo	marcador_genomico_E2	marcador_define_via
+rasgo	lactato	Ácido láctico	fermentacion			acidificación por ácido láctico	criterio de clasificación fermentativa; no es diferencial dentro de la especie				
+rasgo	acetato	Acetato	fermentacion			acetato producido					
+rasgo	propionato	Propionato	fermentacion			propionato producido			metabolito		
+rasgo	butirato	Butirato	fermentacion		but|ptb|buk	M20	butirato producido	la ruta terminal difiere entre productores (CoA-transferasa frente a fosfotransbutirilasa-quinasa)	metabolito		
+rasgo	h2o2	Peróxido de hidrógeno	antagonismo		spxB|lox|aaoSo	M27|M28|M29	H2O2 producido (placa TMB/peroxidasa)	misma molécula por al menos tres enzimas distintas	acido_h2o2		
+rasgo	alcalinizacion	Alcalinización (amonio)	ph_oral		arcA|arcB|arcC	M30|M31	subida de pH / amonio	misma salida por dos sistemas sin homología (ADS frente a ureasa)	alcalinizacion_ads_ureasa		
+rasgo	gaba	GABA	metabolito_neuroactivo		gadB|gadC	M01	GABA en sobrenadante (HPLC)	mismo gen homólogo en todos los productores del atlas: no es convergencia	metabolito		
+rasgo	bsh	Desconjugación de sales biliares	bilis		bsh|cbh	M42*	precipitado en placa con taurodesoxicolato	familia de hidrolasas homóloga; la copia que varía entre cepas no se distingue con presencia/ausencia; M42 propuesto	enzima		
+rasgo	folato	Folato	vitamina			folato en sobrenadante	solo con fenotipo publicado; los marcadores VIT02 no se importan		metabolito		
+rasgo	vitamina_b12	Vitamina B12	vitamina			B12 activa (UHPLC-MS)	solo con fenotipo publicado; los marcadores VIT04 no se importan		metabolito		
+rasgo	vitamina_k2	Vitamina K2 (menaquinona)	vitamina			menaquinona medida	solo con fenotipo publicado; los marcadores VIT03 no se importan		metabolito		
+rasgo	degradacion_mucina	Degrada mucina	glicanos_hospedador		nanH|engBF	M40	crecimiento en mucina / degradación in vitro	presente=no es un dato (CECT 5713 no degrada), no un hueco	uso_glicanos		
+rasgo	uso_hmo	Usa oligosacáridos de leche humana	glicanos_hospedador			M39	crecimiento en 2'-FL/LNT		uso_glicanos		
+rasgo	degradacion_glucanos_placa	Degrada glucanos de la placa (dextrano)	ph_oral			M32	actividad dextranasa	un solo productor en el atlas	enzima		
+rasgo	interferencia_quorum	Interfiere la señal CSP de S. mutans	antagonismo		sgc	M33	degradación de CSP / bloqueo ComDE	un solo productor en el atlas	interferencia_quorum		
+rasgo	bacteriocina	Bacteriocina	antagonismo			M23|M24|M25|M26	actividad del sobrenadante neutralizado sensible a proteasa	la clase y el gen los define E3	bacteriocina		
+rasgo	reuterina	Reuterina (antimicrobiano no peptídico)	antagonismo				3-HPA a partir de glicerol	no es una bacteriocina: no es un péptido ribosómico	otro		
+rasgo	adhesion_epitelio	Adhesión a epitelio	adhesion				adhesión a Caco-2/HT-29	adhesión al hospedador (Caco-2), no exclusión del patógeno: no es M35 ni M41; determinante desconocido (lo define E4)	adhesion_hospedador		
+rasgo	lps_atipico	LPS de baja actividad proinflamatoria	superficie				activación NF-kB en macrófagos		inmunomodulacion		
+via	piruvato_oxidasa	Piruvato oxidasa (SpxB/Pox)		h2o2	spxB	M27				SPXB	si
+via	lactato_oxidasa	Lactato oxidasa (Lox)		h2o2	lox	M28		usa el lactato del competidor como sustrato		LOX	si
+via	aminoacido_oxidasa	L-aminoácido oxidasa (SO-LAAO)		h2o2	aaoSo	M29					
+via	arginina_deiminasa	Sistema arginina deiminasa (ADS)		alcalinizacion	arcA|arcB|arcC	M30				ADS	si
+via	ureasa	Ureasa		alcalinizacion	ure	M31					
+via	glutamato_descarboxilasa	Glutamato descarboxilasa (GAD)		gaba	gadB|gadC	M01				GAD	si
+via	hidrolasa_sales_biliares	Hidrolasa de sales biliares (BSH)		bsh	bsh|cbh	M42*		*M42 propuesto (M41 ya es la coagregación en el catálogo de E1)		BSH	si
+via	coa_transferasa_butirato	Butiril-CoA:acetato CoA-transferasa		butirato	but	M20					
+via	ptb_buk	Fosfotransbutirilasa + butirato quinasa		butirato	ptb|buk	M20					
+via	dextranasa	Dextranasa		degradacion_glucanos_placa		M32					
+via	proteasa_challisina	Proteasa tipo challisina (Sgc)		interferencia_quorum	sgc	M33					
+via	glicosidasas_mucina	Glicosidasas de mucina (sialidasa, endo-α-GalNAc-asa…)		degradacion_mucina	nanH|engBF	M40				SIALIDASA	no
+via	cluster_hmo	Clústeres de utilización de HMO (subsp. infantis)		uso_hmo		M39					
+via	desconocida	Vía no identificada en la fuente		*			*	hay output medido y la fuente no dice por qué gen/enzima			

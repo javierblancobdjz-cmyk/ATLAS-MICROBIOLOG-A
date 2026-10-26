@@ -15,7 +15,8 @@ Se actualiza en cada cambio de fase.
 | Especialistas, ronda 2 | Hecho · 23-10 |
 | Ampliación genómica a todo el atlas (NCBI) | Hecho · 23-10 (161 genomas nuevos) |
 | Cierre del director (especificación) | Hecho · 23-10 (conforme) |
-| Arquitectos y diseñadores implementan | Hecho · 23-10 · propuesta de cambios #1, pendiente de publicar |
+| Arquitectos y diseñadores implementan | Hecho · 23-10 |
+| Versión 2 publicada en la web | Hecho · 23-10 (propuesta de cambios #1 fusionada) |
 
 ## Diagnóstico de los consultores
 
@@ -74,7 +75,7 @@ Se elimina la pestaña Pregunta (pasa a la ficha), los pesos de «parecidas» y 
 
 ## Implementación terminada
 
-Propuesta de cambios: https://github.com/javierblancobdjz-cmyk/ATLAS-MICROBIOLOG-A/pull/1 (rama `mejora-v2`). Al fusionarla con `main` se publica en la web.
+Propuesta de cambios: https://github.com/javierblancobdjz-cmyk/ATLAS-MICROBIOLOG-A/pull/1 (rama `mejora-v2`). Fusionada y publicada el 23-10.
 
 - 14 agentes: datos con dos vueltas de verificación, tres equipos de interfaz, integración, tres revisores (diseño, caso CECT 5713, criterios) que encontraron 35 hallazgos, corrección y verificación final. Después, limpieza de tildes en 463 textos heredados.
 - Pruebas: generador 8/8 OK, contrato 0 fallos, humo en 31 rutas a escritorio y móvil sin errores, pivote OK.
